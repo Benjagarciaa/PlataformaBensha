@@ -4,6 +4,8 @@
 //
 // Regla dura: nada de guiones largos ni medios en texto visible.
 // Usar coma, punto o dos puntos. Rangos con guion común: 2024-2026.
+//
+// PENDIENTE: buscar [[ ]] en este archivo antes de publicar.
 // ============================================================================
 
 export const content = {
@@ -23,8 +25,6 @@ export const content = {
 
   // ── HERO ──────────────────────────────────────────────────────────────
   hero: {
-    // Partido en tres para no depender de un split por string.
-    // "accent" se pinta en celeste y nunca se corta de línea.
     title: {
       before: "Más de 200 páginas de producto,",
       accent: "programadas",
@@ -33,15 +33,13 @@ export const content = {
     subtitle:
       "130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
     ctaPrimary: "Pedí tu presupuesto",
-    ctaSecondary: "Ver proyectos",
+    ctaSecondary: "Cómo trabajo una página",
 
-    // Mobile: dos números monumentales que cuentan desde cero.
     cifras: [
       { n: 200, prefix: "+", label: "PÁGINAS EN PRODUCCIÓN" },
       { n: 130, prefix: "+", label: "MARCAS EN AR Y EXTERIOR" },
     ],
 
-    // Desktop: el cajetín al pie de la lámina.
     rotulo: {
       label: "FICHA",
       rev: "REV. 2026",
@@ -55,7 +53,6 @@ export const content = {
       respuestaValor: "RESPUESTA EN 24 H",
     },
 
-    // Bloques del wireframe del hero (PlanoCanvas).
     wireframe: [
       { id: "hero", label: "HERO" },
       { id: "problema", label: "PROBLEMA" },
@@ -74,7 +71,7 @@ export const content = {
     paragraphs: [
       "Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para unas 130 marcas, en Argentina y afuera. Muchas siguen vendiendo hoy, todos los días.",
       "Ese volumen es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
-      "Me formé como desarrollador full stack y terminé la carrera entre los diez mejores de mi camada. Por eso trabajo en Liquid y JavaScript adentro de tu tema, en lugar de depender de un page builder con abono mensual que te limita a lo que trae la plantilla.",
+      "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja escribir Liquid y JavaScript adentro de tu tema, en vez de depender de un page builder con abono mensual que te limita a lo que trae la plantilla.",
       "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en la conversión.",
     ],
     fichaLabel: "FICHA TÉCNICA",
@@ -82,7 +79,7 @@ export const content = {
       { k: "BASE", v: "Córdoba, AR" },
       { k: "PÁGINAS", v: "+200 construidas" },
       { k: "MARCAS", v: "+130 · AR y exterior" },
-      { k: "FORMACIÓN", v: "Full Stack · top 10" },
+      { k: "FORMACIÓN", v: "Tecnicatura UTN" },
       { k: "PLATAFORMAS", v: "Shopify · Tienda Nube" },
       { k: "DISPONIBLE", v: "Nuevos proyectos" },
     ],
@@ -193,6 +190,244 @@ export const content = {
     ],
   },
 
+  // ── PROCESO (única sección numerada del sitio) ────────────────────────
+  proceso: {
+    title: "Cómo trabajamos",
+    intro:
+      "Seis pasos, siempre en el mismo orden. El orden importa: no se puede diseñar una página antes de saber qué va a decir.",
+    pasos: [
+      {
+        n: "01",
+        titulo: "Charla",
+        detalle:
+          "Me contás el producto, a quién le vendés y qué te está pasando hoy.",
+      },
+      {
+        n: "02",
+        titulo: "Investigación",
+        detalle:
+          "Miro tu competencia, tus reseñas y lo que dicen tus clientes. De ahí sale el ángulo.",
+      },
+      {
+        n: "03",
+        titulo: "Copy",
+        detalle:
+          "Escribo la página entera antes de diseñar nada. Si el texto no vende, el diseño no lo salva.",
+      },
+      {
+        n: "04",
+        titulo: "Diseño e imágenes",
+        detalle:
+          "Identidad visual del producto y las imágenes que hagan falta, generadas y editadas por mí.",
+      },
+      {
+        n: "05",
+        titulo: "Programación",
+        detalle:
+          "Bloque por bloque, adentro de tu tienda. Vas viendo cada uno antes de que siga el siguiente.",
+      },
+      {
+        n: "06",
+        titulo: "Publicación",
+        detalle:
+          "Sale al aire y miramos qué pasa. Lo que no funciona, se cambia.",
+      },
+    ],
+  },
+
+  // ── HERRAMIENTAS ──────────────────────────────────────────────────────
+  herramientas: {
+    title: "Con qué está hecho",
+    intro:
+      "Arriba, lo que gana tu negocio. Abajo en chico, la herramienta que lo hace posible.",
+    nota: "DESLIZÁ PARA VER TODO →",
+    modulos: [
+      { benefit: "Tu tienda, tu control", tool: "SHOPIFY" },
+      { benefit: "También en Tienda Nube", tool: "TIENDA NUBE" },
+      { benefit: "Bloques a medida", tool: "LIQUID" },
+      { benefit: "Sin apps que la frenen", tool: "HTML Y CSS" },
+      { benefit: "Animaciones propias", tool: "JAVASCRIPT" },
+      { benefit: "Que no te copien", tool: "BLINDAJE" },
+      { benefit: "Imágenes que no existían", tool: "IA GENERATIVA" },
+      { benefit: "Cobros al toque", tool: "MERCADO PAGO" },
+      { benefit: "Todo medido", tool: "ANALYTICS" },
+      { benefit: "Tráfico que compra", tool: "META ADS" },
+    ],
+  },
+
+  // ── LO QUE DOMINO ─────────────────────────────────────────────────────
+  // w: 700 todos los días · 600 con soltura · 500 me defiendo
+  oficio: {
+    title: "Lo que domino",
+    intro:
+      "Sin barras de progreso ni porcentajes: el tamaño de cada palabra dice cuánto la uso de verdad.",
+    leyenda: [
+      "GRANDE · TODOS LOS DÍAS",
+      "MEDIANO · CON SOLTURA",
+      "CHICO · ME DEFIENDO",
+    ],
+    grupos: [
+      {
+        id: "construccion",
+        label: "CONSTRUCCIÓN",
+        items: [
+          { name: "Shopify", w: 700 },
+          { name: "Liquid", w: 700 },
+          { name: "HTML y CSS", w: 700 },
+          { name: "JavaScript", w: 700 },
+          { name: "Responsive", w: 700 },
+          { name: "Tienda Nube", w: 600 },
+          { name: "React", w: 500 },
+        ],
+      },
+      {
+        id: "conversion",
+        label: "CONVERSIÓN",
+        items: [
+          { name: "Estructura de landing", w: 700 },
+          { name: "Bundles y precios", w: 700 },
+          { name: "Prueba social", w: 700 },
+          { name: "Barras fijas y popups", w: 700 },
+          { name: "Checkout directo", w: 600 },
+          { name: "Tests", w: 500 },
+        ],
+      },
+      {
+        id: "contenido",
+        label: "CONTENIDO",
+        items: [
+          { name: "Copy argentino", w: 700 },
+          { name: "Advertorials", w: 700 },
+          { name: "Imágenes con IA", w: 600 },
+          { name: "Edición de video", w: 600 },
+          { name: "Fotografía de producto", w: 500 },
+        ],
+      },
+      {
+        id: "proteccion",
+        label: "PROTECCIÓN Y MEDICIÓN",
+        items: [
+          { name: "Blindaje anticopia", w: 700 },
+          { name: "Ofuscación", w: 600 },
+          { name: "Analytics", w: 500 },
+          { name: "Píxeles y eventos", w: 500 },
+        ],
+      },
+    ],
+  },
+
+  // ── RECORRIDO ─────────────────────────────────────────────────────────
+  recorrido: {
+    title: "Recorrido",
+    intro:
+      "Empecé a programar en 2021 con un curso gratuito de Google. Cinco años después tengo una tecnicatura de la UTN, una carrera de Full Stack terminada primero de camada y doscientas páginas hechas. En ese orden.",
+    grupos: [
+      {
+        id: "formacion",
+        label: "FORMACIÓN",
+        items: [
+          {
+            id: "utn",
+            anio: "[[AÑO]]",
+            titulo: "Tecnicatura en Programación",
+            institucion: "Universidad Tecnológica Nacional",
+            detalle:
+              "La carrera dura tres años. La terminé en un año y cuatro meses, cursando y trabajando al mismo tiempo. Es la formación más completa que tengo y la que sostiene todo lo demás.",
+            destacado: true,
+            sello: "3 AÑOS EN 16 MESES",
+          },
+          {
+            id: "unc-ia",
+            anio: "2026",
+            titulo: "IA y automatización de flujos de trabajo",
+            institucion: "Universidad Nacional de Córdoba",
+            detalle:
+              "Veinte horas sobre automatizar procesos de trabajo con inteligencia artificial. Es lo que hoy uso para generar imágenes de producto y acelerar la parte repetitiva de cada página.",
+          },
+          {
+            id: "fullstack",
+            anio: "2024",
+            titulo: "Carrera de Desarrollo Full Stack",
+            institucion: "Coderhouse",
+            detalle:
+              "Sesenta y cuatro semanas de cursada, terminada en el primer puesto de la camada. La academia me dio becas y cursos como reconocimiento por el resultado.",
+            destacado: true,
+            sello: "1° DE LA CAMADA",
+          },
+          {
+            id: "ciberseguridad",
+            anio: "2024",
+            titulo: "Ciberseguridad",
+            institucion: "Coderhouse, certificado por Delta Protect",
+            detalle:
+              "Treinta horas. Es lo que respalda el servicio de blindaje: saber cómo se copia y se raspa una página es lo que permite hacerla difícil de copiar.",
+          },
+          {
+            id: "javascript",
+            anio: "2023",
+            titulo: "JavaScript",
+            institucion: "Coderhouse, certificado por PedidosYa",
+            detalle:
+              "Cuarenta horas y media. Todas las animaciones, los bundles, las barras fijas y los popups que armo salen de acá.",
+          },
+          {
+            id: "desarrollo-web",
+            anio: "2022",
+            titulo: "Desarrollo Web",
+            institucion: "Coderhouse",
+            detalle:
+              "Treinta y ocho horas de HTML y CSS. El primer curso pago, el que confirmó que iba en serio.",
+          },
+          {
+            id: "seguridad",
+            anio: "2022",
+            titulo: "Seguridad Informática",
+            institucion: "Educ.ar, Ministerio de Educación",
+            detalle: "Curso virtual de diez horas.",
+          },
+          {
+            id: "processing",
+            anio: "2022",
+            titulo: "Programación visual de imágenes",
+            institucion: "Educ.ar, Ministerio de Educación",
+            detalle:
+              "Introducción a Processing, doce horas. La primera vez que programé algo que se veía en pantalla.",
+          },
+          {
+            id: "grasshopper",
+            anio: "2021",
+            titulo: "Fundamentos de la codificación",
+            institucion: "Grasshopper, Google",
+            detalle:
+              "El primero de todos, en agosto de 2021. Gratis, desde el celular, y el que arrancó todo esto.",
+          },
+        ],
+      },
+      {
+        id: "trayectoria",
+        label: "TRAYECTORIA",
+        items: [
+          {
+            id: "freelance",
+            anio: "2022-HOY",
+            titulo: "Desarrollo de ecommerce",
+            institucion: "Freelance",
+            detalle:
+              "Más de 200 páginas de producto para unas 130 marcas, en Argentina y el exterior. Shopify y Tienda Nube. Copy, diseño, imágenes, código y medición.",
+          },
+          {
+            id: "role-media",
+            anio: "2024-HOY",
+            titulo: "Coordinación y producción",
+            institucion: "Role Media",
+            detalle:
+              "Gestión de proyectos, coordinación con clientes, edición de video y postproducción. Es de donde salen los creativos que acompañan a cada página.",
+          },
+        ],
+      },
+    ],
+  },
+
   // ── CONTACTO ──────────────────────────────────────────────────────────
   contacto: {
     eyebrow: "PRESUPUESTO",
@@ -246,12 +481,32 @@ export const content = {
   // ── NAV ───────────────────────────────────────────────────────────────
   nav: {
     links: [
-      { label: "Proyectos", href: "#proyectos" },
+      { label: "Anatomía", href: "#anatomia" },
       { label: "Servicios", href: "#servicios" },
-      { label: "Presupuesto", href: "#contacto" },
+      { label: "Recorrido", href: "#recorrido" },
     ],
-    status: "DISPONIBLE",
+    status: "AGENDA ABIERTA",
   },
+
+  // ── RIEL DE PROFUNDIDAD ───────────────────────────────────────────────
+  riel: {
+    label: "PROFUNDIDAD DE SCROLL",
+    aria: "Navegación por secciones e indicador de scroll",
+  },
+
+  // Los ids tienen que existir como id de una <Section> y respetar el orden
+  // en que aparecen en app/page.tsx.
+  waypoints: [
+    { id: "inicio", label: "INICIO" },
+    { id: "sobre-mi", label: "SOBRE MÍ" },
+    { id: "anatomia", label: "ANATOMÍA" },
+    { id: "servicios", label: "SERVICIOS" },
+    { id: "proceso", label: "PROCESO" },
+    { id: "herramientas", label: "HERRAMIENTAS" },
+    { id: "oficio", label: "LO QUE DOMINO" },
+    { id: "recorrido", label: "RECORRIDO" },
+    { id: "contacto", label: "CONTACTO" },
+  ],
 
   // ── SEO ───────────────────────────────────────────────────────────────
   // OJO: cambiar `url` por el dominio real antes de deployar.
