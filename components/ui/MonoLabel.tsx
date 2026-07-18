@@ -8,7 +8,12 @@ type MonoLabelProps = {
 
 export function MonoLabel({ children, className }: MonoLabelProps) {
   return (
-    <span className={cn("text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]", className)}>
+    <span
+      className={cn(
+        "font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]",
+        className,
+      )}
+    >
       {children}
     </span>
   );

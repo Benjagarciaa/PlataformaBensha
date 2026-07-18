@@ -14,7 +14,7 @@ export function SectionTitle({ title, eyebrow, className }: SectionTitleProps) {
   return (
     <div className={cn("mb-10 max-w-3xl", className)}>
       {eyebrow ? (
-        <div className="mb-4 text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
+        <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
           {eyebrow}
         </div>
       ) : null}
