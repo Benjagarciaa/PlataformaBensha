@@ -12,7 +12,7 @@ type SectionTitleProps = {
 
 /**
  * leading-[0.95] es obligatorio: sin interlineado explicito, un titular de
- * 4.5rem hereda el line-height por defecto del navegador y las lineas quedan
+ * 4rem hereda el line-height por defecto del navegador y las lineas quedan
  * separadas por medio renglon de aire.
  */
 export function SectionTitle({ title, eyebrow, className }: SectionTitleProps) {

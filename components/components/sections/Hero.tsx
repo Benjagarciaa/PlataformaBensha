@@ -222,7 +222,7 @@ export function Hero() {
             <Button
               variant="secondary"
               className="flex-1 md:flex-none"
-              onClick={() => scrollTo("#anatomia")}
+              onClick={() => scrollTo("#proyectos")}
             >
               {hero.ctaSecondary}
             </Button>

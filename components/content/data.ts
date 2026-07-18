@@ -5,7 +5,7 @@
 // Regla dura: nada de guiones largos ni medios en texto visible.
 // Usar coma, punto o dos puntos. Rangos con guion común: 2024-2026.
 //
-// PENDIENTE: buscá [[ ]] en este archivo. Eso se ve literal en pantalla.
+// PENDIENTE: buscar [[ ]] en este archivo antes de publicar.
 // ============================================================================
 
 export const content = {
@@ -31,13 +31,13 @@ export const content = {
       after: "una por una.",
     },
     subtitle:
-      "Trabajo con marcas que testean productos en serie, en Argentina y afuera. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
+      "130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
     ctaPrimary: "Pedí tu presupuesto",
-    ctaSecondary: "Ver proyectos",
+    ctaSecondary: "Cómo trabajo una página",
 
     cifras: [
       { n: 200, prefix: "+", label: "PÁGINAS EN PRODUCCIÓN" },
-      { n: 130, prefix: "+", label: "MARCAS Y PRODUCTOS" },
+      { n: 130, prefix: "+", label: "MARCAS EN AR Y EXTERIOR" },
     ],
 
     rotulo: {
@@ -69,8 +69,8 @@ export const content = {
   sobreMi: {
     title: "Doscientas páginas después.",
     paragraphs: [
-      "Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y afuera. Muchos de mis clientes testean varias marcas a la vez: lanzan, miden y vuelven a lanzar. Yo soy el que arma la página cada vez.",
-      "Ese ritmo es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
+      "Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para unas 130 marcas, en Argentina y afuera. Muchas siguen vendiendo hoy, todos los días.",
+      "Ese volumen es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
       "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja escribir Liquid y JavaScript adentro de tu tema, en vez de depender de un page builder con abono mensual que te limita a lo que trae la plantilla.",
       "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en la conversión.",
     ],
@@ -150,78 +150,6 @@ export const content = {
         n: "09",
         name: "Cierre y CTA fijo",
         note: "La barra que sigue al scroll. El botón no se puede perder de vista nunca.",
-      },
-    ],
-  },
-
-  // ── PROYECTOS ─────────────────────────────────────────────────────────
-  // Las capturas van en public/proyectos/ y se referencian como
-  // "/proyectos/archivo.webp" (sin "public" adelante).
-  // Con `captura: null` se dibuja un marco achurado y la sección funciona igual.
-  proyectos: {
-    eyebrow: "PÁGINAS EN PRODUCCIÓN",
-    title: "Proyectos",
-    intro:
-      "Acá hay cinco. Detrás hay más de doscientas, porque trabajo con gente que testea productos en serie: lanzan, miden, matan lo que no anda y vuelven a lanzar. Cuando un producto pega, la página tiene que estar lista ayer.",
-    bloquesLabel: "BLOQUES CONSTRUIDOS",
-    verLabel: "VER LA PÁGINA",
-    sinCaptura: "CAPTURA PENDIENTE",
-    pie: "Más de 200 páginas para más de 130 marcas y productos. La mayoría no las puedo mostrar por acuerdo con el cliente.",
-    items: [
-      {
-        id: "lautaro",
-        marca: "Lautaro Cardozo",
-        producto: "[[QUÉ PRODUCTO O TIENDA]]",
-        rubro: "ECOMMERCE · CÓRDOBA",
-        descripcion:
-          "[[Dos o tres líneas: qué había antes, qué armaste y qué cambió después. Es el único caso con nombre propio del sitio: dale el mejor texto.]]",
-        bloques: ["Advertorial", "Bundles", "Prueba social", "FAQ", "Checkout directo"],
-        captura: null,
-        url: null,
-      },
-      {
-        id: "suplemento-femenino",
-        marca: "Suplemento probiótico",
-        producto: "Bienestar femenino",
-        rubro: "SUPLEMENTOS",
-        descripcion:
-          "Página editorial completa con ángulo de advertorial: hook, historia del problema, mecanismo, testimonios, comparativa de precio y barra fija.",
-        bloques: ["Advertorial", "Bundles", "Barra fija"],
-        captura: null,
-        url: null,
-      },
-      {
-        id: "capsaicina",
-        marca: "Suplemento con capsaicina",
-        producto: "Control de peso",
-        rubro: "SUPLEMENTOS",
-        descripcion:
-          "Página de producto con identidad visual propia, bundles de tres opciones y checkout directo sin pasar por el carrito.",
-        bloques: ["Bundles", "Checkout directo", "Garantía"],
-        captura: null,
-        url: null,
-      },
-      {
-        id: "serum-cuero",
-        marca: "Sérum ayurvédico",
-        producto: "Cuero cabelludo",
-        rubro: "COSMÉTICA",
-        descripcion:
-          "Página completa con set de bloques propio e imágenes de producto generadas con IA, sin sesión de fotos.",
-        bloques: ["Imágenes IA", "Antes y después", "FAQ"],
-        captura: null,
-        url: null,
-      },
-      {
-        id: "serum-peptidos",
-        marca: "Sérum con péptidos de cobre",
-        producto: "Antiedad",
-        rubro: "COSMÉTICA",
-        descripcion:
-          "Identidad visual distinta a la anterior, mismo nivel de detalle. Set de bloques completo y prueba social con reseñas reales.",
-        bloques: ["Prueba social", "Bundles", "Garantía"],
-        captura: null,
-        url: null,
       },
     ],
   },
@@ -388,46 +316,26 @@ export const content = {
     ],
   },
 
-  // ── RESULTADOS ────────────────────────────────────────────────────────
-  resultados: {
-    eyebrow: "DATOS REALES",
-    title: "Resultados",
-    intro:
-      "Números que puedo respaldar. No hay promedios inventados ni porcentajes de folleto: si un dato sale de un solo caso, está dicho que sale de un solo caso.",
-    cifras: [
-      {
-        n: 200,
-        prefix: "+",
-        label: "PÁGINAS EN PRODUCCIÓN",
-        nota: "Suplementos, indumentaria, cosmética y formación. Muchas siguen vendiendo hoy.",
-      },
-      {
-        n: 130,
-        prefix: "+",
-        label: "MARCAS Y PRODUCTOS",
-        nota: "Muchos clientes testean varias marcas por vez. Ese es el ritmo con el que trabajo.",
-      },
-      {
-        n: 3,
-        prefix: "x",
-        label: "VENTAS SEMANALES",
-        nota: "En una marca de indumentaria. La página nueva salió un día y a los pocos días las ventas ya se habían triplicado.",
-      },
-    ],
-    cita: "Hay páginas mías sosteniendo tiendas que facturan millones de pesos por día.",
-    citaPie: "BENJAMIN GARCIA · CÓRDOBA, 2026",
-  },
-
   // ── RECORRIDO ─────────────────────────────────────────────────────────
   recorrido: {
     title: "Recorrido",
     intro:
-      "Empecé a programar en 2021. En 2022 ya tenía la tecnicatura de la UTN, hecha en un año y cuatro meses. En 2024 terminé la carrera de Full Stack primero de camada. Después vinieron las doscientas páginas.",
+      "Empecé a programar en 2021 con un curso gratuito de Google. Cinco años después tengo una tecnicatura de la UTN, una carrera de Full Stack terminada primero de camada y doscientas páginas hechas. En ese orden.",
     grupos: [
       {
         id: "formacion",
         label: "FORMACIÓN",
         items: [
+          {
+            id: "utn",
+            anio: "[[AÑO]]",
+            titulo: "Tecnicatura en Programación",
+            institucion: "Universidad Tecnológica Nacional",
+            detalle:
+              "La carrera dura tres años. La terminé en un año y cuatro meses, cursando y trabajando al mismo tiempo. Es la formación más completa que tengo y la que sostiene todo lo demás.",
+            destacado: true,
+            sello: "3 AÑOS EN 16 MESES",
+          },
           {
             id: "unc-ia",
             anio: "2026",
@@ -461,16 +369,6 @@ export const content = {
             institucion: "Coderhouse, certificado por PedidosYa",
             detalle:
               "Cuarenta horas y media. Todas las animaciones, los bundles, las barras fijas y los popups que armo salen de acá.",
-          },
-          {
-            id: "utn",
-            anio: "2022",
-            titulo: "Tecnicatura en Programación",
-            institucion: "Universidad Tecnológica Nacional",
-            detalle:
-              "La carrera dura tres años. La terminé en un año y cuatro meses, cursando y trabajando al mismo tiempo. Es la formación más completa que tengo y la que sostiene todo lo demás.",
-            destacado: true,
-            sello: "3 AÑOS EN 16 MESES",
           },
           {
             id: "desarrollo-web",
@@ -515,7 +413,7 @@ export const content = {
             titulo: "Desarrollo de ecommerce",
             institucion: "Freelance",
             detalle:
-              "Más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y el exterior. Shopify y Tienda Nube. Copy, diseño, imágenes, código y medición.",
+              "Más de 200 páginas de producto para unas 130 marcas, en Argentina y el exterior. Shopify y Tienda Nube. Copy, diseño, imágenes, código y medición.",
           },
           {
             id: "role-media",
@@ -527,19 +425,6 @@ export const content = {
           },
         ],
       },
-    ],
-  },
-
-  // ── TESTIMONIOS ───────────────────────────────────────────────────────
-  // Con `items` vacío la sección NO se renderiza. Cargá el primero y aparece.
-  testimonios: {
-    title: "Lo que dicen",
-    items: [
-      // {
-      //   quote: "La cita, tal cual la dijo. Sin retocar.",
-      //   autor: "Nombre Apellido",
-      //   rol: "MARCA · RUBRO",
-      // },
     ],
   },
 
@@ -596,7 +481,7 @@ export const content = {
   // ── NAV ───────────────────────────────────────────────────────────────
   nav: {
     links: [
-      { label: "Proyectos", href: "#proyectos" },
+      { label: "Anatomía", href: "#anatomia" },
       { label: "Servicios", href: "#servicios" },
       { label: "Recorrido", href: "#recorrido" },
     ],
@@ -610,28 +495,25 @@ export const content = {
   },
 
   // Los ids tienen que existir como id de una <Section> y respetar el orden
-  // en que aparecen en app/page.tsx. "testimonios" NO va: mientras el array
-  // esté vacío la sección no se renderiza y el waypoint apuntaría a la nada.
+  // en que aparecen en app/page.tsx.
   waypoints: [
     { id: "inicio", label: "INICIO" },
     { id: "sobre-mi", label: "SOBRE MÍ" },
     { id: "anatomia", label: "ANATOMÍA" },
-    { id: "proyectos", label: "PROYECTOS" },
     { id: "servicios", label: "SERVICIOS" },
     { id: "proceso", label: "PROCESO" },
     { id: "herramientas", label: "HERRAMIENTAS" },
     { id: "oficio", label: "LO QUE DOMINO" },
-    { id: "resultados", label: "RESULTADOS" },
     { id: "recorrido", label: "RECORRIDO" },
     { id: "contacto", label: "CONTACTO" },
   ],
 
   // ── SEO ───────────────────────────────────────────────────────────────
-  // OJO: cambiar `url` por el dominio real antes de publicar.
+  // OJO: cambiar `url` por el dominio real antes de deployar.
   seo: {
     title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba",
     description:
-      "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para más de 130 marcas y productos en Argentina y el exterior.",
+      "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para 130 marcas en Argentina y el exterior.",
     url: "https://benjamingarcia.dev",
     locale: "es_AR",
   },
