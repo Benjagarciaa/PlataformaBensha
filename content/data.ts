@@ -13,17 +13,38 @@ export const content = {
     instagram: null,
   },
   hero: {
-    title: "Diseño y programo páginas de producto que venden.",
+    // El título va partido en tres para no depender de un split por string.
+    // "accent" se pinta en celeste y nunca se corta de línea.
+    title: {
+      before: "Más de 200 páginas de producto,",
+      accent: "programadas",
+      after: "una por una.",
+    },
     subtitle:
-      "Cada bloque de la página está pensado para responder una objeción y empujar al checkout. Copy, imágenes, código y medición: lo hago todo yo, y lo dejo funcionando en tu Shopify.",
+      "130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
     ctaPrimary: "Pedí tu presupuesto",
     ctaSecondary: "Ver proyectos",
-    annotation: [
-      "BENJAMIN GARCIA · CBA AR",
-      "CÓRDOBA [hora local, se calcula sola]",
-      "SESIÓN [uptime, se calcula solo]",
-      "ESTADO · TOMANDO PROYECTOS",
+    telemetry: {
+      stats: [
+        { label: "PÁGINAS EN PRODUCCIÓN", value: "+200" },
+        { label: "MARCAS", value: "+130 · AR Y EXTERIOR" },
+        { label: "PLATAFORMAS", value: "SHOPIFY · TIENDA NUBE" },
+      ],
+      clockLabel: "CÓRDOBA",
+      statusLabel: "ESTADO",
+      statusValue: "TOMANDO PROYECTOS",
+    },
+    // Los bloques del wireframe. El orden define el dibujo de arriba hacia abajo.
+    wireframe: [
+      { id: "hero", label: "HERO" },
+      { id: "problema", label: "PROBLEMA" },
+      { id: "mecanismo", label: "MECANISMO" },
+      { id: "prueba", label: "PRUEBA SOCIAL" },
+      { id: "bundles", label: "BUNDLES" },
+      { id: "garantia", label: "GARANTÍA" },
+      { id: "faq", label: "FAQ" },
     ],
+    wireframeCaption: "ASÍ SE ESTRUCTURA UNA PÁGINA QUE VENDE",
   },
   nav: {
     links: [
@@ -34,9 +55,9 @@ export const content = {
     status: "DISPONIBLE",
   },
   seo: {
-    title: "Benjamin Garcia · Páginas de producto que venden | Córdoba, Argentina",
+    title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba",
     description:
-      "Desarrollador de ecommerce en Córdoba. Diseño, escribo y programo páginas de producto para Shopify pensadas para vender en Argentina.",
+      "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para 130 marcas en Argentina y el exterior.",
     url: "https://[[dominio]]",
     locale: "es_AR",
   },

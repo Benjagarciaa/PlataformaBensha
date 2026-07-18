@@ -13,9 +13,6 @@
   --hairline: rgba(200, 224, 255, 0.1);
   --trazo: 0.5;
   --trazo-b: 0.5;
-  --font-display: var(--font-display);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
 }
 
 @theme inline {

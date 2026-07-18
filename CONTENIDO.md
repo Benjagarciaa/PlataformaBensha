@@ -1,31 +1,58 @@
 # CONTENIDO · Todo el texto del sitio
 
-Este archivo es la fuente de verdad del copy. Se traduce 1 a 1 a `content/data.ts`.
+Fuente de verdad del copy. Se traduce 1 a 1 a `content/data.ts`.
 Ningún componente escribe texto adentro.
 
-Datos personales y formación: **verificados contra CV y certificados**.
-Lo que sigue entre `[[ ]]` es lo único que falta.
+**Versión 2:** reescrito con la escala real del trabajo. El posicionamiento anterior
+("hago landings que venden") era de commodity y subvendía por mucho.
+
+---
+
+## EL POSICIONAMIENTO
+
+Antes: un desarrollador más que hace páginas de producto.
+Ahora: **el que ya hizo 200 y sabe lo que pasa cuando entran 5.000 personas por día.**
+
+Tres pilares, en orden de fuerza:
+
+1. **Volumen.** 200 páginas, 130 marcas, Argentina y exterior. Nadie con quien te comparen tiene eso.
+2. **Programadas, no armadas.** Liquid y JavaScript adentro del tema, no un page builder con abono.
+3. **Blindaje.** La página no se copia fácil. Casi nadie lo ofrece.
 
 ---
 
 ## ⚠️ PENDIENTE
 
-- [ ] Dominio (sugerencias: `benjamingarcia.dev`, `bengarcia.com.ar`, `benjamurgarcia.com`)
-- [ ] GitHub e Instagram, si querés mostrarlos
-- [ ] Permiso de las marcas para nombrarlas. Sin permiso, se anonimizan
-- [ ] Capturas mobile de las landings en `.webp` para `public/proyectos/`
-- [ ] Foto tuya para Sobre mí
-- [ ] Métricas reales, solo si son verificables
-- [ ] **Decisión sobre los certificados:** llevan tu DNI impreso. O no se linkean
-      (recomendado), o subís versiones con el número tapado
+- [ ] **Permiso por escrito de Lautaro Cardozo** para nombrarlo. Sin eso, va anónimo
+- [ ] Dominio
+- [ ] Capturas mobile de 4 a 6 páginas en `.webp` para `public/proyectos/`
+- [ ] Foto tuya
+- [ ] Un solo testimonio. Con 130 clientes, un audio de WhatsApp transcripto alcanza
+- [ ] Confirmar el dato del caso de +200%: qué marca, en qué período, contra qué base
+
+---
+
+## SOBRE LOS NÚMEROS
+
+Los que van al sitio tienen que ser los que puedas defender en una llamada sin dudar.
+
+| Dato | Cómo va escrito | Por qué |
+|---|---|---|
+| 200 páginas | `+200 páginas de producto` | Contable, tuyo, verificable |
+| 130 marcas | `+130 marcas en Argentina y el exterior` | Idem |
+| Facturación de clientes | `Páginas que hoy sostienen tiendas facturando millones de pesos por día` | El volumen es del cliente, no tuyo. Escrito así es cierto y no se te puede refutar |
+| +200% | `En una marca de indumentaria, las ventas semanales se triplicaron` | Un caso puntual, no un promedio. Prometer eso como norma te expone |
+| Blindaje | `Protección contra copia` | Nunca "100% segura" |
+
+**Regla:** si no lo podés respaldar con una captura o un cliente que lo confirme, no va.
 
 ---
 
 ## IDENTITY
 
 ```ts
-name: "Benjamin Garcia"          // legal completo: Benjamin Mur Garcia
-firstName: "BENJAMIN"            // va gigante en el hero
+name: "Benjamin Garcia"
+firstName: "BENJAMIN"
 lastName: "GARCIA"
 role: "Desarrollador de ecommerce y especialista en conversión"
 location: "Córdoba, Argentina"
@@ -33,112 +60,82 @@ locationShort: "CBA · AR"
 email: "bmurgarcia@gmail.com"
 phoneDisplay: "+54 9 351 512 2108"
 whatsappNumber: "5493515122108"
-github: "[[URL o null]]"
-instagram: "[[URL o null]]"
 ```
 
-**El DNI no va al sitio.** No aporta nada y expone un dato sensible.
+**Tesis del hero** (una sola línea, "programadas" en `--accent`, sin cortar):
 
-**Tesis del hero** (se resalta "que venden" en peso 700):
-
-> Diseño y programo páginas de producto que venden.
+> Más de 200 páginas de producto, programadas una por una.
 
 **Bajada:**
 
-> Cada bloque de la página está pensado para responder una objeción y empujar al checkout.
-> Copy, imágenes, código y medición: lo hago todo yo, y lo dejo funcionando en tu Shopify.
+> 130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un
+> page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.
 
 CTA primario: `Pedí tu presupuesto` · CTA secundario: `Ver proyectos`
 
-**Tira de anotación mono del hero:**
+**Tira de telemetría** (reemplaza el uptime de sesión, que no decía nada):
 
 ```
-BENJAMIN GARCIA · CBA AR
-CÓRDOBA [hora local, se calcula sola]
-SESIÓN [uptime, se calcula solo]
-ESTADO · TOMANDO PROYECTOS
-```
-
----
-
-## NAV
-
-Links: `Proyectos` → `#proyectos` · `Servicios` → `#servicios` · `Presupuesto` → `#contacto`
-Etiqueta de estado: `DISPONIBLE`
-
----
-
-## WAYPOINTS (riel izquierdo)
-
-```
-inicio        INICIO
-sobre-mi      SOBRE MÍ
-anatomia      ANATOMÍA
-proyectos     PROYECTOS
-servicios     SERVICIOS
-proceso       PROCESO
-herramientas  HERRAMIENTAS
-oficio        LO QUE DOMINO
-recorrido     RECORRIDO
-resultados    RESULTADOS
-testimonios   TESTIMONIOS
-contacto      CONTACTO
+PÁGINAS EN PRODUCCIÓN   +200
+MARCAS                  +130 · AR Y EXTERIOR
+PLATAFORMAS             SHOPIFY · TIENDA NUBE
+CÓRDOBA                 [hora real]
+ESTADO                  TOMANDO PROYECTOS
 ```
 
 ---
 
 ## SOBRE MÍ
 
-**Título:** Una página, una persona.
+**Título:** Doscientas páginas después.
 
 **Párrafos:**
 
-> Soy Benjamin, desarrollador de ecommerce en Córdoba. Armo páginas de producto para marcas
-> que venden online en Argentina: la escribo, la diseño, la programo y la dejo andando en
-> tu tienda.
+> Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto
+> para unas 130 marcas, en Argentina y afuera. Muchas siguen vendiendo hoy, todos los días.
+
+> Ese volumen es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout
+> falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente:
+> ya lo vi, y sé dónde mirar. No es teoría de curso.
 
 > Me formé como desarrollador full stack y terminé la carrera entre los diez mejores de mi
-> camada. Esa base es la que me deja meterme en el código de tu tienda en vez de depender de
-> apps y plantillas: si algo tiene que funcionar de una manera puntual, se programa y listo.
+> camada. Por eso trabajo en Liquid y JavaScript adentro de tu tema, en lugar de depender de
+> un page builder con abono mensual que te limita a lo que trae la plantilla.
 
-> No uso plantillas. Cada página se construye bloque por bloque, adentro de tu Shopify. Eso
-> me deja controlar cada detalle: cómo entra cada sección, dónde aparece el precio, cuándo se
-> muestra la garantía, qué pasa cuando alguien toca comprar.
+> Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago,
+> cómo se habla acá. Una página traducida del inglés se nota, y se nota en la conversión.
 
-> Trabajo para el mercado argentino y eso cambia todo: el precio en pesos, las cuotas, Mercado
-> Pago, la forma de hablar. Una página traducida del inglés se nota, y se nota en la conversión.
-
-**Ficha** (mono, al costado de la foto):
+**Ficha:**
 
 ```
 BASE          Córdoba, AR
+PÁGINAS       +200 construidas
+MARCAS        +130 · AR y exterior
 FORMACIÓN     Full Stack, top 10 de camada
-TRABAJO       Todo a medida, en código
-PLATAFORMA    Shopify
-IDIOMAS       Español, inglés, portugués
+PLATAFORMAS   Shopify · Tienda Nube
 DISPONIBLE    Nuevos proyectos
 ```
 
 ---
 
-## ANATOMÍA DE UNA LANDING (la sección firma)
+## ANATOMÍA DE UNA LANDING (sección firma)
 
-**Eyebrow:** `POR QUÉ ESTÁ CADA COSA DONDE ESTÁ`
+**Eyebrow:** `LO QUE APRENDÍ EN 200 PÁGINAS`
 **Título:** Anatomía de una página que vende.
 **Bajada:** Una landing no es una página larga con fotos lindas. Es una secuencia. Cada bloque
 está donde está porque responde la objeción que aparece justo antes.
 
-| # | Bloque | Anotación de conversión |
+| # | Bloque | Anotación |
 |---|---|---|
-| 01 | Hero y promesa | Tenés menos de 3 segundos. Acá va el problema en las palabras del cliente, no el nombre del producto. |
-| 02 | El problema | Antes de vender, hay que nombrar lo que le pasa. Si se siente identificado, sigue bajando. |
+| 01 | Hero y promesa | Tenés menos de 3 segundos. Va el problema en las palabras del cliente, no el nombre del producto. |
+| 02 | El problema | Antes de vender hay que nombrar lo que le pasa. Si se siente identificado, sigue bajando. |
 | 03 | Cómo funciona | El mecanismo, explicado simple. Sin esto, el producto es una promesa sin respaldo. |
-| 04 | Prueba social | Va justo acá porque la desconfianza aparece cuando la promesa suena demasiado buena. |
+| 04 | Prueba social | Va acá porque la desconfianza aparece cuando la promesa suena demasiado buena. |
 | 05 | Antes y después | Lo visual convence donde el texto ya no alcanza. |
-| 06 | Bundles y precio | Se muestra el precio recién cuando el valor ya está construido. Tres opciones, la del medio destacada. |
+| 06 | Bundles y precio | El precio se muestra recién cuando el valor ya está construido. Tres opciones, la del medio destacada. |
 | 07 | Garantía | Saca el riesgo de encima justo cuando está por decidir. |
 | 08 | Preguntas frecuentes | Las objeciones que quedaron. Cada pregunta es una venta que se estaba por perder. |
-| 09 | Cierre y CTA fijo | La barra que sigue al scroll. El botón no se puede perder nunca de vista. |
+| 09 | Cierre y CTA fijo | La barra que sigue al scroll. El botón no se puede perder de vista nunca. |
 
 ---
 
@@ -147,33 +144,18 @@ está donde está porque responde la objeción que aparece justo antes.
 **Eyebrow:** `PÁGINAS EN PRODUCCIÓN`
 **Título:** Proyectos
 
-Estructura por proyecto:
+Mostrar 4 a 6, no más. El resto se resume en una línea al pie.
 
-```ts
-{
-  id: "...",
-  marca: "[[nombre o versión anónima]]",
-  producto: "[[qué es]]",
-  rubro: "[[categoría]]",
-  descripcion: "[[2 o 3 líneas: qué se armó y qué resolvía]]",
-  bloques: ["Advertorial", "Bundles", "Prueba social", "FAQ", "Checkout directo"],
-  captura: "/proyectos/xxx.webp",
-  url: "[[link o null]]",
-  callouts: [{ t: "...", d: "..." }],
-}
-```
+1. **Lautaro Cardozo** `[[pendiente de permiso]]` · ecommerce de Córdoba. `[[qué se hizo]]`
+2. **Marca de indumentaria** · página de producto completa. Las ventas semanales se triplicaron
+   tras el rediseño. `[[confirmar período y base de comparación]]`
+3. **Mentorías de ecommerce** · páginas de venta para formaciones, con estructura de advertorial
+   larga y bundles. Cliente bajo acuerdo de confidencialidad.
+4. **Suplementos** · páginas editoriales con ángulo de advertorial: hook, problema, mecanismo,
+   testimonios, comparativa de precio, bundles, FAQ y barra fija.
+5. **Cosmética y skincare** · identidad visual propia por producto, imágenes generadas con IA.
 
-Borrador (confirmá nombres y permisos):
-
-1. **Suplemento probiótico femenino** · página editorial completa con ángulo de advertorial:
-   hook, historia del problema, mecanismo, testimonios, comparativa de precio, bundles, FAQ y
-   barra fija. Identidad tipográfica y paleta propias.
-2. **Suplemento con capsaicina** · página de producto con identidad visual propia, bundles y
-   checkout directo.
-3. **Sérum ayurvédico para cuero cabelludo** · página completa con set de bloques propio e
-   imágenes generadas con IA.
-4. **Sérum antiedad con péptidos de cobre** · página completa, identidad visual distinta, set
-   de bloques completo.
+Al pie: **"Más de 200 páginas para unas 130 marcas. Acá hay cinco."**
 
 ---
 
@@ -182,23 +164,29 @@ Borrador (confirmá nombres y permisos):
 **Título:** Qué hago
 
 1. **Página de producto que vende** (celda dominante)
-   La página completa: copy, diseño, imágenes, código y medición. Bloque por bloque adentro de
-   tu Shopify, sin apps que la vuelvan lenta.
-2. **Tienda Shopify completa**
+   Copy, diseño, imágenes, código y medición. Bloque por bloque adentro de tu tienda,
+   sin apps que la frenen.
+2. **Tienda completa, Shopify o Tienda Nube**
    Desde cero: estructura, catálogo, checkout, medios de pago y envíos, lista para vender.
-3. **Optimización de lo que ya tenés**
+3. **Blindaje de la página**
+   Protección contra copia: sin click derecho, sin selección de texto, sin arrastrar imágenes,
+   con los atajos de inspección bloqueados y el código ofuscado. Que tu competencia no te
+   clone la página en una tarde.
+4. **Optimización de lo que ya tenés**
    Reviso tu página actual, marco dónde se pierde la venta y lo arreglo bloque por bloque.
-4. **Copy y creativos**
-   Los textos que venden y las imágenes que los acompañan, generadas y editadas por mí.
+
+*Nota interna: el blindaje frena la copia manual y automatizada casual, que es el escenario
+real. No prometas seguridad absoluta: todo lo que corre en el navegador es inspeccionable
+por alguien con conocimiento, y un comprador técnico lo sabe.*
 
 ---
 
-## PROCESO (única sección numerada)
+## PROCESO
 
 1. **Charla** · Me contás el producto, a quién le vendés y qué te está pasando hoy.
 2. **Investigación** · Miro tu competencia, tus reseñas y lo que dicen tus clientes. De ahí sale el ángulo.
 3. **Copy** · Escribo la página entera antes de diseñar nada. Si el texto no vende, el diseño no lo salva.
-4. **Diseño e imágenes** · Identidad visual del producto y las imágenes que hacen falta.
+4. **Diseño e imágenes** · Identidad visual del producto y las imágenes que hagan falta.
 5. **Programación** · Bloque por bloque, en tu tienda. Vos vas viendo cada uno.
 6. **Publicación y medición** · Sale al aire y miramos qué pasa. Lo que no funciona, se cambia.
 
@@ -206,65 +194,58 @@ Borrador (confirmá nombres y permisos):
 
 ## HERRAMIENTAS
 
-**Título:** Con qué está hecho
-
 | Beneficio | Herramienta |
 |---|---|
 | Tu tienda, tu control | Shopify |
+| También en Tienda Nube | Tienda Nube |
 | Bloques a medida | Liquid |
 | Sin apps que la frenen | HTML y CSS |
-| Interacciones propias | JavaScript |
+| Animaciones propias | JavaScript |
+| Que no te la copien | Blindaje |
 | Imágenes que no existían | IA generativa |
 | Cobros al toque | Mercado Pago |
 | Todo medido | Analytics |
-| Tráfico que compra | Meta Ads |
 
 ---
 
-## LO QUE DOMINO (constelación)
+## LO QUE DOMINO
 
-- **Construcción:** Shopify (700), Liquid (700), HTML y CSS (700), JavaScript (700), Dawn (600), Responsive (700)
-- **Conversión:** Estructura de landing (700), Bundles y precios (700), Prueba social (600), Barra fija y popups (600), Tests (500)
+- **Construcción:** Shopify (700), Tienda Nube (600), Liquid (700), HTML y CSS (700), JavaScript (700), Responsive (700)
+- **Conversión:** Estructura de landing (700), Bundles y precios (700), Prueba social (700), Barra fija y popups (700), Tests (500)
 - **Contenido:** Copy en español argentino (700), Advertorials (700), Imágenes con IA (600), Edición de video (600)
-- **Tráfico:** Meta Ads (500), Analytics (500), Píxeles y eventos (500)
-
-JavaScript va en 700: tenés 40.5 horas certificadas más la carrera full stack, y es lo que
-usás todos los días. `[[Ajustá el resto con honestidad]]`
+- **Protección:** Blindaje anticopia (700), Ofuscación (600)
 
 ---
 
 ## RECORRIDO
 
-Tabla tipo legajo, dos bloques. Año en mono al margen, título, institución, y acordeón que
-abre el detalle.
-
 **Título:** Recorrido
 
 ### Formación
 
-| Año | Título | Institución | Detalle |
-|---|---|---|---|
-| 2026 | IA y automatización de flujos de trabajo | Universidad Nacional de Córdoba | Automatizar procesos de trabajo con inteligencia artificial. 20 horas. Mayo 2026. |
-| 2024 | **Carrera de Desarrollo Full Stack** | Coderhouse | 64 semanas. Terminada dentro del **top 10 de la camada**. Noviembre 2024. |
-| 2024 | Ciberseguridad | Coderhouse, certificado por Delta Protect | 30 horas, 8 semanas. Mayo 2024. |
-| 2023 | JavaScript | Coderhouse, certificado por PedidosYa | 40.5 horas, 8 semanas. Octubre 2023. |
-| 2022 | Desarrollo Web | Coderhouse | 38 horas, 10 semanas. Noviembre 2022. |
-| 2022 | Seguridad Informática | Educ.ar, Ministerio de Educación | Curso virtual, 10 horas. |
-| 2022 | Programación visual de imágenes: Processing | Educ.ar, Ministerio de Educación | Curso virtual, 12 horas. |
-| 2022 | Reparación y mantenimiento de PC | Educ.ar, Ministerio de Educación | Curso virtual, 12 horas. |
-| 2021 | Fundamentos de la codificación | Grasshopper, Google | Agosto 2021. El primer curso, el que arrancó todo. |
-| 2021 | Bachiller con orientación en Idiomas | IPEM N°43 Hipólito Yrigoyen | Secundario completo, 2015-2021. |
+| Año | Título | Institución |
+|---|---|---|
+| 2026 | IA y automatización de flujos de trabajo | Universidad Nacional de Córdoba · 20 hs |
+| 2024 | **Carrera de Desarrollo Full Stack** | Coderhouse · 64 semanas · **top 10 de camada** |
+| 2024 | Ciberseguridad | Coderhouse, certificado por Delta Protect · 30 hs |
+| 2023 | JavaScript | Coderhouse, certificado por PedidosYa · 40.5 hs |
+| 2022 | Desarrollo Web | Coderhouse · 38 hs |
+| 2022 | Seguridad Informática | Educ.ar, Ministerio de Educación |
+| 2022 | Programación visual de imágenes: Processing | Educ.ar, Ministerio de Educación |
+| 2022 | Reparación y mantenimiento de PC | Educ.ar, Ministerio de Educación |
+| 2021 | Fundamentos de la codificación | Grasshopper, Google |
+| 2021 | Bachiller con orientación en Idiomas | IPEM N°43 Hipólito Yrigoyen |
 
-La fila de Full Stack va destacada: es la credencial principal y el top 10 es verificable.
+*La ciberseguridad no es un adorno acá: es lo que respalda el servicio de blindaje.*
 
 ### Trayectoria
 
-| Año | Rol | Dónde | Detalle |
-|---|---|---|---|
-| 2025-hoy | Desarrollo de ecommerce | Freelance | Páginas de producto y tiendas Shopify para marcas que venden en Argentina. Copy, diseño, código y medición. |
-| 2024-hoy | Coordinación y producción | Role Media | Gestión de proyectos, coordinación con clientes, edición de video y postproducción. |
+| Año | Rol | Dónde |
+|---|---|---|
+| 2022-hoy | Desarrollo de ecommerce | Freelance · +200 páginas, +130 marcas, AR y exterior |
+| 2024-hoy | Coordinación y producción | Role Media · gestión de proyectos, edición y postproducción |
 
-`[[Ajustá el año de arranque del freelance si no es 2025]]`
+`[[Confirmá el año de arranque del freelance]]`
 
 ---
 
@@ -273,16 +254,20 @@ La fila de Full Stack va destacada: es la credencial principal y el top 10 es ve
 **Eyebrow:** `DATOS REALES`
 **Título:** Resultados
 
-`[[Solo si tenés números verificables. Si no los tenés, esta sección se saca: es preferible
-tener 12 secciones ciertas que 13 con una inventada.]]`
-
-Datos verificables que ya tenés, por si querés usar la sección con lo que hay:
+Tres columnas, número grande, label mono, una línea de contexto:
 
 ```
-4       páginas de producto publicadas
-64      semanas de formación full stack
-TOP 10  de la camada
++200        PÁGINAS EN PRODUCCIÓN
+            Para marcas de suplementos, indumentaria, cosmética y formación.
+
++130        MARCAS
+            En Argentina y el exterior.
+
+x3          VENTAS SEMANALES
+            En una marca de indumentaria, tras rediseñar la página de producto.
 ```
+
+Cita al pie: **"Hay páginas mías sosteniendo tiendas que facturan millones de pesos por día."**
 
 ---
 
@@ -290,8 +275,11 @@ TOP 10  de la camada
 
 Mientras no haya:
 
-> Las primeras marcas ya están vendiendo con estas páginas. Cuando tenga sus palabras por
-> escrito, van a aparecer acá tal cual las digan.
+> Ciento treinta marcas pasaron por acá. Sus palabras van a aparecer en este lugar, tal cual
+> las digan, apenas termine de pedirlas.
+
+*Con ese volumen, esta sección debería durar una semana en placeholder. Un audio de WhatsApp
+transcripto y autorizado alcanza.*
 
 ---
 
@@ -302,7 +290,8 @@ Mientras no haya:
 **Bajada:** Respondo el mismo día. Si me pasás el link de tu producto, te digo qué haría antes
 de cobrarte nada.
 
-Campos y select: ver DESIGN.md sección 12.
+Select "Qué necesitás": Página de producto / Tienda completa / Rediseño y optimización /
+Blindaje de una página existente / Copy y creativos / Otro
 
 **Columna derecha:**
 
@@ -322,7 +311,7 @@ La página queda tuya, en tu tienda.
 ## FOOTER
 
 ```
-© 2026 · BENJAMIN GARCIA   ·   CÓRDOBA, AR   ·   [hora local]   ·   SESIÓN [uptime]
+© 2026 · BENJAMIN GARCIA   ·   CÓRDOBA, AR   ·   [hora local]
 Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Córdoba, 2026.
                                                                     ↑ VOLVER ARRIBA
 ```
@@ -332,13 +321,8 @@ Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Cór
 ## SEO
 
 ```ts
-title: "Benjamin Garcia · Páginas de producto que venden | Córdoba, Argentina"
-description: "Desarrollador de ecommerce en Córdoba. Diseño, escribo y programo páginas de producto para Shopify pensadas para vender en Argentina."
+title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba"
+description: "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para 130 marcas en Argentina y el exterior."
 url: "https://[[dominio]]"
 locale: "es_AR"
 ```
-
-Keywords: landing page Shopify, página de producto, ecommerce Córdoba, Shopify Argentina,
-diseño de landing, optimización de conversión, copywriting ecommerce, tienda online Argentina.
-
-Falta: imagen Open Graph de 1200×630 en `public/og.png`.

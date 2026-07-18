@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
+import { Grano } from "@/components/chrome/Grano";
+import { Grilla } from "@/components/chrome/Grilla";
+import { LenisProvider } from "@/components/chrome/LenisProvider";
 import { TrazoProvider } from "@/lib/trazo";
 import "./globals.css";
 
@@ -43,7 +46,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`${clashDisplay.variable} ${switzer.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-[color:var(--bg)] text-[color:var(--text)]">
-        <TrazoProvider>{children}</TrazoProvider>
+        <LenisProvider>
+          <Grilla />
+          <Grano />
+          <TrazoProvider>{children}</TrazoProvider>
+        </LenisProvider>
       </body>
     </html>
   );
