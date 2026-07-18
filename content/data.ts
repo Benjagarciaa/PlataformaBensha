@@ -1,3 +1,11 @@
+// ============================================================================
+// PLANO · Contenido central del portfolio
+// TODO el texto visible del sitio vive acá. Los componentes no hardcodean copy.
+//
+// Regla dura: nada de guiones largos ni medios en texto visible.
+// Usar coma, punto o dos puntos. Rangos con guion común: 2024-2026.
+// ============================================================================
+
 export const content = {
   identity: {
     name: "Benjamin Garcia",
@@ -13,8 +21,10 @@ export const content = {
     instagram: null,
   },
 
+  // ── HERO ──────────────────────────────────────────────────────────────
   hero: {
-    // El titulo va partido en tres para no depender de un split por string.
+    // Partido en tres para no depender de un split por string.
+    // "accent" se pinta en celeste y nunca se corta de línea.
     title: {
       before: "Más de 200 páginas de producto,",
       accent: "programadas",
@@ -24,16 +34,28 @@ export const content = {
       "130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
     ctaPrimary: "Pedí tu presupuesto",
     ctaSecondary: "Ver proyectos",
-    telemetry: {
-      stats: [
-        { label: "PÁGINAS EN PRODUCCIÓN", value: "+200" },
-        { label: "MARCAS", value: "+130 · AR Y EXTERIOR" },
-        { label: "PLATAFORMAS", value: "SHOPIFY · TIENDA NUBE" },
+
+    // Mobile: dos números monumentales que cuentan desde cero.
+    cifras: [
+      { n: 200, prefix: "+", label: "PÁGINAS EN PRODUCCIÓN" },
+      { n: 130, prefix: "+", label: "MARCAS EN AR Y EXTERIOR" },
+    ],
+
+    // Desktop: el cajetín al pie de la lámina.
+    rotulo: {
+      label: "FICHA",
+      rev: "REV. 2026",
+      cells: [
+        { k: "PÁGINAS", v: "+200" },
+        { k: "MARCAS", v: "+130" },
+        { k: "MERCADO", v: "AR · EXT" },
       ],
-      clockLabel: "CÓRDOBA",
-      statusLabel: "ESTADO",
-      statusValue: "TOMANDO PROYECTOS",
+      platforms: "SHOPIFY · TIENDA NUBE · LIQUID · JAVASCRIPT",
+      estadoValor: "AGENDA ABIERTA",
+      respuestaValor: "RESPUESTA EN 24 H",
     },
+
+    // Bloques del wireframe del hero (PlanoCanvas).
     wireframe: [
       { id: "hero", label: "HERO" },
       { id: "problema", label: "PROBLEMA" },
@@ -46,6 +68,7 @@ export const content = {
     wireframeCaption: "ASÍ SE ESTRUCTURA UNA PÁGINA QUE VENDE",
   },
 
+  // ── SOBRE MÍ ──────────────────────────────────────────────────────────
   sobreMi: {
     title: "Doscientas páginas después.",
     paragraphs: [
@@ -65,11 +88,13 @@ export const content = {
     ],
   },
 
-  // ── La seccion firma ────────────────────────────────────────────────
+  // ── ANATOMÍA (sección firma) ──────────────────────────────────────────
+  // Los `id` deben coincidir con el switch de <Contenido> en Anatomia.tsx.
   anatomia: {
-    planoLabel: "BLOQUE ACTIVO",
     eyebrow: "LO QUE APRENDÍ EN 200 PÁGINAS",
     title: "Anatomía de una página que vende.",
+    planoLabel: "BLOQUE ACTIVO",
+    deslizaLabel: "DESLIZÁ →",
     intro:
       "Una landing no es una página larga con fotos lindas. Es una secuencia. Cada bloque está donde está porque responde la objeción que aparece justo antes.",
     outro:
@@ -132,6 +157,7 @@ export const content = {
     ],
   },
 
+  // ── SERVICIOS ─────────────────────────────────────────────────────────
   servicios: {
     title: "Qué hago",
     hoverTick: "· CONSULTAR",
@@ -167,6 +193,57 @@ export const content = {
     ],
   },
 
+  // ── CONTACTO ──────────────────────────────────────────────────────────
+  contacto: {
+    eyebrow: "PRESUPUESTO",
+    title: "Contame qué querés vender.",
+    intro:
+      "Respondo el mismo día. Si me pasás el link de tu producto, te digo qué haría antes de cobrarte nada.",
+    campos: {
+      nombre: "Nombre",
+      email: "Email",
+      tipo: "Qué necesitás",
+      proyecto: "Contame de tu producto o marca",
+      link: "Link de tu tienda (opcional)",
+    },
+    opciones: [
+      { id: "pagina", name: "Página de producto", hint: "LA MÁS PEDIDA" },
+      { id: "tienda", name: "Tienda completa", hint: "SHOPIFY O TIENDA NUBE" },
+      { id: "optimizacion", name: "Optimización", hint: "SOBRE LO QUE YA TENÉS" },
+      { id: "blindaje", name: "Blindaje", hint: "QUE NO TE COPIEN" },
+      { id: "copy", name: "Copy y creativos", hint: "TEXTOS E IMÁGENES" },
+      { id: "otro", name: "Otra cosa", hint: "CONTAME QUÉ NECESITÁS" },
+    ],
+    errores: {
+      nombre: "Poné tu nombre así sé con quién hablo.",
+      emailVacio: "Necesito un email para responderte.",
+      emailInvalido: "Ese email no parece válido.",
+      tipo: "Elegí qué necesitás.",
+      proyecto: "Contame algo del producto, aunque sean dos líneas.",
+    },
+    medidorLabel: "COMPLETÁ PARA ENVIAR",
+    medidorListo: "LISTO PARA ENVIAR",
+    cta: "Enviar por WhatsApp",
+    ctaNota: "SE ABRE WHATSAPP CON EL MENSAJE ARMADO",
+    directoLabel: "ESCRIBIME DIRECTO",
+    comoLabel: "CÓMO TRABAJO",
+    como: [
+      "Presupuesto cerrado, sin sorpresas.",
+      "Te muestro cada bloque antes de seguir.",
+      "La página queda tuya, en tu tienda.",
+    ],
+  },
+
+  // ── FOOTER ────────────────────────────────────────────────────────────
+  footer: {
+    year: "2026",
+    clockLabel: "CÓRDOBA",
+    backToTop: "↑ VOLVER ARRIBA",
+    colofon:
+      "Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Córdoba, 2026.",
+  },
+
+  // ── NAV ───────────────────────────────────────────────────────────────
   nav: {
     links: [
       { label: "Proyectos", href: "#proyectos" },
@@ -176,11 +253,13 @@ export const content = {
     status: "DISPONIBLE",
   },
 
+  // ── SEO ───────────────────────────────────────────────────────────────
+  // OJO: cambiar `url` por el dominio real antes de deployar.
   seo: {
     title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba",
     description:
       "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para 130 marcas en Argentina y el exterior.",
-    url: "https://[[dominio]]",
+    url: "https://benjamingarcia.dev",
     locale: "es_AR",
   },
 };
