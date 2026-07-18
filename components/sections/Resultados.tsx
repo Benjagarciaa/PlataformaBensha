@@ -46,12 +46,10 @@ function useEnVista<T extends HTMLElement>() {
 function Cifra({
   value,
   prefix,
-  suffix,
   start,
 }: {
   value: number;
   prefix?: string;
-  suffix?: string;
   start: boolean;
 }) {
   const [n, setN] = useState(0);
@@ -79,7 +77,6 @@ function Cifra({
     <span>
       {prefix}
       {n}
-      {suffix}
     </span>
   );
 }
@@ -112,12 +109,7 @@ export function Resultados() {
             } ${index < 2 ? "md:pr-9" : ""}`}
           >
             <p className="font-display text-[clamp(3rem,7vw,5rem)] font-bold leading-[0.9] tracking-[-0.04em] text-[color:var(--text)]">
-              <Cifra
-                value={cifra.n}
-                prefix={cifra.prefix}
-                suffix={cifra.suffix}
-                start={visible}
-              />
+              <Cifra value={cifra.n} prefix={cifra.prefix} start={visible} />
             </p>
             <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
               {cifra.label}

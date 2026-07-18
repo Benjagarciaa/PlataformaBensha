@@ -534,14 +534,20 @@ export const content = {
   // Con `items` vacío la sección NO se renderiza. Cargá el primero y aparece.
   testimonios: {
     title: "Lo que dicen",
-    items: [
-      // {
-      //   quote: "La cita, tal cual la dijo. Sin retocar.",
-      //   autor: "Nombre Apellido",
-      //   rol: "MARCA · RUBRO",
-      // },
-    ],
+    // El tipo va explícito: sin esto, un array vacío se infiere como never[]
+    // y TypeScript no deja leer .quote ni .autor adentro del componente.
+    items: [] as { quote: string; autor: string; rol: string }[],
   },
+
+  // Cuando tengas el primero, reemplazá la línea de arriba por esto:
+  //
+  //   items: [
+  //     {
+  //       quote: "La cita, tal cual la dijo. Sin retocar.",
+  //       autor: "Lautaro Cardozo",
+  //       rol: "TINTE PRO · ECOMMERCE",
+  //     },
+  //   ],
 
   // ── CONTACTO ──────────────────────────────────────────────────────────
   contacto: {
