@@ -652,7 +652,7 @@ export const content = {
     title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba",
     description:
       "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para más de 130 marcas y productos en Argentina y el exterior.",
-    url: "https://benjamingarcia.dev",
+    url: "https://plataformabensha.vercel.app",
     locale: "es_AR",
   },
 };

@@ -52,18 +52,21 @@ function Cifra({
   prefix?: string;
   start: boolean;
 }) {
-  const [n, setN] = useState(0);
+  // Arranca en el valor FINAL: el HTML del servidor tiene que traer el número
+  // real, no un cero que después sube. Eso es lo que indexa Google y lo que ve
+  // alguien con conexión lenta antes de que hidrate.
+  const [n, setN] = useState(value);
 
   useEffect(() => {
     if (!start) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const DURATION = reduced ? 0 : 1600;
+    const DURATION = 1600;
     const t0 = performance.now();
     let raf = 0;
 
     const loop = (now: number) => {
-      const p = DURATION === 0 ? 1 : Math.min(1, (now - t0) / DURATION);
+      const p = Math.min(1, (now - t0) / DURATION);
       const eased = 1 - Math.pow(1 - p, 3);
       setN(Math.round(value * eased));
       if (p < 1) raf = window.requestAnimationFrame(loop);
