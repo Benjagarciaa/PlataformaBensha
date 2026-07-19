@@ -7,8 +7,12 @@ import { onFrame } from "@/lib/raf";
 /**
  * Nav. Barra fija que se esconde al bajar y vuelve al subir.
  *
- * Corre a 20fps sobre el loop compartido: esto solo compara dos números y no
- * hace falta que se ejecute sesenta veces por segundo.
+ * Los links son <a href="#seccion"> de verdad, no <button>. Se ven igual, pero
+ * un ancla real deja abrir en pestaña nueva, se puede copiar el link, y los
+ * buscadores entienden la estructura de la página. El preventDefault está solo
+ * para que el scroll sea suave.
+ *
+ * Corre a 20fps sobre el loop compartido: esto solo compara dos números.
  */
 export function Nav() {
   const [hidden, setHidden] = useState(false);
@@ -16,7 +20,7 @@ export function Nav() {
   const lastY = useRef(0);
 
   useEffect(() => {
-    const baja = onFrame(() => {
+    return onFrame(() => {
       const y = window.scrollY;
       setSolid(y > 40);
       // margen de 8px para que un temblor del trackpad no la haga parpadear
@@ -25,15 +29,17 @@ export function Nav() {
         lastY.current = y;
       }
     }, 20);
-
-    return baja;
   }, []);
 
-  const goTo = useCallback((href: string) => {
-    const el = document.getElementById(href.replace(/^#/, ""));
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  const irA = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      const el = document.getElementById(href.replace(/^#/, ""));
+      if (!el) return;
+      event.preventDefault();
+      el.scrollIntoView({ behavior: "smooth" });
+    },
+    [],
+  );
 
   return (
     <header
@@ -47,9 +53,9 @@ export function Nav() {
       }}
     >
       <div className="mx-auto flex max-w-[1400px] items-center gap-6 px-6 py-4 md:px-12 lg:pl-28 lg:pr-20">
-        <button
-          type="button"
-          onClick={() => goTo("#inicio")}
+        <a
+          href="#inicio"
+          onClick={(e) => irA(e, "#inicio")}
           className="font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text)] transition-colors hover:text-[color:var(--accent)]"
         >
           {content.identity.firstName}
@@ -57,7 +63,7 @@ export function Nav() {
             {" "}
             {content.identity.lastName}
           </span>
-        </button>
+        </a>
 
         <span
           aria-hidden
@@ -66,20 +72,20 @@ export function Nav() {
 
         <nav className="ml-auto hidden items-center gap-8 md:flex">
           {content.nav.links.map((link) => (
-            <button
+            <a
               key={link.href}
-              type="button"
-              onClick={() => goTo(link.href)}
+              href={link.href}
+              onClick={(e) => irA(e, link.href)}
               className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)] transition-colors hover:text-[color:var(--accent)]"
             >
               {link.label}
-            </button>
+            </a>
           ))}
         </nav>
 
-        <button
-          type="button"
-          onClick={() => goTo("#contacto")}
+        <a
+          href="#contacto"
+          onClick={(e) => irA(e, "#contacto")}
           className="ml-auto flex items-center gap-2 border border-[color:var(--hairline)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)] md:ml-0"
         >
           <span
@@ -88,7 +94,7 @@ export function Nav() {
             style={{ opacity: "calc(0.4 + 0.6 * var(--trazo, 0.7))" }}
           />
           {content.nav.status}
-        </button>
+        </a>
       </div>
     </header>
   );

@@ -1,6 +1,8 @@
-"use client";
-
 import Image from "next/image";
+// Sin "use client": esta sección no usa estado ni efectos, así que se
+// renderiza solo en el servidor y no manda JavaScript al navegador.
+// <Reveal> sí es de cliente, y está bien: un componente de servidor
+// puede renderizar uno de cliente sin problema.
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";

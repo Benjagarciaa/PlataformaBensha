@@ -1,5 +1,7 @@
-"use client";
-
+// Sin "use client": esta sección no usa estado ni efectos, así que se
+// renderiza solo en el servidor y no manda JavaScript al navegador.
+// <Reveal> sí es de cliente, y está bien: un componente de servidor
+// puede renderizar uno de cliente sin problema.
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -9,13 +11,17 @@ import { content } from "@/content/data";
  * Proceso. La UNICA seccion numerada del sitio, porque acá el orden es
  * informacion real: no se puede diseñar antes de escribir el copy.
  *
- * OJO con el marcador: la celda lleva `pt-10` y el numero NO lleva margen.
- * Si el padding va en cero y el margen en el hijo, ese margen se escapa hacia
- * afuera (margin collapsing), empuja la celda entera hacia abajo y se lleva
- * puesto el marcador absoluto, que termina despegado de la linea de cota.
+ * UN SOLO DOM. Antes había dos listas, una para desktop y otra para mobile,
+ * y las dos viajaban al navegador aunque una estuviera oculta: un lector de
+ * pantalla leía los seis pasos dos veces y Google veía contenido duplicado.
+ * Ahora hay una sola lista y el CSS cambia la dirección.
  *
- * Desktop (>= xl): tira horizontal de seis pasos sobre una linea de cota.
- * Abajo de 1280px seis columnas quedan de 140px: ahi va la version vertical.
+ * El <Reveal> va ADENTRO del <li>, no envolviéndolo: <ol><div><li> es HTML
+ * inválido y rompe la numeración.
+ *
+ * OJO con el marcador: el <li> lleva padding, no margen en el hijo. Si el
+ * padding va en cero y el margen en el hijo, ese margen se escapa hacia
+ * afuera y arrastra al marcador absoluto.
  */
 export function Proceso() {
   const { proceso } = content;
@@ -25,74 +31,57 @@ export function Proceso() {
       <SectionTitle title={proceso.title} />
 
       <Reveal>
-        <p className="mb-16 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+        <p className="mb-14 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mb-16 md:text-[17px]">
           {proceso.intro}
         </p>
       </Reveal>
 
-      {/* ── Desktop ancho: cota horizontal ──────────────────────────── */}
-      <div className="relative hidden xl:block">
-        {/* la linea de cota con sus dos topes */}
-        <div
+      <div className="relative">
+        {/* cota vertical, hasta 1279px */}
+        <span
           aria-hidden
-          className="absolute left-0 right-0 top-[6px] h-px bg-[color:var(--hairline)]"
-        />
-        <div
-          aria-hidden
-          className="absolute left-0 top-0 h-[13px] w-px bg-[color:var(--accent)]"
-        />
-        <div
-          aria-hidden
-          className="absolute right-0 top-0 h-[13px] w-px bg-[color:var(--accent)]"
+          className="absolute bottom-8 left-[4px] top-2 w-px bg-[color:var(--hairline)] xl:hidden"
         />
 
-        <ol className="grid grid-cols-6 gap-6">
+        {/* cota horizontal, desde 1280px */}
+        <span
+          aria-hidden
+          className="absolute left-0 right-0 top-[6px] hidden h-px bg-[color:var(--hairline)] xl:block"
+        />
+        <span
+          aria-hidden
+          className="absolute left-0 top-0 hidden h-[13px] w-px bg-[color:var(--accent)] xl:block"
+        />
+        <span
+          aria-hidden
+          className="absolute right-0 top-0 hidden h-[13px] w-px bg-[color:var(--accent)] xl:block"
+        />
+
+        <ol className="flex flex-col xl:grid xl:grid-cols-6 xl:gap-6">
           {proceso.pasos.map((paso, index) => (
-            <Reveal key={paso.n} delay={index * 0.07}>
-              <li className="group relative pt-10">
-                <span
-                  aria-hidden
-                  className="absolute left-0 top-[2px] block h-[9px] w-[9px] border border-[color:var(--hairline)] bg-[color:var(--bg)] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-[color:var(--accent)] group-hover:bg-[color:var(--accent)]"
-                />
+            <li
+              key={paso.n}
+              className="group relative pb-10 pl-9 last:pb-0 xl:pb-0 xl:pl-0 xl:pt-10"
+            >
+              <span
+                aria-hidden
+                className="absolute left-0 top-[4px] block h-[9px] w-[9px] border border-[color:var(--accent)] bg-[color:var(--accent)] transition-all duration-300 xl:top-[2px] xl:border-[color:var(--hairline)] xl:bg-[color:var(--bg)] xl:group-hover:border-[color:var(--accent)] xl:group-hover:bg-[color:var(--accent)]"
+              />
+              <Reveal delay={index * 0.06}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
                   {paso.n}
                 </p>
-                <h3 className="mt-3 font-display text-[1.3rem] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)]">
+                <h3 className="mt-2 font-display text-[1.3rem] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)] md:text-[1.5rem] xl:mt-3 xl:text-[1.3rem]">
                   {paso.titulo}
                 </h3>
-                <p className="mt-2.5 text-[15px] leading-relaxed text-[color:var(--text-dim)]">
+                <p className="mt-2 max-w-[56ch] text-[15px] leading-relaxed text-[color:var(--text-dim)] md:text-[16px] xl:mt-2.5 xl:text-[15px]">
                   {paso.detalle}
                 </p>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ol>
       </div>
-
-      {/* ── Hasta 1279px: la misma cota, en vertical ────────────────── */}
-      <ol className="relative flex flex-col xl:hidden">
-        <span
-          aria-hidden
-          className="absolute bottom-4 left-[4px] top-2 w-px bg-[color:var(--hairline)]"
-        />
-        {proceso.pasos.map((paso) => (
-          <li key={paso.n} className="group relative pb-10 pl-9 last:pb-0">
-            <span
-              aria-hidden
-              className="absolute left-0 top-[4px] block h-[9px] w-[9px] border border-[color:var(--accent)] bg-[color:var(--accent)]"
-            />
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
-              {paso.n}
-            </p>
-            <h3 className="mt-2 font-display text-[1.3rem] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)] md:text-[1.5rem]">
-              {paso.titulo}
-            </h3>
-            <p className="mt-2 max-w-[56ch] text-[15px] leading-relaxed text-[color:var(--text-dim)] md:text-[16px]">
-              {paso.detalle}
-            </p>
-          </li>
-        ))}
-      </ol>
     </Section>
   );
 }

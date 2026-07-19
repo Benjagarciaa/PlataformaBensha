@@ -1,29 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { content } from "@/content/data";
 
 /**
  * Footer. Barra de estado, no un footer de links.
- * La hora arranca vacia para no romper la hidratacion.
+ *
+ * Sin reloj, por la misma razón que se sacó del hero: la hora no dice nada
+ * sobre el trabajo, y además dejaba un guion visible mientras hidrataba.
+ * El punto celeste sí se queda: respira con el reloj global y es lo único
+ * vivo del pie.
  */
 export function Footer() {
   const { footer, identity } = content;
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const formatter = new Intl.DateTimeFormat("es-AR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-      timeZone: "America/Argentina/Cordoba",
-    });
-
-    const tick = () => setTime(formatter.format(new Date()));
-    tick();
-    const interval = window.setInterval(tick, 1000);
-    return () => window.clearInterval(interval);
-  }, []);
 
   const backToTop = () => {
     const target = document.getElementById("inicio");
@@ -39,11 +27,8 @@ export function Footer() {
             © {footer.year} · {identity.name}
           </span>
           <span aria-hidden>·</span>
-          <span>{identity.location}</span>
-          <span aria-hidden>·</span>
           <span className="flex items-center gap-2">
-            {footer.clockLabel}
-            <span className="text-[color:var(--text)]">{time || "\u2013"}</span>
+            {identity.location}
             <span
               aria-hidden
               className="inline-block h-[6px] w-[6px] bg-[color:var(--accent)]"

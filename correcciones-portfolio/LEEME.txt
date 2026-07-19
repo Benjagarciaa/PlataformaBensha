@@ -1,0 +1,76 @@
+PAQUETE DE CORRECCIONES · portfolio Benjamin Garcia
+
+Ocho archivos. Extraé el ZIP sobre D:\benja-portfolio y decí que sí a
+reemplazar todo.
+
+--------------------------------------------------------------------------
+QUÉ CORRIGE CADA UNO
+--------------------------------------------------------------------------
+
+components/sections/Hero.tsx
+  El contador arrancaba en cero, así que el HTML publicado decía
+  "+0 PÁGINAS EN PRODUCCIÓN". Eso es lo que indexa Google y lo que ve
+  alguien con conexión lenta. Ahora arranca en el número real y la
+  animación baja y vuelve a subir.
+
+components/sections/Proceso.tsx
+  Tenía dos listas, una para desktop y otra para mobile, y las dos
+  viajaban al navegador. Ahora hay una sola y el CSS cambia la dirección.
+  Además el <li> ahora es hijo directo del <ol>: antes había un <div>
+  en el medio y por eso la numeración salía toda como "1.".
+  Sin "use client".
+
+components/sections/Herramientas.tsx
+  Mismo problema: las diez tarjetas estaban dos veces. Ahora una sola vez,
+  con el contenedor pasando de scroll horizontal en mobile a grilla en
+  desktop. Sin "use client".
+
+components/sections/SobreMi.tsx
+components/sections/Proyectos.tsx
+components/sections/Servicios.tsx
+  Sin "use client". No usan estado ni efectos, así que se renderizan solo
+  en el servidor y dejan de mandar JavaScript al navegador.
+
+components/sections/Footer.tsx
+  Sin reloj. Dejaba un guion visible al lado de "CÓRDOBA" mientras
+  hidrataba, y la hora no dice nada sobre el trabajo. Se saca por la misma
+  razón que se sacó del hero. El punto celeste que respira se queda.
+
+components/chrome/Nav.tsx
+  Los links pasan de <button> a <a href="#seccion">. Se ven igual, pero
+  ahora se pueden abrir en pestaña nueva, se pueden copiar, y los
+  buscadores entienden la estructura de la página.
+
+--------------------------------------------------------------------------
+DESPUÉS DE EXTRAER
+--------------------------------------------------------------------------
+
+    npm run build
+    git add .
+    git commit -m "Contadores, DOM unificado y componentes de servidor"
+    git push
+
+--------------------------------------------------------------------------
+CÓMO VERIFICAR QUE LLEGÓ
+--------------------------------------------------------------------------
+
+Esperá a que Vercel diga Ready y abrí:
+
+    view-source:https://plataformabensha.vercel.app
+
+Con Ctrl+F:
+
+  [ ] "+0"            no tiene que aparecer ninguno
+  [ ] "Investigación" tiene que aparecer UNA sola vez
+  [ ] "SHOPIFY"       tiene que aparecer UNA sola vez
+
+Si las tres dan bien, quedó todo aplicado.
+
+--------------------------------------------------------------------------
+QUÉ QUEDA, Y NO ES CÓDIGO
+--------------------------------------------------------------------------
+
+  [ ] El testimonio de Lautaro. Es lo único que dice otro sobre vos.
+  [ ] El dominio propio, y actualizar seo.url con él.
+  [ ] Volver a correr Lighthouse: con las cinco secciones de servidor y el
+      DOM duplicado resuelto, deberías cruzar 90.

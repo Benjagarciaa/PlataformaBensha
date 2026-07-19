@@ -9,8 +9,9 @@ import { content } from "@/content/data";
  * Hero.
  *
  * Desktop: UNA lamina. El dibujo arriba y el cajetin como banda al pie, dentro
- * del mismo marco. En un plano tecnico el rotulo va siempre en el angulo
- * inferior derecho de la lamina, nunca suelto arriba.
+ * del mismo marco. En un plano tecnico el rotulo va siempre en el angulo inferior
+ * derecho de la lamina, nunca suelto arriba: dos cajas separadas no tenian donde
+ * apoyarse y la de arriba arrancaba mucho antes que el titular.
  *
  * Mobile: los numeros grandes contando desde cero. El wireframe vertical mide
  * 800px en un celular y ahi no se lee.
@@ -22,19 +23,27 @@ function scrollTo(hash: string) {
   el.scrollIntoView({ behavior: "smooth" });
 }
 
-/** Cuenta de 0 al numero final una sola vez, al montar. */
+/**
+ * Cuenta hasta el número final una sola vez, al montar.
+ *
+ * Arranca en el valor FINAL, no en cero. El HTML que renderiza el servidor
+ * tiene que traer el número real: si arranca en 0, eso es lo que ve Google y
+ * lo que ve alguien con conexión lenta antes de que hidrate. Nadie quiere que
+ * su portfolio diga "+0 páginas en producción".
+ */
 function CountUp({ to, prefix = "" }: { to: number; prefix?: string }) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(to);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const DURATION = reduced ? 0 : 1500;
+    // Con reduced-motion no se anima: ya está en el valor final.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const DURATION = 1500;
     const start = performance.now();
     let raf = 0;
 
     const loop = (now: number) => {
-      const progress =
-        DURATION === 0 ? 1 : Math.min(1, (now - start) / DURATION);
+      const progress = Math.min(1, (now - start) / DURATION);
       const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(to * eased));
       if (progress < 1) raf = window.requestAnimationFrame(loop);
@@ -87,7 +96,7 @@ function PuntoEstado() {
   );
 }
 
-/** Mobile: dos numeros monumentales. */
+/** Mobile: dos numeros monumentales. Es lo que se recuerda de un scroll rapido. */
 function CifrasMobile() {
   const { cifras, rotulo } = content.hero;
 
@@ -127,6 +136,7 @@ function Lamina() {
     <div className="relative hidden border border-[color:var(--hairline)] bg-[color:var(--surface)]/70 lg:block">
       <CornerMarks />
 
+      {/* área de dibujo */}
       <div className="px-6 pb-5 pt-8">
         <div className="mx-auto max-w-[340px]">
           <PlanoCanvas />
@@ -136,6 +146,7 @@ function Lamina() {
         </p>
       </div>
 
+      {/* cajetín: en un plano va al pie, en el ángulo inferior derecho */}
       <div className="border-t border-[color:var(--hairline)]">
         <div className="grid grid-cols-3">
           {rotulo.cells.map((cell, index) => (
@@ -190,6 +201,7 @@ export function Hero() {
       className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1400px] flex-col justify-center px-6 py-20 md:px-12 md:py-24 lg:pl-28 lg:pr-20"
     >
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-16">
+        {/* ── La tesis ──────────────────────────────────────────────── */}
         <div className="max-w-[46rem]">
           <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text-faint)] md:text-[11px]">
             {identity.firstName} {identity.lastName}
@@ -233,6 +245,7 @@ export function Hero() {
           </div>
         </div>
 
+        {/* ── La lámina: solo desktop ───────────────────────────────── */}
         <Lamina />
       </div>
     </section>
