@@ -9,6 +9,7 @@ import { LenisProvider } from "@/components/chrome/LenisProvider";
 import { Grilla } from "@/components/chrome/Grilla";
 import { Grano } from "@/components/chrome/Grano";
 import { Nav } from "@/components/chrome/Nav";
+import { Blindaje } from "@/components/chrome/Blindaje";
 import { RielScroll } from "@/components/plano/RielScroll";
 
 /* ============================================================
@@ -110,6 +111,7 @@ export default function RootLayout({
 
         <TrazoProvider>
           <LenisProvider>
+            <Blindaje />
             <Grilla />
             <Grano />
             <Nav />

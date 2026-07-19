@@ -2,14 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { content } from "@/content/data";
+import { onFrame } from "@/lib/raf";
 
 /**
- * Nav. Barra fija que se esconde al bajar y vuelve al subir: en una pagina de
- * scroll largo, una barra siempre visible roba altura sin dar nada a cambio.
+ * Nav. Barra fija que se esconde al bajar y vuelve al subir.
  *
- * Sin hamburguesa en mobile. Ocho secciones en un menu desplegable es peor que
- * no tenerlo: la pagina es un solo scroll y lo unico que hace falta a mano es
- * llegar al presupuesto.
+ * Corre a 20fps sobre el loop compartido: esto solo compara dos números y no
+ * hace falta que se ejecute sesenta veces por segundo.
  */
 export function Nav() {
   const [hidden, setHidden] = useState(false);
@@ -17,9 +16,7 @@ export function Nav() {
   const lastY = useRef(0);
 
   useEffect(() => {
-    let raf = 0;
-
-    const measure = () => {
+    const baja = onFrame(() => {
       const y = window.scrollY;
       setSolid(y > 40);
       // margen de 8px para que un temblor del trackpad no la haga parpadear
@@ -27,11 +24,9 @@ export function Nav() {
         setHidden(y > lastY.current && y > 240);
         lastY.current = y;
       }
-      raf = window.requestAnimationFrame(measure);
-    };
+    }, 20);
 
-    raf = window.requestAnimationFrame(measure);
-    return () => window.cancelAnimationFrame(raf);
+    return baja;
   }, []);
 
   const goTo = useCallback((href: string) => {

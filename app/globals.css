@@ -66,3 +66,31 @@ body {
     scroll-behavior: auto !important;
   }
 }
+/* ============================================================
+   Blindaje anticopia
+   El atributo data-blindado lo pone <Blindaje /> y solo aparece
+   en producción, así en desarrollo podés seguir seleccionando.
+   ============================================================ */
+ 
+html[data-blindado="1"] body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+ 
+/* Lo que SÍ se puede seleccionar y copiar: el formulario y los datos
+   de contacto. Bloquear esto sería impedirle copiar el mail justo al
+   visitante que te quiere escribir. */
+html[data-blindado="1"] input,
+html[data-blindado="1"] textarea,
+html[data-blindado="1"] [data-copiable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+ 
+/* Las imágenes no se arrastran al escritorio */
+html[data-blindado="1"] img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+ 

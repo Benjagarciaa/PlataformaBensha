@@ -2,58 +2,83 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { content } from "@/content/data";
+import { onFrame } from "@/lib/raf";
 
 /**
  * El riel de profundidad. Carril fijo del margen izquierdo, desktop >= lg.
  *
  * No es decoracion: mide profundidad de scroll, que es una de las metricas con
- * las que se optimiza una landing de verdad. La estructura dice algo cierto.
+ * las que se optimiza una landing de verdad.
  *
- * Medicion por rAF y no por evento de scroll: con Lenis los listeners se pierden
- * o llegan tarde, y ya nos comimos ese bug una vez en Anatomia.
+ * RENDIMIENTO. Antes esto media las once secciones con getBoundingClientRect en
+ * CADA frame. Cada una de esas llamadas fuerza al navegador a recalcular el
+ * layout: once por frame, sesenta veces por segundo. Ahora:
+ *  - las secciones se buscan UNA vez y quedan cacheadas
+ *  - las posiciones se leen con offsetTop, que no fuerza reflow
+ *  - el progreso corre a 30fps, que ya se ve fluido
+ *  - la seccion activa se calcula a 8fps, que el ojo ni nota
  * En mobile no existe: degrada a una barra de 2px al borde izquierdo.
  */
 
 const TICKS = [20, 40, 60, 80];
 
 export function RielScroll() {
-  const [progress, setProgress] = useState(0);
+  const [pct, setPct] = useState(0);
   const [activeId, setActiveId] = useState<string>(content.waypoints[0].id);
   const [visible, setVisible] = useState(false);
-  const rafRef = useRef(0);
+
+  const seccionesRef = useRef<{ id: string; el: HTMLElement }[]>([]);
 
   useEffect(() => {
-    let lastActive = "";
+    // se resuelven una sola vez, no en cada frame
+    const cachear = () => {
+      seccionesRef.current = content.waypoints
+        .map((w) => {
+          const el = document.getElementById(w.id);
+          return el ? { id: w.id, el } : null;
+        })
+        .filter(Boolean) as { id: string; el: HTMLElement }[];
+    };
+    cachear();
 
-    const measure = () => {
+    // ── progreso: fluido, pero solo lee scrollY ──────────────────────
+    const bajaProgreso = onFrame(() => {
       const doc = document.documentElement;
       const max = doc.scrollHeight - window.innerHeight;
-      const y = window.scrollY || doc.scrollTop;
-
+      const y = window.scrollY;
       const ratio = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
-      setProgress(ratio);
+
+      setPct((actual) => {
+        const nuevo = Math.round(ratio * 100);
+        return actual === nuevo ? actual : nuevo;
+      });
       setVisible(y > 400);
+    }, 30);
 
-      // waypoint activo: la seccion que cruza el 40% de la pantalla
-      const line = window.innerHeight * 0.4;
-      let current = content.waypoints[0].id;
+    // ── seccion activa: 8 veces por segundo alcanza y sobra ──────────
+    let ultima = "";
+    const bajaActiva = onFrame(() => {
+      const linea = window.scrollY + window.innerHeight * 0.4;
+      let actual = content.waypoints[0].id;
 
-      for (const point of content.waypoints) {
-        const el = document.getElementById(point.id);
-        if (!el) continue;
-        if (el.getBoundingClientRect().top <= line) current = point.id;
+      for (const s of seccionesRef.current) {
+        // offsetTop no fuerza recalculo de layout, getBoundingClientRect sí
+        if (s.el.offsetTop <= linea) actual = s.id;
       }
 
-      if (current !== lastActive) {
-        lastActive = current;
-        setActiveId(current);
+      if (actual !== ultima) {
+        ultima = actual;
+        setActiveId(actual);
       }
+    }, 8);
 
-      rafRef.current = window.requestAnimationFrame(measure);
+    window.addEventListener("resize", cachear);
+
+    return () => {
+      bajaProgreso();
+      bajaActiva();
+      window.removeEventListener("resize", cachear);
     };
-
-    rafRef.current = window.requestAnimationFrame(measure);
-    return () => window.cancelAnimationFrame(rafRef.current);
   }, []);
 
   const goTo = useCallback((id: string) => {
@@ -64,17 +89,15 @@ export function RielScroll() {
     el.focus({ preventScroll: true });
   }, []);
 
-  const pct = Math.round(progress * 100);
-
   return (
     <>
-      {/* mobile: solo el progreso, sin waypoints ni lectura */}
+      {/* mobile: solo el progreso */}
       <div
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-30 h-dvh w-[2px] bg-[color:var(--hairline)] lg:hidden"
       >
         <div
-          className="w-full origin-top bg-[color:var(--accent)]"
+          className="w-full bg-[color:var(--accent)]"
           style={{ height: `${pct}%` }}
         />
       </div>
@@ -85,7 +108,6 @@ export function RielScroll() {
         className="pointer-events-none fixed left-0 top-0 z-30 hidden h-dvh w-[96px] transition-opacity duration-700 lg:block"
         style={{ opacity: visible ? 1 : 0 }}
       >
-        {/* lectura en vertical */}
         <p
           className="absolute left-[18px] top-[92px] font-mono text-[9px] uppercase tracking-[0.24em] text-[color:var(--text-faint)]"
           style={{ writingMode: "vertical-rl" }}
@@ -94,14 +116,11 @@ export function RielScroll() {
           <span className="ml-3 text-[color:var(--accent)]">{pct}%</span>
         </p>
 
-        {/* la linea base y la que crece con el scroll */}
         <div className="absolute bottom-[120px] left-[48px] top-[120px] w-px bg-[color:var(--hairline)]">
           <div
-            className="w-full origin-top bg-[color:var(--accent)]"
+            className="w-full bg-[color:var(--accent)]"
             style={{ height: `${pct}%` }}
           />
-
-          {/* cotas cada 20% */}
           {TICKS.map((tick) => (
             <span
               key={tick}
@@ -112,7 +131,6 @@ export function RielScroll() {
           ))}
         </div>
 
-        {/* waypoints: indicador y navegacion a la vez */}
         <ul className="pointer-events-auto absolute bottom-[120px] left-[48px] top-[120px] w-px">
           {content.waypoints.map((point, index) => {
             const top = (index / (content.waypoints.length - 1)) * 100;
