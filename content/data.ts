@@ -148,8 +148,8 @@ export const content = {
       {
         id: "cierre",
         n: "09",
-        name: "Cierre y CTA fijo",
-        note: "La barra que sigue al scroll. El botón no se puede perder de vista nunca.",
+        name: "Cierre y botón fijo",
+        note: "La barra que te sigue mientras bajás. El botón no se puede perder de vista nunca.",
       },
     ],
   },
@@ -474,7 +474,7 @@ export const content = {
             titulo: "JavaScript",
             institucion: "Coderhouse, certificado por PedidosYa",
             detalle:
-              "Cuarenta horas y media. Todas las animaciones, los bundles, las barras fijas y los popups que armo salen de acá.",
+              "Cuarenta horas y media. Todas las animaciones, los combos, las barras fijas y las ventanas emergentes que armo salen de acá.",
           },
           {
             id: "utn",
@@ -529,7 +529,7 @@ export const content = {
             titulo: "Desarrollo de ecommerce",
             institucion: "Freelance",
             detalle:
-              "Más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y el exterior. Shopify y Tienda Nube. Copy, diseño, imágenes, código y medición.",
+              "Más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y el exterior. Shopify y Tienda Nube. Textos, diseño, imágenes, código y medición.",
           },
           {
             id: "role-media",
@@ -626,7 +626,7 @@ export const content = {
   // ── RIEL DE PROFUNDIDAD ───────────────────────────────────────────────
   riel: {
     label: "AVANCE EN LA PÁGINA",
-    aria: "Navegación por secciones e indicador de scroll",
+    aria: "Navegación por secciones e indicador de avance",
   },
 
   // Los ids tienen que existir como id de una <Section> y respetar el orden
