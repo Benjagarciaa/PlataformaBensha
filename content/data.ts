@@ -252,14 +252,14 @@ export const content = {
         tag: "EL SERVICIO PRINCIPAL",
         name: "Página de producto que vende",
         description:
-          "La página completa: textos, diseño, imágenes, programación y medición. Bloque por bloque adentro de tu tienda, sin apps que la frenen.",
+          "La página completa: textos, diseño, imágenes, programación y medición. Bloque por bloque adentro de tu tienda, sin apps que la hagan lenta.",
       },
       {
         id: "tienda",
         tag: "DESDE CERO",
-        name: "Tienda completa",
+        name: "Tienda o sitio completo",
         description:
-          "Shopify o Tienda Nube: estructura, catálogo, carrito de compra, medios de pago y envíos, lista para vender.",
+          "Shopify o Tienda Nube para vender productos, o un sitio completo para tu negocio de servicios: estructura, catálogo o cotizador, reseñas, medios de pago y contacto. Listo para funcionar.",
       },
       {
         id: "blindaje",
