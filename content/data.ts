@@ -103,7 +103,7 @@ export const content = {
         id: "hero",
         n: "01",
         name: "Hero y promesa",
-        note: "Tenés menos de 3 segundos. Acá va el problema en las palabras del cliente, no el nombre del producto.",
+        note: "Tenés menos de 3 segundos para enganchar. Va el problema en las palabras del cliente, no el nombre del producto.",
       },
       {
         id: "problema",
@@ -145,7 +145,7 @@ export const content = {
         id: "faq",
         n: "08",
         name: "Preguntas frecuentes",
-        note: "Las objeciones que quedaron. Cada pregunta es una venta que se estaba por perder.",
+        note: "Las dudas que quedaron sin responder. Cada una es una venta que se estaba por perder.",
       },
       {
         id: "cierre",
