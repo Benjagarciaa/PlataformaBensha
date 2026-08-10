@@ -70,10 +70,10 @@ export const content = {
   sobreMi: {
     title: "Doscientas páginas después.",
     paragraphs: [
-      "Soy Benjamín, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y afuera. Muchos de mis clientes testean varias marcas a la vez: lanzan, miden y vuelven a lanzar. Yo soy el que arma la página cada vez.",
-      "Ese ritmo es la diferencia. Cuando una página se cae en pleno lanzamiento, cuando el botón de pagar falla en un celular viejo, cuando de un día para el otro la página deja de vender sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
-      "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja programar a mano cada parte de tu tienda, con código propio, en vez de depender de un armador de páginas con abono mensual que te limita a lo que ya trae la plantilla.",
-      "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en las ventas.",
+      "Soy Benjamín, desarrollador de ecommerce en Córdoba. En los últimos años hice más de 200 páginas de producto para más de 130 marcas, en Argentina y en el exterior. La mayoría de mis clientes prueban varias marcas a la vez: lanzan, miden y vuelven a lanzar. En cada intento, la página la armo yo.",
+      "Ese volumen es la diferencia. Cuando una página se cae en pleno lanzamiento, cuando el botón de pagar falla en un celular viejo o de un día para el otro deja de vender sin explicación, ya lo viví muchas veces y sé exactamente dónde mirar.",
+      "Detrás hay formación de verdad: hice la Tecnicatura en Programación de la UTN en la mitad del tiempo previsto y terminé la carrera de desarrollo web primero de mi camada. No lo cuento por el diploma, sino porque es lo que me permite programar tu tienda a medida, con código propio, sin depender de plantillas ni de apps que la frenen.",
+      "Y conozco el mercado argentino, que cambia todo: precios en pesos, cuotas, Mercado Pago, la forma de comprar y de hablar de acá. Una página traducida del inglés se nota, y se nota en las ventas.",
     ],
     fichaLabel: "FICHA TÉCNICA",
     ficha: [
