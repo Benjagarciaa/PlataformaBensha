@@ -202,7 +202,7 @@ export const content = {
           "Para empresas",
           "Cómo trabajamos",
         ],
-        captura: null,
+        captura: "/proyectos/salguero.webp",
         url: "https://salguerogourmet.vercel.app",
       },
       {
