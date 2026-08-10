@@ -93,7 +93,7 @@ export const content = {
     planoLabel: "BLOQUE ACTIVO",
     deslizaLabel: "DESLIZÁ →",
     intro:
-      "Una landing no es una página larga con fotos lindas. Es una secuencia. Cada bloque está donde está porque responde la objeción que aparece justo antes.",
+      "Una página de venta no es una página larga con fotos lindas. Es una secuencia. Cada bloque está donde está porque responde la objeción que aparece justo antes.",
     outro:
       "Ese orden no es un molde. Cambia según el producto, el precio y quién compra. Pero la lógica es siempre la misma: cada bloque se gana el derecho a que sigas bajando.",
     blocks: [
@@ -257,7 +257,7 @@ export const content = {
         tag: "DESDE CERO",
         name: "Tienda completa",
         description:
-          "Shopify o Tienda Nube: estructura, catálogo, checkout, medios de pago y envíos, lista para vender.",
+          "Shopify o Tienda Nube: estructura, catálogo, carrito de compra, medios de pago y envíos, lista para vender.",
       },
       {
         id: "blindaje",
@@ -361,7 +361,7 @@ export const content = {
           { name: "Liquid", w: 700 },
           { name: "HTML y CSS", w: 700 },
           { name: "JavaScript", w: 700 },
-          { name: "Responsive", w: 700 },
+          { name: "Adaptado al celular", w: 700 },
           { name: "Tienda Nube", w: 600 },
           { name: "React", w: 500 },
         ],
@@ -370,20 +370,20 @@ export const content = {
         id: "conversion",
         label: "CONVERSIÓN",
         items: [
-          { name: "Estructura de landing", w: 700 },
+          { name: "Estructura de venta", w: 700 },
           { name: "Combos y precios", w: 700 },
-          { name: "Prueba social", w: 700 },
-          { name: "Barras fijas y popups", w: 700 },
+          { name: "Opiniones de clientes", w: 700 },
+          { name: "Barras fijas y avisos", w: 700 },
           { name: "Pago directo", w: 600 },
-          { name: "Tests", w: 500 },
+          { name: "Pruebas para vender más", w: 500 },
         ],
       },
       {
         id: "contenido",
         label: "CONTENIDO",
         items: [
-          { name: "Copy argentino", w: 700 },
-          { name: "Advertorials", w: 700 },
+          { name: "Textos de venta argentinos", w: 700 },
+          { name: "Notas de revista", w: 700 },
           { name: "Imágenes con IA", w: 600 },
           { name: "Edición de video", w: 600 },
           { name: "Fotografía de producto", w: 500 },
@@ -394,9 +394,9 @@ export const content = {
         label: "PROTECCIÓN Y MEDICIÓN",
         items: [
           { name: "Blindaje anticopia", w: 700 },
-          { name: "Ofuscación", w: 600 },
-          { name: "Analytics", w: 500 },
-          { name: "Píxeles y eventos", w: 500 },
+          { name: "Código ilegible", w: 600 },
+          { name: "Medir visitas y ventas", w: 500 },
+          { name: "Rendimiento de anuncios", w: 500 },
         ],
       },
     ],
@@ -625,7 +625,7 @@ export const content = {
 
   // ── RIEL DE PROFUNDIDAD ───────────────────────────────────────────────
   riel: {
-    label: "PROFUNDIDAD DE SCROLL",
+    label: "AVANCE EN LA PÁGINA",
     aria: "Navegación por secciones e indicador de scroll",
   },
 
