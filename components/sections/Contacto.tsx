@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -129,6 +129,29 @@ export function Contacto() {
   }, [form]);
 
   const listo = completos === 4;
+
+  // Preseleccion: al tocar un servicio (con data-servicio) en la seccion
+  // "Que hago", se elige esa opcion y se baja suave hasta el cotizador.
+  // El <a href="#contacto"> sigue funcionando aunque no haya JavaScript.
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const link = target?.closest("[data-servicio]");
+      if (!link) return;
+      const opcion = contacto.opciones.find(
+        (o) => o.id === link.getAttribute("data-servicio"),
+      );
+      if (!opcion) return;
+      event.preventDefault();
+      setForm((current) => ({ ...current, tipo: opcion.name }));
+      setErrors((current) => ({ ...current, tipo: undefined }));
+      document
+        .getElementById("contacto")
+        ?.scrollIntoView({ behavior: "smooth" });
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [contacto.opciones]);
 
   const handleSubmit = () => {
     const next: Errors = {};
