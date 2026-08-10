@@ -31,7 +31,7 @@ export const content = {
       after: "una por una.",
     },
     subtitle:
-      "Trabajo con marcas que lanzan productos todo el tiempo, en Argentina y afuera. Programo la página a mano dentro de tu tienda, no con un armador que te cobra todos los meses y te limita a una plantilla. El texto, el diseño, las imágenes y la programación los hago yo.",
+      "Ayudo a marcas de Argentina y del exterior a vender más con páginas de producto hechas a medida. Todo dentro de tu tienda, sin plantillas ni costos mensuales que te aten. Una sola persona a cargo de todo: texto, diseño, imágenes y programación.",
     ctaPrimary: "Pedí tu presupuesto",
     ctaSecondary: "Ver proyectos",
 
