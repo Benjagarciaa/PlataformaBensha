@@ -82,6 +82,9 @@ export const metadata: Metadata = {
     description: content.seo.description,
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: "0HeNu7KdC5VJQgEYX2DyUiZBsWpJ4CCLXCU-eJByWpk",
+  },
 };
 
 export const viewport: Viewport = {

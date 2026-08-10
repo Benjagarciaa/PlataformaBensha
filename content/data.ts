@@ -13,7 +13,7 @@ export const content = {
     name: "Benjamin Garcia",
     firstName: "BENJAMIN",
     lastName: "GARCIA",
-    role: "Desarrollador de ecommerce y especialista en conversión",
+    role: "Desarrollador de ecommerce, especialista en páginas que venden",
     location: "Córdoba, Argentina",
     locationShort: "CBA · AR",
     email: "bmurgarcia@gmail.com",
@@ -31,7 +31,7 @@ export const content = {
       after: "una por una.",
     },
     subtitle:
-      "Trabajo con marcas que testean productos en serie, en Argentina y afuera. Liquid y JavaScript adentro de tu tema, no un page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.",
+      "Trabajo con marcas que lanzan productos todo el tiempo, en Argentina y afuera. Programo la página a mano dentro de tu tienda, no con un armador que te cobra todos los meses y te limita a una plantilla. El texto, el diseño, las imágenes y la programación los hago yo.",
     ctaPrimary: "Pedí tu presupuesto",
     ctaSecondary: "Ver proyectos",
 
@@ -54,13 +54,13 @@ export const content = {
     },
 
     wireframe: [
-      { id: "hero", label: "HERO" },
+      { id: "hero", label: "INICIO" },
       { id: "problema", label: "PROBLEMA" },
-      { id: "mecanismo", label: "MECANISMO" },
-      { id: "prueba", label: "PRUEBA SOCIAL" },
-      { id: "bundles", label: "BUNDLES" },
+      { id: "mecanismo", label: "CÓMO FUNCIONA" },
+      { id: "prueba", label: "OPINIONES" },
+      { id: "bundles", label: "COMBOS" },
       { id: "garantia", label: "GARANTÍA" },
-      { id: "faq", label: "FAQ" },
+      { id: "faq", label: "PREGUNTAS" },
     ],
     wireframeCaption: "ASÍ SE ESTRUCTURA UNA PÁGINA QUE VENDE",
   },
@@ -70,9 +70,9 @@ export const content = {
     title: "Doscientas páginas después.",
     paragraphs: [
       "Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y afuera. Muchos de mis clientes testean varias marcas a la vez: lanzan, miden y vuelven a lanzar. Yo soy el que arma la página cada vez.",
-      "Ese ritmo es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
-      "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja escribir Liquid y JavaScript adentro de tu tema, en vez de depender de un page builder con abono mensual que te limita a lo que trae la plantilla.",
-      "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en la conversión.",
+      "Ese ritmo es la diferencia. Cuando una página se cae en pleno lanzamiento, cuando el botón de pagar falla en un celular viejo, cuando de un día para el otro la página deja de vender sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
+      "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja programar a mano cada parte de tu tienda, con código propio, en vez de depender de un armador de páginas con abono mensual que te limita a lo que ya trae la plantilla.",
+      "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en las ventas.",
     ],
     fichaLabel: "FICHA TÉCNICA",
     ficha: [
@@ -113,13 +113,13 @@ export const content = {
         id: "mecanismo",
         n: "03",
         name: "Cómo funciona",
-        note: "El mecanismo, explicado simple. Sin esto, el producto es una promesa sin respaldo.",
+        note: "Cómo funciona el producto, explicado simple. Sin esto, el producto es una promesa sin respaldo.",
       },
       {
         id: "prueba",
         n: "04",
-        name: "Prueba social",
-        note: "Va justo acá porque la desconfianza aparece cuando la promesa suena demasiado buena.",
+        name: "Opiniones de clientes",
+        note: "Van justo acá porque la desconfianza aparece cuando la promesa suena demasiado buena.",
       },
       {
         id: "antes-despues",
@@ -130,7 +130,7 @@ export const content = {
       {
         id: "bundles",
         n: "06",
-        name: "Bundles y precio",
+        name: "Combos y precio",
         note: "El precio se muestra recién cuando el valor ya está construido. Tres opciones, la del medio destacada.",
       },
       {
@@ -162,7 +162,7 @@ export const content = {
     eyebrow: "PÁGINAS EN PRODUCCIÓN",
     title: "Proyectos",
     intro:
-      "El primero facturó 25 millones de pesos en un solo día. Los otros tres muestran las tres cosas que hago además de programar: escribir el copy, armar la identidad visual y generar las imágenes. Trabajo con gente que testea productos en serie, así que cuando uno pega la página tiene que estar lista ayer.",
+      "El primero facturó 25 millones de pesos en un solo día. Los otros tres muestran las tres cosas que hago además de programar: escribir los textos, armar la identidad visual y generar las imágenes. Trabajo con gente que lanza productos todo el tiempo, así que cuando uno pega la página tiene que estar lista ayer.",
     bloquesLabel: "BLOQUES CONSTRUIDOS",
     verLabel: "VER LA PÁGINA",
     sinCaptura: "CAPTURA PENDIENTE",
@@ -174,14 +174,14 @@ export const content = {
         producto: "Shampoo de tinte instantáneo · para Lautaro Cardozo",
         rubro: "ECOMMERCE · CÓRDOBA",
         descripcion:
-          "Página de producto completa para el lanzamiento: selector de cinco tonos, bundles de una, dos y tres unidades con elección de color por unidad, cuotas sin interés, garantía de 30 días y sellos de pago seguro. Validó el primer día que salió y llegó a facturar 25 millones de pesos en una sola jornada. El producto sigue vendiéndose hoy.",
+          "Página de producto completa para el lanzamiento: selector de cinco tonos, combos de una, dos y tres unidades con elección de color por unidad, cuotas sin interés, garantía de 30 días y sellos de pago seguro. Validó el primer día que salió y llegó a facturar 25 millones de pesos en una sola jornada. El producto sigue vendiéndose hoy.",
         bloques: [
           "Selector de tonos",
-          "Bundles",
+          "Combos",
           "Color por unidad",
           "Cuotas",
           "Garantía",
-          "Prueba social",
+          "Opiniones",
         ],
         captura: "/proyectos/tinte-pro.webp",
         url: null,
@@ -192,12 +192,12 @@ export const content = {
         producto: "Suplemento de bienestar íntimo",
         rubro: "SUPLEMENTOS",
         descripcion:
-          "Bloque educativo con acordeón de cuatro solapas: qué destruye el antibiótico, qué no reconstruye, dónde no llega y en qué punto exacto entra el producto. El que ya sabe pasa de largo, el que duda abre y se queda leyendo.",
+          "Bloque educativo con un desplegable de cuatro pestañas: qué destruye el antibiótico, qué no reconstruye, dónde no llega y en qué punto exacto entra el producto. El que ya sabe pasa de largo, el que duda lo abre y se queda leyendo.",
         bloques: [
           "Bloque educativo",
-          "Acordeón",
-          "Copy de objeciones",
-          "Bundles",
+          "Desplegable",
+          "Respuesta a dudas",
+          "Combos",
           "Barra fija",
         ],
         captura: "/proyectos/probiotico.webp",
@@ -209,10 +209,10 @@ export const content = {
         producto: "Suero para el cuero cabelludo",
         rubro: "COSMÉTICA",
         descripcion:
-          "Infografía de mecanismo con un corte del cuero cabelludo, los cuatro puntos donde actúa el producto señalados sobre la ilustración, y solapas para recorrerlos uno por uno. La ilustración se generó con IA: cero sesión de fotos.",
+          "Un dibujo del cuero cabelludo por dentro que muestra cómo funciona: los cuatro puntos donde actúa el producto marcados sobre la ilustración, con pestañas para recorrerlos uno por uno. La ilustración la generé con inteligencia artificial: cero sesión de fotos.",
         bloques: [
-          "Infografía de mecanismo",
-          "Solapas",
+          "Dibujo explicativo",
+          "Pestañas",
           "Ilustración con IA",
           "Identidad visual",
           "Barra de anuncios",
@@ -226,10 +226,10 @@ export const content = {
         producto: "Extracto de ajo envejecido sin olor",
         rubro: "SUPLEMENTOS",
         descripcion:
-          "Advertorial con formato de nota: titular editorial en serif, bajada en itálica, ficha de la profesional que revisa el contenido e imágenes generadas para ilustrar el problema. Se lee como un artículo, no como un aviso.",
+          "Una página con forma de nota de revista: titular grande, bajada en itálica, la ficha de la profesional que revisa el contenido e imágenes hechas para ilustrar el problema. Se lee como un artículo, no como una publicidad.",
         bloques: [
-          "Advertorial",
-          "Formato editorial",
+          "Nota de revista",
+          "Diseño editorial",
           "Revisión profesional",
           "Imágenes IA",
           "Ficha técnica",
@@ -250,7 +250,7 @@ export const content = {
         tag: "EL SERVICIO PRINCIPAL",
         name: "Página de producto que vende",
         description:
-          "La página completa: copy, diseño, imágenes, código y medición. Bloque por bloque adentro de tu tienda, sin apps que la frenen.",
+          "La página completa: textos, diseño, imágenes, programación y medición. Bloque por bloque adentro de tu tienda, sin apps que la frenen.",
       },
       {
         id: "tienda",
@@ -264,7 +264,7 @@ export const content = {
         tag: "PROTECCIÓN",
         name: "Blindaje de la página",
         description:
-          "Sin click derecho, sin selección de texto, sin arrastrar imágenes y con los atajos de inspección bloqueados. Que tu competencia no te clone la página en una tarde.",
+          "Sin click derecho, sin poder seleccionar el texto ni arrastrar las imágenes, y con las herramientas para copiar el código bloqueadas. Que tu competencia no te clone la página en una tarde.",
       },
       {
         id: "optimizacion",
@@ -296,7 +296,7 @@ export const content = {
       },
       {
         n: "03",
-        titulo: "Copy",
+        titulo: "Textos",
         detalle:
           "Escribo la página entera antes de diseñar nada. Si el texto no vende, el diseño no lo salva.",
       },
@@ -371,10 +371,10 @@ export const content = {
         label: "CONVERSIÓN",
         items: [
           { name: "Estructura de landing", w: 700 },
-          { name: "Bundles y precios", w: 700 },
+          { name: "Combos y precios", w: 700 },
           { name: "Prueba social", w: 700 },
           { name: "Barras fijas y popups", w: 700 },
-          { name: "Checkout directo", w: 600 },
+          { name: "Pago directo", w: 600 },
           { name: "Tests", w: 500 },
         ],
       },
@@ -466,7 +466,7 @@ export const content = {
             titulo: "Ciberseguridad",
             institucion: "Coderhouse, certificado por Delta Protect",
             detalle:
-              "Treinta horas. Es lo que respalda el servicio de blindaje: saber cómo se copia y se raspa una página es lo que permite hacerla difícil de copiar.",
+              "Treinta horas. Es lo que respalda el servicio de blindaje: saber cómo se copia y se roba una página es lo que me permite hacerla difícil de copiar.",
           },
           {
             id: "javascript",
@@ -581,7 +581,7 @@ export const content = {
       { id: "tienda", name: "Tienda completa", hint: "SHOPIFY O TIENDA NUBE" },
       { id: "optimizacion", name: "Optimización", hint: "SOBRE LO QUE YA TENÉS" },
       { id: "blindaje", name: "Blindaje", hint: "QUE NO TE COPIEN" },
-      { id: "copy", name: "Copy y creativos", hint: "TEXTOS E IMÁGENES" },
+      { id: "copy", name: "Textos e imágenes", hint: "PARA TU PÁGINA Y TUS ANUNCIOS" },
       { id: "otro", name: "Otra cosa", hint: "CONTAME QUÉ NECESITÁS" },
     ],
     errores: {
