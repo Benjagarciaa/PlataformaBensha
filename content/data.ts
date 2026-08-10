@@ -10,9 +10,9 @@
 
 export const content = {
   identity: {
-    name: "Benjamin Garcia",
-    firstName: "BENJAMIN",
-    lastName: "GARCIA",
+    name: "Benjamín García",
+    firstName: "BENJAMÍN",
+    lastName: "GARCÍA",
     role: "Desarrollador de ecommerce, especialista en páginas que venden",
     location: "Córdoba, Argentina",
     locationShort: "CBA · AR",
@@ -63,13 +63,14 @@ export const content = {
       { id: "faq", label: "PREGUNTAS" },
     ],
     wireframeCaption: "ASÍ SE ESTRUCTURA UNA PÁGINA QUE VENDE",
+    wireframeCta: "BOTÓN FIJO",
   },
 
   // ── SOBRE MÍ ──────────────────────────────────────────────────────────
   sobreMi: {
     title: "Doscientas páginas después.",
     paragraphs: [
-      "Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y afuera. Muchos de mis clientes testean varias marcas a la vez: lanzan, miden y vuelven a lanzar. Yo soy el que arma la página cada vez.",
+      "Soy Benjamín, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y afuera. Muchos de mis clientes testean varias marcas a la vez: lanzan, miden y vuelven a lanzar. Yo soy el que arma la página cada vez.",
       "Ese ritmo es la diferencia. Cuando una página se cae en pleno lanzamiento, cuando el botón de pagar falla en un celular viejo, cuando de un día para el otro la página deja de vender sin motivo aparente: ya lo vi, y sé dónde mirar. No es teoría de curso.",
       "Estudié la Tecnicatura en Programación en la UTN, que dura tres años, y la terminé en un año y cuatro meses. La carrera de Full Stack la terminé primero de mi camada. Esa base es la que me deja programar a mano cada parte de tu tienda, con código propio, en vez de depender de un armador de páginas con abono mensual que te limita a lo que ya trae la plantilla.",
       "Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago, cómo se habla acá. Una página traducida del inglés se nota, y se nota en las ventas.",
@@ -91,6 +92,7 @@ export const content = {
     eyebrow: "LO QUE APRENDÍ EN 200 PÁGINAS",
     title: "Anatomía de una página que vende.",
     planoLabel: "BLOQUE ACTIVO",
+    bloqueLabel: "BLOQUE",
     deslizaLabel: "DESLIZÁ →",
     intro:
       "Una página de venta no es una página larga con fotos lindas. Es una secuencia. Cada bloque está donde está porque responde la objeción que aparece justo antes.",
@@ -429,7 +431,7 @@ export const content = {
       },
     ],
     cita: "Hay páginas mías sosteniendo tiendas que facturan millones de pesos por día.",
-    citaPie: "BENJAMIN GARCIA · CÓRDOBA, 2026",
+    citaPie: "BENJAMÍN GARCÍA · CÓRDOBA, 2026",
   },
 
   // ── RECORRIDO ─────────────────────────────────────────────────────────
@@ -576,6 +578,21 @@ export const content = {
       proyecto: "Contame de tu producto o marca",
       link: "Link de tu tienda (opcional)",
     },
+    placeholders: {
+      nombre: "Tu nombre",
+      email: "nombre@tumarca.com",
+      proyecto: "Qué vendés, a quién, y qué te está pasando hoy con tu página.",
+      link: "tutienda.com",
+    },
+    wa: {
+      saludo: "Hola Benjamín, soy",
+      intro: "Te escribo desde tu portfolio para pedir un presupuesto.",
+      labelTipo: "Qué necesito:",
+      labelEmail: "Email:",
+      labelProducto: "Sobre mi producto o marca:",
+      labelLink: "Link:",
+      cierre: "Quedo atento. Gracias.",
+    },
     opciones: [
       { id: "pagina", name: "Página de producto", hint: "LA MÁS PEDIDA" },
       { id: "tienda", name: "Tienda completa", hint: "SHOPIFY O TIENDA NUBE" },
@@ -649,7 +666,7 @@ export const content = {
   // ── SEO ───────────────────────────────────────────────────────────────
   // OJO: cambiar `url` por el dominio real antes de publicar.
   seo: {
-    title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba",
+    title: "Benjamín García · +200 páginas de producto para ecommerce | Córdoba",
     description:
       "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para más de 130 marcas y productos en Argentina y el exterior.",
     url: "https://plataformabensha.vercel.app",

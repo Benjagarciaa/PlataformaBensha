@@ -39,20 +39,21 @@ function isValidEmail(email: string): boolean {
 }
 
 function buildMessage(form: FormState): string {
+  const { wa } = content.contacto;
   const lines = [
-    `Hola Benjamin, soy *${form.nombre.trim()}*.`,
-    "Te escribo desde tu portfolio para pedir un presupuesto.",
+    `${wa.saludo} *${form.nombre.trim()}*.`,
+    wa.intro,
     "",
-    `*Qué necesito:* ${form.tipo}`,
-    `*Email:* ${form.email.trim()}`,
+    `*${wa.labelTipo}* ${form.tipo}`,
+    `*${wa.labelEmail}* ${form.email.trim()}`,
     "",
-    "*Sobre mi producto o marca:*",
+    `*${wa.labelProducto}*`,
     form.proyecto.trim(),
   ];
   if (form.link.trim()) {
-    lines.push("", `*Link:* ${form.link.trim()}`);
+    lines.push("", `*${wa.labelLink}* ${form.link.trim()}`);
   }
-  lines.push("", "Quedo atento. Gracias.");
+  lines.push("", wa.cierre);
   return lines.join("\n");
 }
 
@@ -191,7 +192,7 @@ export function Contacto() {
               value={form.nombre}
               error={errors.nombre}
               onChange={(event) => update("nombre", event.target.value)}
-              placeholder="Tu nombre"
+              placeholder={contacto.placeholders.nombre}
               autoComplete="name"
             />
             <Field
@@ -200,7 +201,7 @@ export function Contacto() {
               value={form.email}
               error={errors.email}
               onChange={(event) => update("email", event.target.value)}
-              placeholder="nombre@tumarca.com"
+              placeholder={contacto.placeholders.email}
               autoComplete="email"
             />
           </div>
@@ -210,14 +211,14 @@ export function Contacto() {
             value={form.proyecto}
             error={errors.proyecto}
             onChange={(event) => update("proyecto", event.target.value)}
-            placeholder="Qué vendés, a quién, y qué te está pasando hoy con tu página."
+            placeholder={contacto.placeholders.proyecto}
           />
 
           <Field
             label={contacto.campos.link}
             value={form.link}
             onChange={(event) => update("link", event.target.value)}
-            placeholder="tutienda.com"
+            placeholder={contacto.placeholders.link}
             inputMode="url"
           />
 

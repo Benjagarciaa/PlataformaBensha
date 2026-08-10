@@ -114,7 +114,9 @@ export default async function Image() {
             color: FAINT,
           }}
         >
-          <div style={{ display: "flex" }}>BENJAMIN GARCIA</div>
+          <div style={{ display: "flex" }}>
+            {content.identity.firstName} {content.identity.lastName}
+          </div>
           <div style={{ display: "flex" }}>CÓRDOBA · ARGENTINA</div>
         </div>
 
@@ -132,9 +134,9 @@ export default async function Image() {
               maxWidth: 880,
             }}
           >
-            <span style={{ marginRight: 16 }}>Más de 200 páginas de producto,</span>
-            <span style={{ color: ACCENT, marginRight: 16 }}>programadas</span>
-            <span>una por una.</span>
+            <span style={{ marginRight: 16 }}>{content.hero.title.before}</span>
+            <span style={{ color: ACCENT, marginRight: 16 }}>{content.hero.title.accent}</span>
+            <span>{content.hero.title.after}</span>
           </div>
 
           <div
@@ -147,7 +149,7 @@ export default async function Image() {
               maxWidth: 780,
             }}
           >
-            Desarrollador de ecommerce y especialista en conversión.
+            {content.identity.role}.
           </div>
         </div>
 
@@ -162,11 +164,7 @@ export default async function Image() {
           }}
         >
           <div style={{ display: "flex", alignItems: "flex-end" }}>
-            {[
-              { k: "PÁGINAS", v: "+200" },
-              { k: "MARCAS", v: "+130" },
-              { k: "MERCADO", v: "AR · EXT" },
-            ].map((celda, i) => (
+            {content.hero.rotulo.cells.map((celda, i) => (
               <div
                 key={celda.k}
                 style={{

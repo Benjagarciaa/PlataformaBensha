@@ -432,7 +432,7 @@ export function Anatomia() {
                         color: isActive ? "var(--accent)" : "var(--text-faint)",
                       }}
                     >
-                      BLOQUE {block.n}
+                      {anatomia.bloqueLabel} {block.n}
                     </span>
                     <h3 className="mt-3 font-display text-[clamp(1.5rem,2.4vw,2rem)] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)]">
                       {block.name}
@@ -532,7 +532,7 @@ export function Anatomia() {
                       color: isActive ? "var(--accent)" : "var(--text-faint)",
                     }}
                   >
-                    BLOQUE {block.n}
+                    {anatomia.bloqueLabel} {block.n}
                   </span>
                   <h3 className="mt-3 font-display text-[1.6rem] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)]">
                     {block.name}

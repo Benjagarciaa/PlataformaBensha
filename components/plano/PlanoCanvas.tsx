@@ -186,7 +186,7 @@ export function PlanoCanvas() {
         letterSpacing="1.1"
         fill="var(--accent)"
       >
-        CTA FIJO
+        {content.hero.wireframeCta}
       </text>
     </svg>
   );
