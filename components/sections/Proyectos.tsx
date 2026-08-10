@@ -167,6 +167,17 @@ export function Proyectos() {
               <div className="mt-4">
                 <Bloques items={proyecto.bloques} />
               </div>
+
+              {proyecto.url ? (
+                <a
+                  href={proyecto.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex w-fit items-center gap-2 border border-[color:var(--hairline)] px-3 py-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)]"
+                >
+                  {proyectos.verLabel} ↗
+                </a>
+              ) : null}
             </article>
           </Reveal>
         ))}

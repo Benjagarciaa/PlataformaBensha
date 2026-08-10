@@ -164,19 +164,19 @@ export const content = {
     eyebrow: "PÁGINAS EN PRODUCCIÓN",
     title: "Proyectos",
     intro:
-      "El primero facturó 25 millones de pesos en un solo día. Los otros tres muestran las tres cosas que hago además de programar: escribir los textos, armar la identidad visual y generar las imágenes. Trabajo con gente que lanza productos todo el tiempo, así que cuando uno pega la página tiene que estar lista ayer.",
+      "El primero facturó 25 millones de pesos en un solo día. Los otros muestran lo que hago más allá del código: escribir los textos, crear la identidad visual y generar las imágenes. Hay ecommerce y también negocios de servicios, como un catering de Córdoba. Cuando una marca lanza, la página tiene que estar lista ayer.",
     bloquesLabel: "BLOQUES CONSTRUIDOS",
     verLabel: "VER LA PÁGINA",
     sinCaptura: "CAPTURA PENDIENTE",
-    pie: "Acá hay cuatro. Detrás hay más de doscientas: la mayoría no las puedo mostrar por acuerdo con el cliente.",
+    pie: "Acá muestro cuatro. Detrás hay más de doscientas, pero la mayoría quedan bajo acuerdo con cada cliente.",
     items: [
       {
         id: "tinte-pro",
-        marca: "Tinte Pro",
-        producto: "Shampoo de tinte instantáneo · para Lautaro Cardozo",
+        marca: "Shampoo de tinte",
+        producto: "Lanzamiento de ecommerce",
         rubro: "ECOMMERCE · CÓRDOBA",
         descripcion:
-          "Página de producto completa para el lanzamiento: selector de cinco tonos, combos de una, dos y tres unidades con elección de color por unidad, cuotas sin interés, garantía de 30 días y sellos de pago seguro. Validó el primer día que salió y llegó a facturar 25 millones de pesos en una sola jornada. El producto sigue vendiéndose hoy.",
+          "El lanzamiento que validó desde el primer día: facturó 25 millones de pesos en una sola jornada, y el producto sigue vendiéndose hoy. Página de producto completa, con selector de cinco tonos, combos de una a tres unidades eligiendo el color de cada una, cuotas sin interés, garantía de 30 días y sellos de pago seguro.",
         bloques: [
           "Selector de tonos",
           "Combos",
@@ -189,21 +189,21 @@ export const content = {
         url: null,
       },
       {
-        id: "probiotico",
-        marca: "Probiótico femenino",
-        producto: "Suplemento de bienestar íntimo",
-        rubro: "SUPLEMENTOS",
+        id: "salguero",
+        marca: "Salguero Gourmet",
+        producto: "Catering gourmet para eventos",
+        rubro: "GASTRONOMÍA · CÓRDOBA",
         descripcion:
-          "Bloque educativo con un desplegable de cuatro pestañas: qué destruye el antibiótico, qué no reconstruye, dónde no llega y en qué punto exacto entra el producto. El que ya sabe pasa de largo, el que duda lo abre y se queda leyendo.",
+          "No todo es venta de productos. Sitio completo para un catering de Córdoba con 15 años de trayectoria: servicios, galería, reseñas con puntaje 5.0 en Google, sección para empresas y un cotizador que arma el presupuesto y lo manda por WhatsApp. Está en vivo y podés entrar.",
         bloques: [
-          "Bloque educativo",
-          "Desplegable",
-          "Respuesta a dudas",
-          "Combos",
-          "Barra fija",
+          "Cotizador",
+          "Reseñas 5.0",
+          "Galería",
+          "Para empresas",
+          "Cómo trabajamos",
         ],
-        captura: "/proyectos/probiotico.webp",
-        url: null,
+        captura: null,
+        url: "https://salguerogourmet.vercel.app",
       },
       {
         id: "capileka",
