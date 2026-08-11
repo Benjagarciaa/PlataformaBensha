@@ -380,14 +380,6 @@ export const content = {
               "Treinta horas. Es lo que respalda el servicio de blindaje: saber cómo se copia y se roba una página es lo que me permite hacerla difícil de copiar.",
           },
           {
-            id: "javascript",
-            anio: "2023",
-            titulo: "JavaScript",
-            institucion: "Coderhouse, certificado por PedidosYa",
-            detalle:
-              "Cuarenta horas y media. Todas las animaciones, los combos, las barras fijas y las ventanas emergentes que armo salen de acá.",
-          },
-          {
             id: "utn",
             anio: "2022",
             titulo: "Tecnicatura en Programación",
@@ -396,37 +388,6 @@ export const content = {
               "La carrera dura tres años. La terminé en un año y cuatro meses, cursando y trabajando al mismo tiempo. Es la formación más completa que tengo y la que sostiene todo lo demás.",
             destacado: true,
             sello: "3 AÑOS EN 16 MESES",
-          },
-          {
-            id: "desarrollo-web",
-            anio: "2022",
-            titulo: "Desarrollo Web",
-            institucion: "Coderhouse",
-            detalle:
-              "Treinta y ocho horas de HTML y CSS. El primer curso pago, el que confirmó que iba en serio.",
-          },
-          {
-            id: "seguridad",
-            anio: "2022",
-            titulo: "Seguridad Informática",
-            institucion: "Educ.ar, Ministerio de Educación",
-            detalle: "Curso virtual de diez horas.",
-          },
-          {
-            id: "processing",
-            anio: "2022",
-            titulo: "Programación visual de imágenes",
-            institucion: "Educ.ar, Ministerio de Educación",
-            detalle:
-              "Introducción a Processing, doce horas. La primera vez que programé algo que se veía en pantalla.",
-          },
-          {
-            id: "grasshopper",
-            anio: "2021",
-            titulo: "Fundamentos de la codificación",
-            institucion: "Grasshopper, Google",
-            detalle:
-              "El primero de todos, en agosto de 2021. Gratis, desde el celular, y el que arrancó todo esto.",
           },
         ],
       },
