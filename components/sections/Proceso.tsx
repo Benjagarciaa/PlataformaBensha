@@ -1,7 +1,8 @@
-// Sin "use client": esta sección no usa estado ni efectos, así que se
-// renderiza solo en el servidor y no manda JavaScript al navegador.
-// <Reveal> sí es de cliente, y está bien: un componente de servidor
-// puede renderizar uno de cliente sin problema.
+"use client";
+
+// Es de cliente para animar la cota de progreso: la linea se dibuja al
+// entrar en pantalla (motion whileInView). Los pasos siguen con <Reveal>.
+import { motion, useReducedMotion } from "motion/react";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -25,6 +26,7 @@ import { content } from "@/content/data";
  */
 export function Proceso() {
   const { proceso } = content;
+  const reduce = useReducedMotion();
 
   return (
     <Section id="proceso">
@@ -37,16 +39,24 @@ export function Proceso() {
       </Reveal>
 
       <div className="relative">
-        {/* cota vertical, hasta 1279px */}
-        <span
+        {/* cota vertical, hasta 1279px: se dibuja de arriba hacia abajo */}
+        <motion.span
           aria-hidden
-          className="absolute bottom-8 left-[4px] top-2 w-px bg-[color:var(--hairline)] xl:hidden"
+          className="absolute bottom-8 left-[4px] top-2 w-px origin-top bg-[color:var(--hairline)] xl:hidden"
+          initial={reduce ? false : { scaleY: 0 }}
+          whileInView={{ scaleY: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         />
 
-        {/* cota horizontal, desde 1280px */}
-        <span
+        {/* cota horizontal, desde 1280px: se dibuja de izquierda a derecha */}
+        <motion.span
           aria-hidden
-          className="absolute left-0 right-0 top-[6px] hidden h-px bg-[color:var(--hairline)] xl:block"
+          className="absolute left-0 right-0 top-[6px] hidden h-px origin-left bg-[color:var(--hairline)] xl:block"
+          initial={reduce ? false : { scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         />
         <span
           aria-hidden
@@ -67,7 +77,7 @@ export function Proceso() {
                 aria-hidden
                 className="absolute left-0 top-[4px] block h-[9px] w-[9px] border border-[color:var(--accent)] bg-[color:var(--accent)] transition-all duration-300 xl:top-[2px] xl:border-[color:var(--hairline)] xl:bg-[color:var(--bg)] xl:group-hover:border-[color:var(--accent)] xl:group-hover:bg-[color:var(--accent)]"
               />
-              <Reveal delay={index * 0.06}>
+              <Reveal delay={index * 0.09}>
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
                   {paso.n}
                 </p>

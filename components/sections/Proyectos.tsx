@@ -173,7 +173,7 @@ export function Proyectos() {
                   href={proyecto.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-auto inline-flex w-fit items-center gap-2 border border-[color:var(--hairline)] px-3 py-2 pt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)]"
+                  className="mt-6 inline-flex w-fit items-center gap-2 border border-[color:var(--hairline)] px-3 py-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)]"
                 >
                   {proyectos.verLabel} ↗
                 </a>

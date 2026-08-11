@@ -27,6 +27,12 @@ html {
   background: var(--bg);
   color: var(--text);
   scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox: sin barra nativa, el riel es el indicador */
+}
+
+/* Chrome, Safari y Edge: ocultar la barra de scroll nativa */
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
