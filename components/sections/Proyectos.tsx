@@ -119,6 +119,16 @@ export function Proyectos() {
               <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
                 {destacado.producto}
               </p>
+              {proyectos.destacadoStat ? (
+                <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-none tracking-[-0.03em] text-[color:var(--accent)]">
+                    {proyectos.destacadoStat.valor}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
+                    {proyectos.destacadoStat.detalle}
+                  </span>
+                </p>
+              ) : null}
               <p className="mt-6 max-w-[54ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
                 {destacado.descripcion}
               </p>

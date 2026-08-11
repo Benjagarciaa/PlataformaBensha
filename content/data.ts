@@ -169,6 +169,7 @@ export const content = {
     verLabel: "VER LA PÁGINA",
     sinCaptura: "CAPTURA PENDIENTE",
     pie: "Acá muestro cuatro. Detrás hay más de doscientas, pero la mayoría quedan bajo acuerdo con cada cliente.",
+    destacadoStat: { valor: "25 millones", detalle: "facturado en un solo día" },
     items: [
       {
         id: "tinte-pro",
@@ -176,7 +177,7 @@ export const content = {
         producto: "Lanzamiento de ecommerce",
         rubro: "ECOMMERCE · CÓRDOBA",
         descripcion:
-          "El lanzamiento que validó desde el primer día: facturó 25 millones de pesos en una sola jornada, y el producto sigue vendiéndose hoy. Página de producto completa, con selector de cinco tonos, combos de una a tres unidades eligiendo el color de cada una, cuotas sin interés, garantía de 30 días y sellos de pago seguro.",
+          "Página de producto completa para un lanzamiento: selector de cinco tonos, combos de una a tres unidades eligiendo el color de cada una, cuotas sin interés, garantía de 30 días y sellos de pago seguro. Validó desde el primer día y el producto sigue vendiéndose hoy.",
         bloques: [
           "Selector de tonos",
           "Combos",
@@ -656,8 +657,6 @@ export const content = {
     { id: "servicios", label: "SERVICIOS" },
     { id: "proceso", label: "PROCESO" },
     { id: "herramientas", label: "HERRAMIENTAS" },
-    { id: "oficio", label: "LO QUE DOMINO" },
-    { id: "resultados", label: "RESULTADOS" },
     { id: "recorrido", label: "RECORRIDO" },
     { id: "contacto", label: "CONTACTO" },
   ],

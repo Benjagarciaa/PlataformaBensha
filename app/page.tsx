@@ -5,8 +5,6 @@ import { Proyectos } from "@/components/sections/Proyectos";
 import { Servicios } from "@/components/sections/Servicios";
 import { Proceso } from "@/components/sections/Proceso";
 import { Herramientas } from "@/components/sections/Herramientas";
-import { Oficio } from "@/components/sections/Oficio";
-import { Resultados } from "@/components/sections/Resultados";
 import { Recorrido } from "@/components/sections/Recorrido";
 import { Testimonios } from "@/components/sections/Testimonios";
 import { Contacto } from "@/components/sections/Contacto";
@@ -22,8 +20,6 @@ export default function Home() {
       <Servicios />
       <Proceso />
       <Herramientas />
-      <Oficio />
-      <Resultados />
       <Recorrido />
       <Testimonios />
       <Contacto />
