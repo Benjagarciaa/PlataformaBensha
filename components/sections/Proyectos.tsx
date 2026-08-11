@@ -32,7 +32,7 @@ function Mockup({
   grande?: boolean;
 }) {
   return (
-    <div className="relative border border-[color:var(--hairline)] bg-[color:var(--surface)] p-3">
+    <div className="relative mx-auto w-full max-w-[260px] border border-[color:var(--hairline)] bg-[color:var(--surface)] p-3 md:max-w-none">
       <span
         aria-hidden
         className="pointer-events-none absolute left-1.5 top-1.5 z-10 h-[9px] w-[9px] border-l border-t border-[color:var(--accent)]"
