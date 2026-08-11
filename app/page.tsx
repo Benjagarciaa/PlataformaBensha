@@ -18,8 +18,8 @@ export default function Home() {
       <Anatomia />
       <Proyectos />
       <Servicios />
-      <Proceso />
       <Herramientas />
+      <Proceso />
       <Recorrido />
       <Testimonios />
       <Contacto />
