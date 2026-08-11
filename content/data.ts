@@ -13,7 +13,7 @@ export const content = {
     name: "Benjamín García",
     firstName: "BENJAMÍN",
     lastName: "GARCÍA",
-    role: "Desarrollador de ecommerce, especialista en páginas que venden",
+    role: "Desarrollo web para ecommerce, negocios y emprendedores",
     location: "Córdoba, Argentina",
     locationShort: "CBA · AR",
     email: "bmurgarcia@gmail.com",
@@ -534,9 +534,9 @@ export const content = {
   // ── SEO ───────────────────────────────────────────────────────────────
   // OJO: cambiar `url` por el dominio real antes de publicar.
   seo: {
-    title: "Benjamín García · +200 páginas de producto para ecommerce | Córdoba",
+    title: "Benjamín García · +200 páginas que venden | ecommerce, negocios y emprendedores · Córdoba",
     description:
-      "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para más de 130 marcas y productos en Argentina y el exterior.",
+      "¿Querés una página que venda? Diseño y programo tiendas y sitios a medida, para marcas de productos y de servicios, en Argentina y afuera. Más de 200 páginas para más de 130 marcas, desde Córdoba.",
     url: "https://plataformabensha.vercel.app",
     locale: "es_AR",
   },
