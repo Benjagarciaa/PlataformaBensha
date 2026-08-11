@@ -68,13 +68,14 @@ export function Proceso() {
           aria-hidden
           className="absolute bottom-8 left-[4px] top-2 w-px bg-[color:var(--hairline)] xl:hidden"
         />
-        {/* acento vertical que se dibuja de arriba hacia abajo */}
+        {/* acento vertical que se dibuja de arriba hacia abajo y despues respira */}
         <motion.span
           aria-hidden
           className="absolute bottom-8 left-[4px] top-2 w-px origin-top bg-[color:var(--accent)] xl:hidden"
           initial={false}
           animate={{ scaleY: on ? 1 : 0 }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{ opacity: "calc(0.45 + 0.55 * var(--trazo-b, 0.6))" }}
         />
 
         {/* cota horizontal gris (desde 1280px) */}
@@ -82,13 +83,14 @@ export function Proceso() {
           aria-hidden
           className="absolute left-0 right-0 top-[6px] hidden h-px bg-[color:var(--hairline)] xl:block"
         />
-        {/* acento horizontal que se dibuja de izquierda a derecha */}
+        {/* acento horizontal que se dibuja de izquierda a derecha y despues respira */}
         <motion.span
           aria-hidden
           className="absolute left-0 right-0 top-[6px] hidden h-px origin-left bg-[color:var(--accent)] xl:block"
           initial={false}
           animate={{ scaleX: on ? 1 : 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          style={{ opacity: "calc(0.45 + 0.55 * var(--trazo, 0.6))" }}
         />
 
         <span
@@ -118,6 +120,12 @@ export function Proceso() {
                 transition={{
                   duration: 0.35,
                   delay: on ? 0.25 + index * 0.14 : 0,
+                }}
+                style={{
+                  opacity:
+                    index % 2 === 0
+                      ? "calc(0.5 + 0.5 * var(--trazo, 0.6))"
+                      : "calc(0.5 + 0.5 * var(--trazo-b, 0.6))",
                 }}
               />
               <Reveal delay={index * 0.09}>
