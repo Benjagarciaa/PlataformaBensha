@@ -200,7 +200,6 @@ export const content = {
           "Reseñas 5.0",
           "Galería",
           "Para empresas",
-          "Cómo trabajamos",
         ],
         captura: "/proyectos/salguero.webp",
         url: "https://salguerogourmet.vercel.app",

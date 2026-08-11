@@ -45,7 +45,7 @@ export function Herramientas() {
               }}
             />
             <div>
-              <p className="font-display text-[1.1rem] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text)]">
+              <p className="min-h-[3rem] font-display text-[1.1rem] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text)]">
                 {modulo.benefit}
               </p>
               <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)] transition-colors duration-300 group-hover:text-[color:var(--accent)]">
