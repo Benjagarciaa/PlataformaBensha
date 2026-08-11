@@ -333,7 +333,7 @@ export const content = {
       { benefit: "Tu tienda, tu control", tool: "SHOPIFY" },
       { benefit: "También en Tienda Nube", tool: "TIENDA NUBE" },
       { benefit: "Bloques a medida", tool: "LIQUID" },
-      { benefit: "Sin apps que la frenen", tool: "HTML Y CSS" },
+      { benefit: "Sin apps que la hagan lenta", tool: "HTML Y CSS" },
       { benefit: "Animaciones propias", tool: "JAVASCRIPT" },
       { benefit: "Que no te copien", tool: "BLINDAJE" },
       { benefit: "Imágenes que no existían", tool: "IA GENERATIVA" },
