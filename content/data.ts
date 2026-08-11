@@ -630,18 +630,6 @@ export const content = {
       "Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Córdoba, 2026.",
   },
 
-  // ── AVISO DE PRUEBA SOCIAL ────────────────────────────────────────────
-  // Aparece una sola vez por sesión, al pasar Anatomía. No finge ser real:
-  // se presenta como demo de un componente propio.
-  avisoPrueba: {
-    label: "COMPONENTE PROPIO · PRUEBA SOCIAL",
-    inicial: "S",
-    nombre: "Sofía de Rosario",
-    accion: "compró hace 3 minutos",
-    nota: "Esto es un bloque que armo para mis clientes.",
-    cerrar: "Cerrar",
-  },
-
   // ── NAV ───────────────────────────────────────────────────────────────
   nav: {
     links: [
