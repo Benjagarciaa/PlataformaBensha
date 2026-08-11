@@ -360,7 +360,7 @@ export const content = {
         label: "CONSTRUCCIÓN",
         items: [
           { name: "Shopify", w: 700 },
-          { name: "Liquid", w: 700 },
+          { name: "Bloques a medida", w: 700 },
           { name: "HTML y CSS", w: 700 },
           { name: "JavaScript", w: 700 },
           { name: "Adaptado al celular", w: 700 },
@@ -373,9 +373,9 @@ export const content = {
         label: "CONVERSIÓN",
         items: [
           { name: "Estructura de venta", w: 700 },
-          { name: "Combos y precios", w: 700 },
+          { name: "Ofertas y precios", w: 700 },
           { name: "Opiniones de clientes", w: 700 },
-          { name: "Barras fijas y avisos", w: 700 },
+          { name: "Avisos en pantalla", w: 700 },
           { name: "Pago directo", w: 600 },
           { name: "Pruebas para vender más", w: 500 },
         ],
@@ -396,7 +396,7 @@ export const content = {
         label: "PROTECCIÓN Y MEDICIÓN",
         items: [
           { name: "Blindaje anticopia", w: 700 },
-          { name: "Código ilegible", w: 600 },
+          { name: "Código encriptado", w: 600 },
           { name: "Medir visitas y ventas", w: 500 },
           { name: "Rendimiento de anuncios", w: 500 },
         ],
