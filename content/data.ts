@@ -438,7 +438,7 @@ export const content = {
   recorrido: {
     title: "Recorrido",
     intro:
-      "Empecé a programar en 2021. En 2022 ya tenía la tecnicatura de la UTN, hecha en un año y cuatro meses. En 2024 terminé la carrera de Full Stack primero de camada. Después vinieron las doscientas páginas.",
+      "Empecé a programar en 2021. En 2022 ya tenía la tecnicatura de la UTN, hecha en un año y cuatro meses. En 2024 terminé la carrera de desarrollo web, primero de mi camada. Después vinieron las doscientas páginas.",
     grupos: [
       {
         id: "formacion",
@@ -528,7 +528,7 @@ export const content = {
           {
             id: "freelance",
             anio: "2022-HOY",
-            titulo: "Desarrollo de ecommerce",
+            titulo: "Desarrollo web y ecommerce",
             institucion: "Freelance",
             detalle:
               "Más de 200 páginas de producto para más de 130 marcas y productos, en Argentina y el exterior. Shopify y Tienda Nube. Textos, diseño, imágenes, código y medición.",
@@ -539,7 +539,7 @@ export const content = {
             titulo: "Coordinación y producción",
             institucion: "Role Media",
             detalle:
-              "Gestión de proyectos, coordinación con clientes, edición de video y postproducción. Es de donde salen los creativos que acompañan a cada página.",
+              "Gestión de proyectos, coordinación con clientes, edición de video y postproducción. De ahí salen los videos y las piezas que acompañan cada página.",
           },
         ],
       },
