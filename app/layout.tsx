@@ -93,6 +93,42 @@ export const viewport: Viewport = {
 };
 
 /* ============================================================
+   Datos estructurados (JSON-LD)
+   Le dan a Google contexto de quien es, donde y que ofrece.
+   ============================================================ */
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: content.identity.name,
+  description: content.seo.description,
+  url: content.seo.url,
+  image: `${content.seo.url}/opengraph-image`,
+  email: content.identity.email,
+  telephone: `+${content.identity.whatsappNumber}`,
+  areaServed: "Argentina y el exterior",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Córdoba",
+    addressRegion: "Córdoba",
+    addressCountry: "AR",
+  },
+  founder: {
+    "@type": "Person",
+    name: content.identity.name,
+    jobTitle: content.identity.role,
+  },
+  knowsAbout: [
+    "Desarrollo web",
+    "Ecommerce",
+    "Shopify",
+    "Tienda Nube",
+    "Páginas de producto",
+    "Páginas que venden",
+  ],
+};
+
+/* ============================================================
    Layout
    ============================================================ */
 
@@ -111,6 +147,11 @@ export default function RootLayout({
         <noscript>
           <style>{`[style]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
         </noscript>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
 
         <TrazoProvider>
           <LenisProvider>
