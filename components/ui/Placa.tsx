@@ -9,6 +9,11 @@ type PlacaProps = {
 export function Placa({ children, className }: PlacaProps) {
   return (
     <div className={cn("group relative overflow-hidden bg-[color:var(--surface)] p-6 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1", className)}>
+      {/* Lavado de acento al hover: la card "se enciende" sin sombras (DESIGN.md 1). */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-[color:var(--accent-soft)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
       <span className="absolute left-0 top-0 h-[10px] w-[10px] border-l border-t border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />
       <span className="absolute right-0 top-0 h-[10px] w-[10px] border-r border-t border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />
       <span className="absolute bottom-0 left-0 h-[10px] w-[10px] border-b border-l border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />
