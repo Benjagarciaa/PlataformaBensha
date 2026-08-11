@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { PlanoCanvas } from "@/components/plano/PlanoCanvas";
 import { content } from "@/content/data";
@@ -192,8 +193,26 @@ function Lamina() {
   );
 }
 
+/**
+ * Entrada al cargar: la tesis sube en cascada. Es un agregado, no un requisito:
+ * sin JS, el <noscript> del layout fuerza opacity 1 y se ve completa igual.
+ */
+const heroContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
+};
+const heroItem: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 export function Hero() {
   const { identity, hero } = content;
+  const reduce = useReducedMotion();
 
   return (
     <section
@@ -202,29 +221,49 @@ export function Hero() {
     >
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-16">
         {/* ── La tesis ──────────────────────────────────────────────── */}
-        <div className="max-w-[46rem]">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text-faint)] md:text-[11px]">
+        <motion.div
+          className="max-w-[46rem]"
+          variants={heroContainer}
+          initial={reduce ? "show" : "hidden"}
+          animate="show"
+        >
+          <motion.p
+            variants={heroItem}
+            className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text-faint)] md:text-[11px]"
+          >
             {identity.firstName} {identity.lastName}
             <span className="mx-2">·</span>
             {identity.locationShort}
-          </p>
-          <p className="mb-7 font-mono text-[10px] uppercase leading-snug tracking-[0.24em] text-[color:var(--text-faint)] md:mb-8 md:text-[11px]">
+          </motion.p>
+          <motion.p
+            variants={heroItem}
+            className="mb-7 font-mono text-[10px] uppercase leading-snug tracking-[0.24em] text-[color:var(--text-faint)] md:mb-8 md:text-[11px]"
+          >
             {identity.role}
-          </p>
+          </motion.p>
 
-          <h1 className="font-display text-[clamp(2.1rem,7.5vw,3.9rem)] font-medium leading-[1.03] tracking-[-0.03em] text-[color:var(--text)]">
+          <motion.h1
+            variants={heroItem}
+            className="font-display text-[clamp(2.1rem,7.5vw,3.9rem)] font-medium leading-[1.03] tracking-[-0.03em] text-[color:var(--text)]"
+          >
             {hero.title.before}{" "}
             <span className="whitespace-nowrap font-bold text-[color:var(--accent)]">
               {hero.title.accent}
             </span>{" "}
             {hero.title.after}
-          </h1>
+          </motion.h1>
 
-          <p className="mt-6 max-w-[56ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mt-7 md:text-[17px]">
+          <motion.p
+            variants={heroItem}
+            className="mt-6 max-w-[56ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mt-7 md:text-[17px]"
+          >
             {hero.subtitle}
-          </p>
+          </motion.p>
 
-          <div className="mt-8 flex flex-wrap gap-3 md:mt-10 md:gap-4">
+          <motion.div
+            variants={heroItem}
+            className="mt-8 flex flex-wrap gap-3 md:mt-10 md:gap-4"
+          >
             <Button
               className="flex-1 md:flex-none"
               onClick={() => scrollTo("#contacto")}
@@ -238,12 +277,12 @@ export function Hero() {
             >
               {hero.ctaSecondary}
             </Button>
-          </div>
+          </motion.div>
 
-          <div className="mt-10">
+          <motion.div variants={heroItem} className="mt-10">
             <CifrasMobile />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ── La lámina: solo desktop ───────────────────────────────── */}
         <Lamina />
