@@ -19,7 +19,7 @@ export function Section({ id, bleed = false, cota, className, children }: Sectio
     <section
       id={id}
       className={cn(
-        "relative z-10 w-full py-20 md:py-32",
+        "relative z-10 w-full py-16 md:py-24",
         bleed && "-mx-6 md:-mx-12 lg:-mx-28",
         className
       )}
