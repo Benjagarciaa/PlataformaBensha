@@ -570,7 +570,7 @@ export const content = {
     eyebrow: "PRESUPUESTO",
     title: "Contame qué querés vender.",
     intro:
-      "Respondo el mismo día. Si me pasás el link de tu producto, te digo qué haría antes de cobrarte nada.",
+      "Respondo el mismo día. Si me pasás el link de tu tienda o tu negocio, te digo qué haría antes de cobrarte nada.",
     campos: {
       nombre: "Nombre",
       email: "Email",
@@ -595,7 +595,7 @@ export const content = {
     },
     opciones: [
       { id: "pagina", name: "Página de producto", hint: "LA MÁS PEDIDA" },
-      { id: "tienda", name: "Tienda completa", hint: "SHOPIFY O TIENDA NUBE" },
+      { id: "tienda", name: "Tienda o sitio completo", hint: "SHOPIFY O TIENDA NUBE" },
       { id: "optimizacion", name: "Optimización", hint: "SOBRE LO QUE YA TENÉS" },
       { id: "blindaje", name: "Blindaje", hint: "QUE NO TE COPIEN" },
       { id: "copy", name: "Textos e imágenes", hint: "PARA TU PÁGINA Y TUS ANUNCIOS" },
