@@ -288,13 +288,13 @@ export const content = {
         n: "01",
         titulo: "Charla",
         detalle:
-          "Me contás el producto, a quién le vendés y qué te está pasando hoy.",
+          "Me contás qué vendés, a quién, y qué te está pasando hoy.",
       },
       {
         n: "02",
         titulo: "Investigación",
         detalle:
-          "Miro tu competencia, tus reseñas y lo que dicen tus clientes. De ahí sale el ángulo.",
+          "Miro tu competencia, tus reseñas y lo que dicen tus clientes. De ahí sale el enfoque, la manera de contarlo.",
       },
       {
         n: "03",
@@ -306,7 +306,7 @@ export const content = {
         n: "04",
         titulo: "Diseño e imágenes",
         detalle:
-          "Identidad visual del producto y las imágenes que hagan falta, generadas y editadas por mí.",
+          "La identidad visual y las imágenes que hagan falta, generadas y editadas por mí.",
       },
       {
         n: "05",
