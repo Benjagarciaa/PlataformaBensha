@@ -60,6 +60,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(content.seo.url),
   title: content.seo.title,
   description: content.seo.description,
+  // URL canonica: le dice a Google cual es la direccion oficial de la pagina
+  // y evita que trate variantes (con o sin barra, parametros) como duplicados.
+  alternates: {
+    canonical: "/",
+  },
   keywords: [
     "landing page Shopify",
     "página de producto",
