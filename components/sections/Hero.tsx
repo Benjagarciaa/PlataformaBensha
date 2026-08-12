@@ -201,10 +201,12 @@ const heroContainer: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
 };
+// Sin opacity: el contenido se pinta visible desde el SSR (no espera a que
+// hidrate el JS), asi el LCP en mobile no depende del bundle pesado. La carga
+// se siente igual con un deslizamiento suave.
 const heroItem: Variants = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { y: 16 },
   show: {
-    opacity: 1,
     y: 0,
     transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
   },
