@@ -48,7 +48,11 @@ function Mockup({
             src={captura}
             alt={alt}
             fill
-            sizes={grande ? "(max-width: 1024px) 90vw, 420px" : "(max-width: 768px) 90vw, 320px"}
+            sizes={
+              grande
+                ? "(max-width: 767px) 240px, (max-width: 1023px) 90vw, 420px"
+                : "(max-width: 767px) 240px, (max-width: 1023px) 45vw, 320px"
+            }
             className="object-cover object-top"
           />
         ) : (

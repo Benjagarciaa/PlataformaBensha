@@ -1,0 +1,4 @@
+# Navegadores objetivo. Un target moderno evita enviar polyfills viejos
+# (Array.prototype.at, Object.hasOwn, etc.) que ningun navegador actual necesita.
+last 2 years
+not dead
