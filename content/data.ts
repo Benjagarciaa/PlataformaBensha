@@ -497,7 +497,7 @@ export const content = {
     clockLabel: "CÓRDOBA",
     backToTop: "↑ VOLVER ARRIBA",
     colofon:
-      "Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Córdoba, 2026.",
+      "Cada página se piensa, se diseña y se programa a mano, una por una. Desde Córdoba para todo el país y el exterior.",
   },
 
   // ── NAV ───────────────────────────────────────────────────────────────
