@@ -81,7 +81,7 @@ function OpcionTarjeta({
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className="group relative flex flex-col items-start gap-1 border p-4 text-left transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5"
+      className="group relative flex cursor-pointer flex-col items-start gap-1 border p-4 text-left transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5"
       style={{
         borderColor: selected ? "var(--accent)" : "var(--hairline)",
         backgroundColor: selected ? "var(--accent-soft)" : "var(--surface)",
