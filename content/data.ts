@@ -49,7 +49,7 @@ export const content = {
         { k: "MERCADO", v: "AR · EXT" },
       ],
       platforms: "SHOPIFY · TIENDA NUBE · LIQUID · JAVASCRIPT",
-      estadoValor: "AGENDA ABIERTA",
+      estadoValor: "TOMANDO PROYECTOS",
       respuestaValor: "RESPUESTA EN 24 H",
     },
 
@@ -508,7 +508,7 @@ export const content = {
       { label: "Servicios", href: "#servicios" },
       { label: "Recorrido", href: "#recorrido" },
     ],
-    status: "AGENDA ABIERTA",
+    status: "TOMANDO PROYECTOS",
   },
 
   // ── RIEL DE PROFUNDIDAD ───────────────────────────────────────────────
