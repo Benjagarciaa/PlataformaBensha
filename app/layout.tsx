@@ -28,6 +28,9 @@ const clash = localFont({
   ],
   variable: "--font-clash",
   display: "swap",
+  // Sin preload: no competir por ancho de banda con el CSS que bloquea el
+  // render. Con swap, el texto se ve con la fuente de respaldo al instante.
+  preload: false,
 });
 
 const switzer = localFont({
@@ -38,6 +41,7 @@ const switzer = localFont({
   ],
   variable: "--font-switzer",
   display: "swap",
+  preload: false,
 });
 
 const jetbrains = JetBrains_Mono({
@@ -45,6 +49,7 @@ const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
   display: "swap",
+  preload: false,
 });
 
 /* ============================================================
