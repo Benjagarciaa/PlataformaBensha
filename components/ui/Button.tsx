@@ -15,7 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         ref={ref}
         className={cn(
-          "inline-flex h-12 items-center justify-center whitespace-nowrap border px-5 text-[13px] font-medium uppercase tracking-[0.16em] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:translate-y-px",
+          "inline-flex h-12 cursor-pointer items-center justify-center whitespace-nowrap border px-5 text-[13px] font-medium uppercase tracking-[0.16em] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:translate-y-px disabled:cursor-not-allowed",
           variant === "primary"
             ? "border-[color:var(--accent)] bg-[color:var(--accent)] text-[color:var(--bg)]"
             : "border-[color:var(--hairline)] bg-transparent text-[color:var(--text)] hover:bg-[color:var(--accent-soft)]",

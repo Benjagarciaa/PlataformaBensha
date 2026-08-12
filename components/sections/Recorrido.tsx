@@ -58,15 +58,14 @@ function Fila({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="group flex w-full items-baseline gap-4 py-6 text-left md:gap-8"
+        className="group flex w-full cursor-pointer items-baseline gap-4 py-6 text-left md:gap-8"
       >
         <span
-          className="w-[52px] shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-300"
-          style={{
-            color: open || item.destacado
-              ? "var(--accent)"
-              : "var(--text-faint)",
-          }}
+          className={`w-[52px] shrink-0 font-mono text-[11px] uppercase tracking-[0.16em] transition-colors duration-300 ${
+            open || item.destacado
+              ? "text-[color:var(--accent)]"
+              : "text-[color:var(--text-faint)] group-hover:text-[color:var(--accent)]"
+          }`}
         >
           {item.anio}
         </span>
@@ -89,10 +88,11 @@ function Fila({
 
         <span
           aria-hidden
-          className="relative mt-2 h-[9px] w-[9px] shrink-0"
-          style={{
-            color: open ? "var(--accent)" : "var(--text-faint)",
-          }}
+          className={`relative mt-2 h-[9px] w-[9px] shrink-0 transition-colors duration-300 ${
+            open
+              ? "text-[color:var(--accent)]"
+              : "text-[color:var(--text-faint)] group-hover:text-[color:var(--accent)]"
+          }`}
         >
           <span className="absolute left-0 top-[4px] block h-px w-[9px] bg-current transition-colors duration-300" />
           <span

@@ -38,6 +38,15 @@ function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 }
 
+/**
+ * El link es opcional, pero si lo completan tiene que parecer una direccion
+ * real: un dominio con punto y terminacion (tutienda.com), con o sin http y
+ * con o sin ruta. Asi no pasa un "asdasd" cualquiera.
+ */
+function isValidLink(value: string): boolean {
+  return /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(value.trim());
+}
+
 function buildMessage(form: FormState): string {
   const { wa } = content.contacto;
   const lines = [
@@ -153,6 +162,8 @@ export function Contacto() {
       next.email = contacto.errores.emailInvalido;
     if (!form.tipo) next.tipo = contacto.errores.tipo;
     if (!form.proyecto.trim()) next.proyecto = contacto.errores.proyecto;
+    if (form.link.trim() && !isValidLink(form.link))
+      next.link = contacto.errores.linkInvalido;
 
     setErrors(next);
     if (Object.keys(next).length > 0) return;
@@ -232,6 +243,7 @@ export function Contacto() {
           <Field
             label={contacto.campos.link}
             value={form.link}
+            error={errors.link}
             onChange={(event) => update("link", event.target.value)}
             placeholder={contacto.placeholders.link}
             inputMode="url"

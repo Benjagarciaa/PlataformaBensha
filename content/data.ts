@@ -477,6 +477,7 @@ export const content = {
       emailInvalido: "Ese email no parece válido.",
       tipo: "Elegí qué necesitás.",
       proyecto: "Contame algo del producto, aunque sean dos líneas.",
+      linkInvalido: "Revisá el link, algo como tutienda.com",
     },
     medidorLabel: "COMPLETÁ PARA ENVIAR",
     medidorListo: "LISTO PARA ENVIAR",
