@@ -127,6 +127,23 @@ export function Contacto() {
     }
   };
 
+  // Validacion al salir del campo (blur): el aviso aparece apenas termina de
+  // escribir y hace clic afuera, no recien al mandar. Solo revisa el formato
+  // de lo que ya escribio; si el campo quedo vacio no molesta (eso lo toma el
+  // envio). Aplica a email y link, que son los que tienen un formato esperado.
+  const handleBlur = (key: "email" | "link") => {
+    const value = form[key].trim();
+    setErrors((current) => {
+      if (!value) return { ...current, [key]: undefined };
+      const ok = key === "email" ? isValidEmail(value) : isValidLink(value);
+      const message =
+        key === "email"
+          ? contacto.errores.emailInvalido
+          : contacto.errores.linkInvalido;
+      return { ...current, [key]: ok ? undefined : message };
+    });
+  };
+
   // Avance real: cuatro campos obligatorios. El medidor es honesto, no decorativo.
   const completos = useMemo(() => {
     let count = 0;
@@ -227,6 +244,7 @@ export function Contacto() {
               value={form.email}
               error={errors.email}
               onChange={(event) => update("email", event.target.value)}
+              onBlur={() => handleBlur("email")}
               placeholder={contacto.placeholders.email}
               autoComplete="email"
             />
@@ -245,6 +263,7 @@ export function Contacto() {
             value={form.link}
             error={errors.link}
             onChange={(event) => update("link", event.target.value)}
+            onBlur={() => handleBlur("link")}
             placeholder={contacto.placeholders.link}
             inputMode="url"
           />
