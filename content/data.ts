@@ -539,5 +539,7 @@ export const content = {
       "¿Querés una página que venda? Diseño y programo tiendas y sitios a medida, para marcas de productos y de servicios, en Argentina y afuera. Más de 200 páginas para más de 130 marcas, desde Córdoba.",
     url: "https://plataformabensha.vercel.app",
     locale: "es_AR",
+    // Microsoft Clarity: id del proyecto de metricas. Vaciar para desactivarlo.
+    clarityId: "y1bswh0bh6",
   },
 };
