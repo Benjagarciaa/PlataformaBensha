@@ -1,7 +1,8 @@
-// Sin "use client": esta sección no usa estado ni efectos, así que se
-// renderiza solo en el servidor y no manda JavaScript al navegador.
-// <Reveal> sí es de cliente, y está bien: un componente de servidor
-// puede renderizar uno de cliente sin problema.
+"use client";
+
+// Es de cliente por la interaccion: al tocar una tarjeta se preselecciona ese
+// servicio en el cotizador y se baja suave, en UN solo click (mismo patron que
+// el Nav). El copy sigue viniendo de content.
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -25,6 +26,21 @@ const SPANS = [
 export function Servicios() {
   const { servicios } = content;
 
+  // Igual que el Nav: preventDefault + scrollIntoView baja suave en un solo
+  // click (funciona con Lenis). Ademas avisa a Contacto que opcion marcar.
+  const irAlPresupuesto = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
+    window.dispatchEvent(
+      new CustomEvent("preseleccionar-servicio", { detail: id }),
+    );
+    const el = document.getElementById("contacto");
+    if (!el) return;
+    event.preventDefault();
+    el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <Section id="servicios">
       <SectionTitle title={servicios.title} />
@@ -38,7 +54,7 @@ export function Servicios() {
           >
             <a
               href="#contacto"
-              data-servicio={item.id}
+              onClick={(event) => irAlPresupuesto(event, item.id)}
               aria-label={`Consultar por ${item.name}`}
               className="block h-full"
             >
