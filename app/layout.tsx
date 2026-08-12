@@ -161,7 +161,11 @@ export default function RootLayout({
 
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            // Escapar "<" evita que un valor pueda cerrar el <script> e
+            // inyectar markup. Los datos aca son estaticos, pero es barato.
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
         />
 
         {/* Microsoft Clarity: mapas de calor y grabaciones. */}

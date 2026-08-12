@@ -203,7 +203,7 @@ export const content = {
           "Para empresas",
         ],
         captura: "/proyectos/salguero.webp",
-        url: "https://salguerogourmet.vercel.app",
+        url: "https://salguerogourmet.com",
       },
       {
         id: "capileka",
