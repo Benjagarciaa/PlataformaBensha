@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import Lenis from "lenis";
+import { registrarLenis } from "@/lib/lenis";
 
 type LenisProviderProps = {
   children: ReactNode;
@@ -20,6 +21,8 @@ export function LenisProvider({ children }: LenisProviderProps) {
     });
 
     lenisRef.current = lenis;
+    // Queda disponible para los scroll suaves de toda la pagina (irASeccion).
+    registrarLenis(lenis);
 
     let frame = 0;
     const animate = (time: number) => {
@@ -33,6 +36,7 @@ export function LenisProvider({ children }: LenisProviderProps) {
       window.cancelAnimationFrame(frame);
       lenis.destroy();
       lenisRef.current = null;
+      registrarLenis(null);
     };
   }, []);
 

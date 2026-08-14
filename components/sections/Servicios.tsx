@@ -8,6 +8,7 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { Placa } from "@/components/ui/Placa";
 import { content } from "@/content/data";
+import { irASeccion } from "@/lib/lenis";
 
 /**
  * Servicios. Grid asimetrico de 3 columnas: la pagina de producto domina (2 col),
@@ -26,19 +27,18 @@ const SPANS = [
 export function Servicios() {
   const { servicios } = content;
 
-  // Igual que el Nav: preventDefault + scrollIntoView baja suave en un solo
-  // click (funciona con Lenis). Ademas avisa a Contacto que opcion marcar.
+  // Un solo click: preselecciona el servicio en el cotizador y baja suave.
+  // El scroll va por el scrollTo de Lenis (irASeccion), no por el nativo, que
+  // peleaba con el loop de Lenis y a veces obligaba a tocar dos veces.
   const irAlPresupuesto = (
     event: React.MouseEvent<HTMLAnchorElement>,
     id: string,
   ) => {
+    event.preventDefault();
     window.dispatchEvent(
       new CustomEvent("preseleccionar-servicio", { detail: id }),
     );
-    const el = document.getElementById("contacto");
-    if (!el) return;
-    event.preventDefault();
-    el.scrollIntoView({ behavior: "smooth" });
+    irASeccion("contacto");
   };
 
   return (
