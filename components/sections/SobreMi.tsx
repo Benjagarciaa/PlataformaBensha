@@ -31,7 +31,11 @@ export function SobreMi() {
         </div>
 
         <Reveal delay={0.12}>
-          <div className="relative border border-[color:var(--hairline)] bg-[color:var(--surface)] p-7 lg:sticky lg:top-28">
+          <div className="group relative border border-[color:var(--hairline)] bg-[color:var(--surface)] p-7 transition-[transform,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-[color:var(--accent)] lg:sticky lg:top-28">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[color:var(--accent)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+            />
             <span
               aria-hidden
               className="pointer-events-none absolute left-2 top-2 h-[10px] w-[10px] border-l border-t border-[color:var(--accent)]"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { content } from "@/content/data";
@@ -31,19 +32,29 @@ export function Testimonios() {
           aria-hidden
           className="mb-8 block h-px w-16 bg-[color:var(--accent)]"
         />
-        <blockquote>
-          <p className="font-display text-[clamp(1.5rem,3.6vw,2.6rem)] font-medium leading-[1.25] tracking-[-0.02em] text-[color:var(--text)]">
-            {actual.quote}
-          </p>
-        </blockquote>
-        <figcaption className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--accent)]">
-            {actual.autor}
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--text-faint)]">
-            {actual.rol}
-          </span>
-        </figcaption>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -18 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <blockquote>
+              <p className="font-display text-[clamp(1.5rem,3.6vw,2.6rem)] font-medium leading-[1.25] tracking-[-0.02em] text-[color:var(--text)]">
+                {actual.quote}
+              </p>
+            </blockquote>
+            <figcaption className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--accent)]">
+                {actual.autor}
+              </span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--text-faint)]">
+                {actual.rol}
+              </span>
+            </figcaption>
+          </motion.div>
+        </AnimatePresence>
       </figure>
 
       {hayVarios ? (
