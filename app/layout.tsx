@@ -10,6 +10,7 @@ import { LenisProvider } from "@/components/chrome/LenisProvider";
 import { Grilla } from "@/components/chrome/Grilla";
 import { Grano } from "@/components/chrome/Grano";
 import { Nav } from "@/components/chrome/Nav";
+import { Intro } from "@/components/chrome/Intro";
 import { Blindaje } from "@/components/chrome/Blindaje";
 import { RielScroll } from "@/components/plano/RielScroll";
 
@@ -174,6 +175,8 @@ export default function RootLayout({
             {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "${content.seo.clarityId}");`}
           </Script>
         ) : null}
+
+        <Intro />
 
         <TrazoProvider>
           <LenisProvider>
