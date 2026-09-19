@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
+import { StatCountUp } from "@/components/ui/StatCountUp";
 import { content } from "@/content/data";
 
 /**
@@ -25,49 +26,73 @@ function Mockup({
   alt,
   etiqueta,
   grande = false,
+  fase = "a",
 }: {
   captura: string | null;
   alt: string;
   etiqueta: string;
   grande?: boolean;
+  fase?: "a" | "b";
 }) {
-  return (
-    <div className="relative mx-auto w-full max-w-[260px] border border-[color:var(--hairline)] bg-[color:var(--surface)] p-3 md:max-w-none">
-      <span
-        aria-hidden
-        className="pointer-events-none absolute left-1.5 top-1.5 z-10 h-[9px] w-[9px] border-l border-t border-[color:var(--accent)]"
-      />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute bottom-1.5 right-1.5 z-10 h-[9px] w-[9px] border-b border-r border-[color:var(--accent)]"
-      />
+  // Float continuo con el rAF global (TrazoProvider): cada mockup sigue una de
+  // las dos fases del trazo para no bobear todos al unisono. Con reduced-motion
+  // el trazo queda fijo en 0.5 y esto es un desplazamiento estatico inofensivo.
+  const floatVar = fase === "a" ? "--trazo" : "--trazo-b";
 
-      <div className="relative aspect-[9/16] w-full overflow-hidden bg-[color:var(--bg-deep)]">
-        {captura ? (
-          <Image
-            src={captura}
-            alt={alt}
-            fill
-            sizes={
-              grande
-                ? "(max-width: 767px) 240px, (max-width: 1023px) 90vw, 420px"
-                : "(max-width: 767px) 240px, (max-width: 1023px) 45vw, 320px"
-            }
-            className="object-cover object-top"
+  return (
+    <div className="group relative mx-auto w-full max-w-[260px] md:max-w-none">
+      {/* Capa que respira: el transform se recalcula cada frame via CSS var.
+          Sin transition, porque el valor ya cambia suave con el trazo. */}
+      <div
+        className="will-change-transform"
+        style={{ transform: `translateY(calc(-6px * var(${floatVar}, 0.5)))` }}
+      >
+        {/* La placa: al hover se levanta y su borde se enciende en acento. */}
+        <div className="relative border border-[color:var(--hairline)] bg-[color:var(--surface)] p-3 transition-[transform,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:border-[color:var(--accent)]">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute left-1.5 top-1.5 z-10 h-[9px] w-[9px] border-l border-t border-[color:var(--accent)]"
           />
-        ) : (
-          <div
-            className="flex h-full w-full items-center justify-center"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(45deg, transparent 0 10px, rgba(200,224,255,0.045) 10px 11px)",
-            }}
-          >
-            <span className="px-6 text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[color:var(--text-faint)]">
-              {etiqueta}
-            </span>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-1.5 right-1.5 z-10 h-[9px] w-[9px] border-b border-r border-[color:var(--accent)]"
+          />
+
+          <div className="relative aspect-[9/16] w-full overflow-hidden bg-[color:var(--bg-deep)]">
+            {captura ? (
+              <>
+                <Image
+                  src={captura}
+                  alt={alt}
+                  fill
+                  sizes={
+                    grande
+                      ? "(max-width: 767px) 240px, (max-width: 1023px) 90vw, 420px"
+                      : "(max-width: 767px) 240px, (max-width: 1023px) 45vw, 320px"
+                  }
+                  className="object-cover object-top transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                />
+                {/* Barrido de luz: cruza la captura al pasar el mouse. */}
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 left-0 w-1/2 -translate-x-[200%] -skew-x-12 bg-gradient-to-r from-transparent via-[color:var(--accent-soft)] to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[300%]"
+                />
+              </>
+            ) : (
+              <div
+                className="flex h-full w-full items-center justify-center"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(45deg, transparent 0 10px, rgba(200,224,255,0.045) 10px 11px)",
+                }}
+              >
+                <span className="px-6 text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[color:var(--text-faint)]">
+                  {etiqueta}
+                </span>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -126,7 +151,7 @@ export function Proyectos() {
               {proyectos.destacadoStat ? (
                 <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-none tracking-[-0.03em] text-[color:var(--accent)]">
-                    {proyectos.destacadoStat.valor}
+                    <StatCountUp valor={proyectos.destacadoStat.valor} />
                   </span>
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
                     {proyectos.destacadoStat.detalle}
@@ -168,6 +193,7 @@ export function Proyectos() {
                 captura={proyecto.captura}
                 alt={`Página de producto de ${proyecto.marca}`}
                 etiqueta={proyectos.sinCaptura}
+                fase={index % 2 === 0 ? "b" : "a"}
               />
               <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
                 {proyecto.rubro}
