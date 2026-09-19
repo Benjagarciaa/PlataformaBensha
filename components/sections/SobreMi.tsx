@@ -19,7 +19,7 @@ export function SobreMi() {
     <Section id="sobre-mi">
       <SectionTitle title={sobreMi.title} />
 
-      <div className="grid gap-12 lg:grid-cols-[7fr_5fr] lg:gap-20">
+      <div className="grid gap-8 lg:grid-cols-[7fr_5fr] lg:gap-14">
         <div className="flex flex-col gap-6">
           {sobreMi.paragraphs.map((paragraph, index) => (
             <Reveal key={index} delay={index * 0.06}>

@@ -196,12 +196,12 @@ export function Contacto() {
       <SectionTitle eyebrow={contacto.eyebrow} title={contacto.title} />
 
       <Reveal>
-        <p className="mb-12 max-w-[60ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+        <p className="mb-8 max-w-[60ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
           {contacto.intro}
         </p>
       </Reveal>
 
-      <div className="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
+      <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
         <Reveal>
         <div className="flex flex-col gap-8">
           {/* ── Qué necesitás: tarjetas, no dropdown ─────────────── */}

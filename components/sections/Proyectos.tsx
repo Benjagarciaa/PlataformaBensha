@@ -122,7 +122,7 @@ export function Proyectos() {
       <SectionTitle eyebrow={proyectos.eyebrow} title={proyectos.title} />
 
       <Reveal>
-        <p className="mb-14 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+        <p className="mb-8 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
           {proyectos.intro}
         </p>
       </Reveal>
@@ -130,7 +130,7 @@ export function Proyectos() {
       {/* ── El destacado ─────────────────────────────────────────────── */}
       {destacado ? (
         <Reveal>
-          <article className="grid gap-10 border-t border-[color:var(--accent)] pt-10 lg:grid-cols-[420px_1fr] lg:gap-16">
+          <article className="grid gap-8 border-t border-[color:var(--accent)] pt-8 lg:grid-cols-[420px_1fr] lg:gap-12">
             <Mockup
               captura={destacado.captura}
               alt={`Página de producto de ${destacado.marca}`}
@@ -185,7 +185,7 @@ export function Proyectos() {
       ) : null}
 
       {/* ── El resto ─────────────────────────────────────────────────── */}
-      <div className="mt-16 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {resto.map((proyecto, index) => (
           <Reveal key={proyecto.id} delay={index * 0.06}>
             <article className="flex h-full flex-col">
@@ -223,7 +223,7 @@ export function Proyectos() {
         ))}
       </div>
 
-      <p className="mt-14 border-t border-[color:var(--hairline)] pt-6 font-display text-[clamp(1.1rem,2.2vw,1.5rem)] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text-dim)]">
+      <p className="mt-10 border-t border-[color:var(--hairline)] pt-6 font-display text-[clamp(1.1rem,2.2vw,1.5rem)] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text-dim)]">
         {proyectos.pie}
       </p>
     </Section>

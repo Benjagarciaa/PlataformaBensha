@@ -132,12 +132,12 @@ export function Recorrido() {
       <SectionTitle title={recorrido.title} />
 
       <Reveal>
-        <p className="mb-14 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+        <p className="mb-8 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
           {recorrido.intro}
         </p>
       </Reveal>
 
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-10">
         {recorrido.grupos.map((grupo) => (
           <div key={grupo.id}>
             <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text-faint)]">

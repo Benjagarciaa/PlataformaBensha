@@ -106,7 +106,7 @@ export function Proceso() {
           {proceso.pasos.map((paso, index) => (
             <li
               key={paso.n}
-              className="group relative pb-10 pl-9 last:pb-0 xl:pb-0 xl:pl-0 xl:pt-10"
+              className="group relative pb-7 pl-9 last:pb-0 xl:pb-0 xl:pl-0 xl:pt-8"
             >
               {/* punto: se enciende en secuencia a medida que la cota lo alcanza */}
               <motion.span

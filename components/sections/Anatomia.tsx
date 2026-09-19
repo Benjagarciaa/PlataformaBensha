@@ -385,13 +385,13 @@ export function Anatomia() {
       <SectionTitle eyebrow={anatomia.eyebrow} title={anatomia.title} />
 
       <Reveal>
-        <p className="mb-10 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mb-12 md:text-[17px]">
+        <p className="mb-6 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mb-8 md:text-[17px]">
           {anatomia.intro}
         </p>
       </Reveal>
 
       {isDesktop ? (
-        <div className="grid gap-12 lg:grid-cols-[300px_1fr] lg:gap-20">
+        <div className="grid gap-8 lg:grid-cols-[300px_1fr] lg:gap-14">
           <div className="lg:sticky lg:top-24 lg:self-start">
             <Wireframe activeIndex={activeIndex} />
             <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
@@ -414,7 +414,7 @@ export function Anatomia() {
                   ref={(node) => {
                     itemsRef.current[index] = node;
                   }}
-                  className="relative border-l py-10 pl-8 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  className="relative border-l py-7 pl-8 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
                   style={{
                     borderColor: isActive ? "var(--accent)" : "var(--hairline)",
                   }}
@@ -548,7 +548,7 @@ export function Anatomia() {
       )}
 
       <Reveal>
-        <p className="mt-12 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mt-14 md:text-[17px]">
+        <p className="mt-8 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mt-10 md:text-[17px]">
           {anatomia.outro}
         </p>
       </Reveal>

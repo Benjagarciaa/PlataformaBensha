@@ -17,7 +17,7 @@ type SectionTitleProps = {
  */
 export function SectionTitle({ title, eyebrow, className }: SectionTitleProps) {
   return (
-    <div className={cn("mb-10 max-w-3xl", className)}>
+    <div className={cn("mb-6 max-w-3xl md:mb-8", className)}>
       {eyebrow ? (
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
           {eyebrow}
@@ -35,7 +35,7 @@ export function SectionTitle({ title, eyebrow, className }: SectionTitleProps) {
       {/* Linea de acento que se traza sola: el detalle firma en cada seccion. */}
       <motion.span
         aria-hidden
-        className="mt-6 block h-px w-14 origin-left bg-[color:var(--accent)]"
+        className="mt-4 block h-px w-14 origin-left bg-[color:var(--accent)]"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true, amount: 0.25 }}

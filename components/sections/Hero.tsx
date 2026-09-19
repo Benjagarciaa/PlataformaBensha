@@ -263,9 +263,9 @@ export function Hero() {
       id="inicio"
       onPointerMove={handlePointerMove}
       onPointerLeave={resetPointer}
-      className="relative z-10 mx-auto flex max-w-[1400px] flex-col px-6 py-20 md:px-12 md:py-24 lg:min-h-[100svh] lg:justify-center lg:pl-28 lg:pr-20"
+      className="relative z-10 mx-auto flex max-w-[1400px] flex-col px-6 py-14 md:px-12 md:py-16 lg:min-h-[100svh] lg:justify-center lg:pl-28 lg:pr-20"
     >
-      <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-16">
+      <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-12">
         {/* ── La tesis ──────────────────────────────────────────────── */}
         <motion.div
           className="max-w-[46rem]"

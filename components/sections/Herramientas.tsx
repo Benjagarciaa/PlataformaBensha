@@ -43,7 +43,7 @@ export function Herramientas() {
     <Section id="herramientas">
       <SectionTitle title={herramientas.title} />
 
-      <p className="mb-10 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+      <p className="mb-6 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
         {herramientas.intro}
       </p>
 

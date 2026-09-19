@@ -11,7 +11,6 @@ import { Grilla } from "@/components/chrome/Grilla";
 import { Grano } from "@/components/chrome/Grano";
 import { Nav } from "@/components/chrome/Nav";
 import { Intro } from "@/components/chrome/Intro";
-import { Cursor } from "@/components/chrome/Cursor";
 import { Blindaje } from "@/components/chrome/Blindaje";
 import { RielScroll } from "@/components/plano/RielScroll";
 
@@ -178,7 +177,6 @@ export default function RootLayout({
         ) : null}
 
         <Intro />
-        <Cursor />
 
         <TrazoProvider>
           <LenisProvider>
