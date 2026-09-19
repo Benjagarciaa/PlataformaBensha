@@ -17,7 +17,8 @@ export function TrazoProvider({ children }: { children: React.ReactNode }) {
   const frameCallbacks = useRef<Set<(value: number) => void>>(new Set());
   const passCallbacks = useRef<Set<(value: number) => void>>(new Set());
   const rafRef = useRef<number | null>(null);
-  const startRef = useRef<number>(performance.now());
+  // Se inicializa en el efecto (no en render): performance.now() es impuro.
+  const startRef = useRef<number>(0);
   const rateRef = useRef<number>(BASE_RATE);
   const reducedMotionRef = useRef(false);
 
@@ -34,6 +35,8 @@ export function TrazoProvider({ children }: { children: React.ReactNode }) {
 
     applyReducedMotion();
     media.addEventListener("change", applyReducedMotion);
+
+    startRef.current = performance.now();
 
     if (reducedMotionRef.current) {
       return () => media.removeEventListener("change", applyReducedMotion);

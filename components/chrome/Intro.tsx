@@ -32,6 +32,9 @@ export function Intro() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    // Patron "mounted": la cortina no se renderiza en el server (SEO y sin-JS
+    // ven la pagina limpia). Setear el flag al montar es el uso correcto aca.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
