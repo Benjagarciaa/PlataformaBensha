@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -19,6 +20,7 @@ function Fila({
   item,
   open,
   onToggle,
+  index,
 }: {
   item: {
     id: string;
@@ -31,13 +33,18 @@ function Fila({
   };
   open: boolean;
   onToggle: () => void;
+  index: number;
 }) {
   const accent = item.destacado ? "var(--accent)" : "var(--hairline)";
 
   return (
-    <li
+    <motion.li
       className="relative border-t transition-colors duration-300"
       style={{ borderColor: open || item.destacado ? "var(--accent)" : "var(--hairline)" }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.05 }}
     >
       {item.destacado ? (
         <>
@@ -112,7 +119,7 @@ function Fila({
           </p>
         </div>
       </div>
-    </li>
+    </motion.li>
   );
 }
 
@@ -137,10 +144,11 @@ export function Recorrido() {
               {grupo.label}
             </p>
             <ul className="flex flex-col">
-              {grupo.items.map((item) => (
+              {grupo.items.map((item, index) => (
                 <Fila
                   key={item.id}
                   item={item}
+                  index={index}
                   open={openId === item.id}
                   onToggle={() =>
                     setOpenId((current) => (current === item.id ? null : item.id))

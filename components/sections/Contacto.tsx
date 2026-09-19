@@ -202,6 +202,7 @@ export function Contacto() {
       </Reveal>
 
       <div className="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
+        <Reveal>
         <div className="flex flex-col gap-8">
           {/* ── Qué necesitás: tarjetas, no dropdown ─────────────── */}
           <div>
@@ -312,6 +313,7 @@ export function Contacto() {
             </p>
           </div>
         </div>
+        </Reveal>
 
         {/* ── Contacto directo y cómo trabajo ───────────────────────── */}
         <Reveal delay={0.1}>
