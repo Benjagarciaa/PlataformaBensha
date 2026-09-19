@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type Variants,
+} from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { PlanoCanvas } from "@/components/plano/PlanoCanvas";
 import { content } from "@/content/data";
@@ -215,16 +223,53 @@ const heroItem: Variants = {
 export function Hero() {
   const { identity, hero } = content;
   const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Parallax de scroll: al bajar, las capas del hero se mueven a distinta
+  // velocidad y el plano se separa en profundidad. useScroll lo permite
+  // DESIGN.md (nada de listeners de scroll a mano).
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const laminaY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const laminaFade = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 48]);
+
+  // Tilt 3D del plano siguiendo el mouse. Valores crudos -0.5..0.5, suavizados
+  // con spring, mapeados a grados. En reduced-motion o touch queda quieto.
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const springX = useSpring(pointerX, { stiffness: 120, damping: 18 });
+  const springY = useSpring(pointerY, { stiffness: 120, damping: 18 });
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-11, 11]);
+  const rotateX = useTransform(springY, [-0.5, 0.5], [9, -9]);
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLElement>) => {
+    if (reduce || !window.matchMedia("(pointer: fine)").matches) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    pointerX.set((event.clientX - rect.left) / rect.width - 0.5);
+    pointerY.set((event.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const resetPointer = () => {
+    pointerX.set(0);
+    pointerY.set(0);
+  };
 
   return (
     <section
+      ref={sectionRef}
       id="inicio"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPointer}
       className="relative z-10 mx-auto flex max-w-[1400px] flex-col px-6 py-20 md:px-12 md:py-24 lg:min-h-[100svh] lg:justify-center lg:pl-28 lg:pr-20"
     >
       <div className="flex flex-col gap-10 lg:grid lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:gap-16">
         {/* ── La tesis ──────────────────────────────────────────────── */}
         <motion.div
           className="max-w-[46rem]"
+          style={reduce ? undefined : { y: textY }}
           variants={heroContainer}
           initial={reduce ? "show" : "hidden"}
           animate="show"
@@ -286,8 +331,23 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* ── La lámina: solo desktop ───────────────────────────────── */}
-        <Lamina />
+        {/* ── La lámina: solo desktop, con parallax de scroll y tilt 3D ── */}
+        <motion.div
+          className="hidden [transform-style:preserve-3d] lg:block"
+          style={
+            reduce
+              ? undefined
+              : {
+                  y: laminaY,
+                  opacity: laminaFade,
+                  rotateX,
+                  rotateY,
+                  transformPerspective: 1000,
+                }
+          }
+        >
+          <Lamina />
+        </motion.div>
       </div>
     </section>
   );
