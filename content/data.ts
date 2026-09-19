@@ -206,6 +206,17 @@ export const content = {
         url: "https://salguerogourmet.com",
       },
       {
+        id: "salguero-admin",
+        marca: "Panel de administración",
+        producto: "Sistema de gestión para Salguero",
+        rubro: "APLICACIÓN WEB · CÓRDOBA",
+        descripcion:
+          "Del mismo catering, pero puertas adentro: el sistema con el que manejan el día a día. Clientes, eventos, precios, gastos y los números del negocio en un panel hecho a medida. No solo hago páginas que venden, también las herramientas para administrar lo que se vende.",
+        bloques: ["Clientes", "Eventos", "Finanzas", "Precios", "Gastos"],
+        captura: "/proyectos/salguero-admin.webp",
+        url: null,
+      },
+      {
         id: "capileka",
         marca: "Capileka",
         producto: "Suero para el cuero cabelludo",
@@ -220,23 +231,6 @@ export const content = {
           "Barra de anuncios",
         ],
         captura: "/proyectos/capileka.webp",
-        url: null,
-      },
-      {
-        id: "elare",
-        marca: "Elaré",
-        producto: "Extracto de ajo envejecido sin olor",
-        rubro: "SUPLEMENTOS",
-        descripcion:
-          "Una página con forma de nota de revista: titular grande, bajada en itálica, la ficha de la profesional que revisa el contenido e imágenes hechas para ilustrar el problema. Se lee como un artículo, no como una publicidad.",
-        bloques: [
-          "Nota de revista",
-          "Diseño editorial",
-          "Revisión profesional",
-          "Imágenes IA",
-          "Ficha técnica",
-        ],
-        captura: "/proyectos/elare.webp",
         url: null,
       },
     ],
