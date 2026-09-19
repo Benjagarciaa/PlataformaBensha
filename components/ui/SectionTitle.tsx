@@ -32,6 +32,15 @@ export function SectionTitle({ title, eyebrow, className }: SectionTitleProps) {
       >
         {title}
       </motion.h2>
+      {/* Linea de acento que se traza sola: el detalle firma en cada seccion. */}
+      <motion.span
+        aria-hidden
+        className="mt-6 block h-px w-14 origin-left bg-[color:var(--accent)]"
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+      />
     </div>
   );
 }

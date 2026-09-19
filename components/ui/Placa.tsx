@@ -14,6 +14,11 @@ export function Placa({ children, className }: PlacaProps) {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[color:var(--accent-soft)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
+      {/* Linea de acento que crece arriba al hover: mismo lenguaje que el resto. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px origin-left scale-x-0 bg-[color:var(--accent)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+      />
       <span className="absolute left-0 top-0 h-[10px] w-[10px] border-l border-t border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />
       <span className="absolute right-0 top-0 h-[10px] w-[10px] border-r border-t border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />
       <span className="absolute bottom-0 left-0 h-[10px] w-[10px] border-b border-l border-[color:var(--hairline)] transition-colors duration-300 group-hover:border-[color:var(--accent)]" />

@@ -19,8 +19,8 @@ export function Cursor() {
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  const ringX = useSpring(x, { stiffness: 350, damping: 28, mass: 0.4 });
-  const ringY = useSpring(y, { stiffness: 350, damping: 28, mass: 0.4 });
+  const ringX = useSpring(x, { stiffness: 750, damping: 32, mass: 0.25 });
+  const ringY = useSpring(y, { stiffness: 750, damping: 32, mass: 0.25 });
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
