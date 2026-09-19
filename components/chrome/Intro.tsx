@@ -10,14 +10,12 @@ import { content } from "@/content/data";
  * Reglas para que sume y no moleste:
  *  - No se renderiza en el servidor (mounted flag): el HTML que ve Google y el
  *    caso sin JS traen la pagina limpia, sin cortina encima.
- *  - Una sola vez por sesion (sessionStorage): al navegar o recargar seguido no
- *    vuelve a aparecer.
+ *  - Aparece cada vez que se entra o se recarga la pagina.
  *  - Salteable: cualquier click, scroll, tecla o toque la cierra al instante.
  *  - Con reduced-motion no aparece.
  *  - Bloquea el scroll mientras dura y lo suelta al terminar.
  */
 
-const SEEN_KEY = "intro-visto";
 const DURACION = 2200;
 
 const contenedor: Variants = {
@@ -37,22 +35,9 @@ export function Intro() {
     setMounted(true);
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let yaVisto = false;
-    try {
-      yaVisto = sessionStorage.getItem(SEEN_KEY) === "1";
-    } catch {
-      yaVisto = false;
-    }
-
-    if (reduce || yaVisto) {
+    if (reduce) {
       setVisible(false);
       return;
-    }
-
-    try {
-      sessionStorage.setItem(SEEN_KEY, "1");
-    } catch {
-      // sin storage: igual se muestra esta vez
     }
 
     // Bloquear el scroll mientras dura la cortina.
