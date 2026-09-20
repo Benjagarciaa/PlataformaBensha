@@ -16,15 +16,15 @@ import { content } from "@/content/data";
  *  - Bloquea el scroll mientras dura y lo suelta al terminar.
  */
 
-const DURACION = 2200;
+const DURACION = 1500;
 
 const contenedor: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 const item: Variants = {
   hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
 };
 
 export function Intro() {
@@ -38,7 +38,15 @@ export function Intro() {
     setMounted(true);
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    // En conexiones lentas de verdad (o Ahorro de datos), no bloquear con la
+    // cortina: la pagina tiene que aparecer cuanto antes.
+    const conn = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    const slow = !!conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType ?? ""));
+    if (reduce || slow) {
       setVisible(false);
       return;
     }
@@ -79,7 +87,7 @@ export function Intro() {
           key="intro"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[color:var(--bg-deep)] px-6"
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.85, ease: [0.83, 0, 0.17, 1] }}
+          transition={{ duration: 0.6, ease: [0.83, 0, 0.17, 1] }}
         >
           {/* Escuadras en L: el marco del plano. */}
           <span aria-hidden className="pointer-events-none absolute left-6 top-6 h-4 w-4 border-l border-t border-[color:var(--accent)] md:left-10 md:top-10" />
@@ -116,7 +124,7 @@ export function Intro() {
               className="mt-7 block h-px w-[min(320px,70vw)] origin-left bg-[color:var(--accent)]"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
             />
 
             <motion.p
