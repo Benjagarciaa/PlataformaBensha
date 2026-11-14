@@ -96,3 +96,83 @@ Videos (`videos/`):
 | `privacidad-ojo-desktop.mp4` | 8 s | Finanzas en desktop, el cursor toca el ojo: los montos se ocultan y vuelven. |
 | `privacidad-ojo-mobile.mp4` | 8 s | Lo mismo en el celular, con indicador de toque y scroll por las cards ocultas. |
 | `navegacion-mobile.mp4` | 11 s | Recorrido mobile: Finanzas hasta el gráfico, Eventos, abrir un evento y bajar a sus cobros. |
+
+---
+
+## 3. Descartables Multipacking, panel de carga (`descartables-panel/`)
+
+### Ficha (para el texto del portfolio)
+
+Catálogo de consulta con panel de carga para Descartables Multipacking
+(descartables, bolsas, bandejas, vasos y más; Córdoba). Reemplazó la tienda de
+Tienda Nube: sin carrito, sin stock y sin precios públicos; las consultas van
+a WhatsApp con el producto ya escrito. La dueña no es técnica y carga desde el
+celular, así que cargar un producto con sus fotos lleva un minuto.
+
+- **Inicio:** conteos (productos, categorías, fotos), sugerencias armadas con
+  datos reales, "Para revisar" como avance (sin foto, sin categoría, sin
+  ficha, ocultos) y los últimos editados.
+- **Productos:** búsqueda sin tildes y con singular, filtro por categoría y
+  chips (sin foto, sin categoría, sin ficha, ocultos, destacados), tarjetas en
+  el celular y tabla en pantalla grande, con miniaturas.
+- **Ficha de producto:** fotos desde la galería o la cámara, que se achican en
+  el navegador antes de subir, se guardan al toque y se ordenan con flechas;
+  nombre, visible y destacado, categorías múltiples y ficha técnica libre
+  (etiqueta y valor). Borrado en dos pasos.
+- **Categorías:** árbol de hasta 3 niveles; cada fila abre sus acciones
+  (renombrar, subcategoría nueva, mover, subir o bajar, borrar).
+- **Mi tienda:** datos del negocio, aviso de portada, plantilla del mensaje de
+  WhatsApp con vista previa y descripción para buscadores.
+- Dos hosts en un solo proyecto (catálogo público y `admin.` para el panel),
+  importación inicial de 473 productos y 900 fotos desde Tienda Nube,
+  respaldo semanal automático de la base.
+- Stack: Next.js 16, TypeScript, Tailwind v4, Drizzle sobre Postgres (PGlite
+  local, Neon en producción), Vercel Blob para fotos, auth propia con JWT.
+
+**Datos y entorno:** panel corriendo en local (rama `panel-v2`) sobre una base
+PGlite con la importación real del catálogo (474 productos, 76 categorías, 901
+fotos: es el catálogo público, no hay datos personales). Usuarios de prueba.
+El producto de demo del video ("MOLDE BUDIN ALUMINIO 750 GR", con 2 JPEG
+generados con ffmpeg a partir de fotos del repo) se creó y se borró; después
+`npm run db:verificar` dio "Todo coincide".
+
+**Panel en producción vs `panel-v2`:** no se entró al panel de producción (tiene
+datos reales). Por el código, `main` ya tiene el mismo sistema visual v2
+(lateral oscuro, barra inferior de 5 pestañas en el celular, mismos tokens),
+pero hay diferencias de detalle en 26 archivos del panel entre `panel-v2` y
+`main` (inicio, ficha de producto, fotos, Mi tienda, categorías, componentes de
+UI). Las capturas muestran la rama `panel-v2`; puede no ser idéntico a lo que
+está publicado.
+
+### Mejores para el carrusel
+
+- **Miniatura:** `descartables-panel/mobile/02-inicio.webp` (inicio en el celular con conteos, accesos y barra de pestañas) o, en desktop, `descartables-panel/desktop/08-producto-ficha.webp` (ficha con 6 fotos).
+- **Video estrella:** `descartables-panel/videos/carga-producto-mobile.mp4` (22 s: crear un producto, elegir categoría, cargar la ficha, subir 2 fotos y verlo primero en "Últimos editados").
+- **Tercera:** `descartables-panel/mobile/14-mi-tienda-whatsapp.webp` (vista previa del mensaje de WhatsApp) o `descartables-panel/desktop/12-categorias-nodo-abierto.webp`.
+
+### Archivos
+
+Desktop (`desktop/`, 1440x900) y mobile (`mobile/`, 390x844 @2x), mismos nombres:
+
+| Archivo | Qué muestra |
+| --- | --- |
+| `01-login.webp` | Login del panel ("Entrá al panel"). |
+| `02-inicio.webp` / `03-inicio-completa.webp` | Inicio: "Hola, Luciana", conteos (474 productos, 76 categorías, 901 fotos), Nuevo producto, Sugerencias, Para revisar (467 de 474 completos) y Últimos editados con miniaturas. |
+| `03b-inicio-para-revisar.webp` | Solo mobile: el bloque "Para revisar" con la barra de avance. |
+| `04-productos.webp` / `05-productos-completa.webp` | Listado con buscador, filtro de categoría, chips y miniaturas (página 1 de 12). |
+| `06-productos-busqueda-bandeja.webp` | Búsqueda "bandeja". |
+| `07-productos-filtro-sin-ficha.webp` | Chip "Sin ficha" activo (4 productos). |
+| `08-producto-ficha.webp` / `09-producto-ficha-completa.webp` | Ficha de BANDEJA F200 con 6 fotos (principal marcada, flechas para ordenar), datos, categorías y ficha técnica. |
+| `09b-producto-ficha-tecnica.webp` | Solo mobile: la ficha técnica del producto. |
+| `10-categorias.webp` / `11-categorias-completa.webp` | Árbol de categorías completo con el conteo de productos. |
+| `12-categorias-nodo-abierto.webp` | BANDEJAS abierta con sus acciones (nombre, subcategoría nueva, mover, orden, borrar). |
+| `13-mi-tienda.webp` / `15-mi-tienda-completa.webp` | Mi tienda: datos del negocio, aviso, mensaje de WhatsApp y presentación. |
+| `14-mi-tienda-whatsapp.webp` | La card "Mensaje de WhatsApp" con la vista previa en burbuja. |
+| `16-nuevo-producto.webp` | Alta de producto vacía. |
+
+Videos (`videos/`):
+
+| Archivo | Duración | Qué muestra |
+| --- | --- | --- |
+| `carga-producto-mobile.mp4` | 22 s | Flujo de carga en el celular: Nuevo producto, nombre, categoría MOLDES > BUDIN, ficha MATERIAL: ALUMINIO, Crear, Agregar fotos (2 a la vez, "¡Listo! 2 fotos guardadas") y el producto primero en el inicio. |
+| `borrar-producto-mobile.mp4` | 7 s | El mismo producto se borra en dos pasos ("¿Seguro? Sí, borrar") y vuelve al listado con "Producto borrado." |
