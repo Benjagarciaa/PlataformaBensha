@@ -176,3 +176,68 @@ Videos (`videos/`):
 | --- | --- | --- |
 | `carga-producto-mobile.mp4` | 22 s | Flujo de carga en el celular: Nuevo producto, nombre, categoría MOLDES > BUDIN, ficha MATERIAL: ALUMINIO, Crear, Agregar fotos (2 a la vez, "¡Listo! 2 fotos guardadas") y el producto primero en el inicio. |
 | `borrar-producto-mobile.mp4` | 7 s | El mismo producto se borra en dos pasos ("¿Seguro? Sí, borrar") y vuelve al listado con "Producto borrado." |
+
+---
+
+## 2. Salguero Gourmet, landing pública (`salguero-landing/`)
+
+Capturado del sitio publicado, https://salguerogourmet.com (con la analítica
+de terceros bloqueada durante la captura).
+
+### Ficha (para el texto del portfolio)
+
+Landing de una sola página para Salguero Gourmet, catering y pastelería de
+Córdoba con más de 15 años. Un único objetivo de conversión: pedir
+presupuesto por WhatsApp.
+
+- **Hero "escenario" estilo Apple:** la caja del catering queda fija mientras
+  se scrollea; la tapa se levanta hacia la cámara y los productos salen de la
+  caja y quedan flotando, se rotulan uno por uno y cierra con "Tu pedido puede
+  lucir así". Dos canvas dibujados en el mismo tick que el timeline (GSAP
+  ScrollTrigger con pin y scrub, Lenis para el smooth scroll), cuadros
+  decodificados solo alrededor del actual, y versión quieta para reducir
+  movimiento, pantallas bajas o ahorro de datos.
+- Servicios en cards, banda de Empresas con palabras gigantes en movimiento,
+  galería "Las mesas hablan solas", la historia de Flor, reseñas de Google con
+  contador, proceso en cuatro pasos, preguntas frecuentes y cotizador que arma
+  el mensaje de WhatsApp.
+- Stack: Next.js 16, TypeScript, Tailwind v4, GSAP + ScrollTrigger, Framer
+  Motion y Lenis.
+
+**Datos:** es el sitio público tal cual está publicado. La sección de reseñas
+muestra reseñas públicas de Google con el nombre de quien las escribió (así
+están en el sitio); por eso no se eligió como miniatura.
+
+### Mejores para el carrusel
+
+- **Miniatura:** `salguero-landing/desktop/04-hero-pedido-armado.webp` (los productos rotulados alrededor de la caja: "Tu pedido puede lucir así") o `salguero-landing/desktop/01-fold.webp` (la caja cerrada con el titular).
+- **Video estrella:** `salguero-landing/videos/hero-caja-que-se-abre-desktop.mp4` (18 s, ida y vuelta: la tapa se levanta, los productos salen de la caja, se rotulan y la secuencia vuelve hasta la caja cerrada).
+- **Tercera:** `salguero-landing/mobile/04-hero-pedido-armado.webp` o `salguero-landing/desktop/07-empresas.webp` (banda de Empresas).
+
+### Archivos
+
+Desktop (`desktop/`, 1440x900) y mobile (`mobile/`, 390x844 @2x), mismos nombres:
+
+| Archivo | Qué muestra |
+| --- | --- |
+| `00-pagina-completa.webp` | Página entera en su versión quieta (reducir movimiento: el hero sin pin, todo visible). En mobile, partida en `-parte1` y `-parte2` (el webp no admite más de 16383 px de alto). |
+| `01-fold.webp` | Primer pantallazo: "Cada encuentro, algo especial", la caja cerrada y las cifras. |
+| `02-hero-caja-abriendose.webp` | La tapa levantándose (desenfocada hacia la cámara) y "Horneado el mismo día". |
+| `03-hero-productos-flotando.webp` | Los productos fuera de la caja con 5.0 / +15 / +200. |
+| `04-hero-pedido-armado.webp` | Productos rotulados y "Tu pedido puede lucir así" con el botón. |
+| `05-servicios.webp` / `06-servicios-*.webp` | "Nuestras formas de servirte": catering, pastelería, boxes. |
+| `07-empresas.webp` | Banda gigante "COFFEE BREAKS · AGASAJOS" y "Tu equipo también come bien". |
+| `08-galeria-mesas.webp` / `09-galeria-grilla.webp` | "Las mesas hablan solas" y la grilla de fotos. |
+| `10-flor.webp` | "La cocina y Flor". |
+| `11-resenas.webp` | 5.0 en Google y reseñas (nombres públicos de Google). |
+| `12-proceso.webp` | "Del mensaje a la mesa, en cuatro pasos" con el recorrido dibujado. |
+| `13-faq.webp` | Preguntas frecuentes. |
+| `14-cotizador.webp` | Cotizador que arma el pedido para WhatsApp. |
+| `15-pie.webp` | Pie con contacto y wordmark. |
+
+Videos (`videos/`):
+
+| Archivo | Duración | Qué muestra |
+| --- | --- | --- |
+| `hero-caja-que-se-abre-desktop.mp4` | 18 s | La caja que se abre (scrub de ida y vuelta) en desktop. |
+| `hero-caja-que-se-abre-mobile.mp4` | 16,5 s | Lo mismo en el celular. |
