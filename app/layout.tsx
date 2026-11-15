@@ -3,16 +3,15 @@ import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-import Script from "next/script";
 import { content } from "@/content/data";
 import { TrazoProvider } from "@/lib/trazo";
-import { LenisProvider } from "@/components/chrome/LenisProvider";
-import { Grilla } from "@/components/chrome/Grilla";
+import { Fondo } from "@/components/chrome/Fondo";
 import { Grano } from "@/components/chrome/Grano";
 import { Nav } from "@/components/chrome/Nav";
+import { Riel } from "@/components/chrome/Riel";
 import { Intro } from "@/components/chrome/Intro";
 import { Blindaje } from "@/components/chrome/Blindaje";
-import { RielScroll } from "@/components/plano/RielScroll";
+import { Analitica } from "@/components/chrome/Analitica";
 
 /* ============================================================
    Fuentes
@@ -21,11 +20,11 @@ import { RielScroll } from "@/components/plano/RielScroll";
    con lo que espera @theme inline en globals.css.
    ============================================================ */
 
+// Solo los pesos que se usan: cada archivo es una descarga más.
 const clash = localFont({
   src: [
     { path: "./fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
     { path: "./fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-clash",
   display: "swap",
@@ -38,7 +37,6 @@ const switzer = localFont({
   src: [
     { path: "./fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
     { path: "./fonts/Switzer-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/Switzer-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-switzer",
   display: "swap",
@@ -46,7 +44,7 @@ const switzer = localFont({
 });
 
 const jetbrains = JetBrains_Mono({
-  weight: ["400", "500"],
+  weight: ["400"],
   subsets: ["latin"],
   variable: "--font-jetbrains",
   display: "swap",
@@ -66,18 +64,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  keywords: [
-    "landing page Shopify",
-    "página de producto",
-    "ecommerce Córdoba",
-    "Shopify Argentina",
-    "Tienda Nube",
-    "diseño de landing",
-    "optimización de conversión",
-    "copywriting ecommerce",
-    "tienda online Argentina",
-    "desarrollador ecommerce",
-  ],
+  keywords: content.seo.keywords,
   authors: [{ name: content.identity.name }],
   creator: content.identity.name,
   openGraph: {
@@ -100,7 +87,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A1524",
+  // Debe coincidir con --bg de globals.css (metadata no puede leer variables CSS).
+  themeColor: "#060d18",
   colorScheme: "dark",
 };
 
@@ -131,12 +119,13 @@ const jsonLd = {
     jobTitle: content.identity.role,
   },
   knowsAbout: [
-    "Desarrollo web",
+    "Tiendas online",
     "Ecommerce",
     "Shopify",
-    "Tienda Nube",
-    "Páginas de producto",
-    "Páginas que venden",
+    "Tiendanube",
+    "Sistemas a medida",
+    "Diseño UX/UI",
+    "Optimización de conversión",
   ],
 };
 
@@ -154,10 +143,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-[color:var(--bg)] font-sans text-[color:var(--text)]">
-        {/* Sin JS, motion deja todo en su estado initial (opacity 0).
-            Esto fuerza visibilidad para que la página se lea igual. */}
+        {/* Sin JS no hay escenas vivas: todo queda en su versión estática (sin
+            data-escenas en <html>). Esto cubre cualquier estilo inline que
+            hubiera quedado de una animación. */}
         <noscript>
-          <style>{`[style]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+          <style>{`[data-anim]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
 
         <script
@@ -169,24 +159,17 @@ export default function RootLayout({
           }}
         />
 
-        {/* Microsoft Clarity: mapas de calor y grabaciones. */}
-        {content.seo.clarityId ? (
-          <Script id="ms-clarity" strategy="afterInteractive">
-            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "${content.seo.clarityId}");`}
-          </Script>
-        ) : null}
 
         <Intro />
 
         <TrazoProvider>
-          <LenisProvider>
-            <Blindaje />
-            <Grilla />
-            <Grano />
-            <Nav />
-            <RielScroll />
-            {children}
-          </LenisProvider>
+          <Blindaje />
+          <Analitica />
+          <Fondo />
+          <Grano />
+          <Nav />
+          <Riel />
+          {children}
         </TrazoProvider>
       </body>
     </html>

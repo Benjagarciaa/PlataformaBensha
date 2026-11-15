@@ -7,12 +7,11 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { content } from "@/content/data";
 
 /**
- * Testimonios. Cita monumental unica, con navegacion si hay mas de una.
+ * Testimonios. Cita grande, con navegacion si hay mas de una.
  *
- * Si el array esta vacio la seccion NO SE RENDERIZA. A proposito: un cartel
- * que dice "todavia no tengo testimonios" en un sitio que declara 130 marcas
- * genera la pregunta contraria a la que uno quiere. Mejor que no exista hasta
- * que haya uno de verdad. Cargá el primero en data.ts y aparece sola.
+ * Con el array vacio la seccion NO se renderiza: no se inventan testimonios,
+ * y un cartel de "todavia no hay" genera la pregunta contraria. Cargá el
+ * primero real (con permiso) en data.ts y aparece sola.
  */
 export function Testimonios() {
   const { testimonios } = content;
@@ -26,12 +25,7 @@ export function Testimonios() {
   return (
     <Section id="testimonios">
       <SectionTitle title={testimonios.title} />
-
-      <figure className="max-w-[46rem]">
-        <span
-          aria-hidden
-          className="mb-8 block h-px w-16 bg-[color:var(--accent)]"
-        />
+      <figure className="max-w-[52rem]">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -41,15 +35,15 @@ export function Testimonios() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             <blockquote>
-              <p className="font-display text-[clamp(1.5rem,3.6vw,2.6rem)] font-medium leading-[1.25] tracking-[-0.02em] text-[color:var(--text)]">
+              <p className="font-display text-[clamp(1.6rem,3.8vw,3rem)] font-medium leading-[1.2] tracking-[-0.008em] text-[color:var(--text)]">
                 {actual.quote}
               </p>
             </blockquote>
             <figcaption className="mt-8 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--accent)]">
+              <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--accent)]">
                 {actual.autor}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--text-faint)]">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--text-dim)]">
                 {actual.rol}
               </span>
             </figcaption>
@@ -64,16 +58,13 @@ export function Testimonios() {
               key={item.autor}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Testimonio de ${item.autor}`}
+              aria-label={item.autor}
               aria-current={i === index ? "true" : undefined}
               className="py-2"
             >
               <span
                 className="block h-[3px] w-10 transition-colors duration-300"
-                style={{
-                  backgroundColor:
-                    i === index ? "var(--accent)" : "var(--hairline)",
-                }}
+                style={{ backgroundColor: i === index ? "var(--accent)" : "var(--hairline-strong)" }}
               />
             </button>
           ))}

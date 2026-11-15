@@ -3,15 +3,11 @@
 /**
  * Un solo requestAnimationFrame para todo el sitio.
  *
- * Antes había cinco loops corriendo a la vez y cada componente medía por su
- * cuenta en cada frame. Además de gastar de más, cada getBoundingClientRect
- * fuerza al navegador a recalcular el layout: sesenta veces por segundo, por
- * once secciones, es tiempo de bloqueo del hilo principal que se paga en
- * Lighthouse y se siente en un celular de gama baja.
- *
- * Acá hay UN loop. Los suscriptores dicen cada cuánto quieren correr:
- * el progreso del scroll necesita fluidez, saber en qué sección estás no.
- * Cuando no queda nadie suscrito, el loop se apaga solo.
+ * Acá hay UN loop, y lo maneja TrazoProvider (lib/trazo.tsx). Hoy lo usa solo
+ * el scroll suave de Lenis: nada mide el layout ni escribe estilos por frame.
+ * Las escenas leen el scroll con useScroll de motion y los loops ambientales
+ * son animaciones CSS en el compositor. Cuando no queda nadie suscrito, el
+ * loop se apaga solo. La escena 3D del hero es la excepción documentada.
  */
 
 type Suscriptor = {

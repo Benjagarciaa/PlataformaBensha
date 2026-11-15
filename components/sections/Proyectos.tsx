@@ -6,11 +6,12 @@ import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
-import { StatCountUp } from "@/components/ui/StatCountUp";
 import { content } from "@/content/data";
 
 /**
  * Proyectos. El destacado ocupa el ancho completo; el resto va en grilla.
+ * Seccion provisoria: se reemplaza por el carrusel 3D de trabajos. Aca solo
+ * se adapto al sistema visual nuevo (tokens, tipografia, aire, loops CSS).
  *
  * Si un proyecto todavia no tiene captura (`captura: null`), en vez de romper
  * o dejar un hueco se dibuja un marco achurado con su etiqueta. Queda como una
@@ -34,29 +35,15 @@ function Mockup({
   grande?: boolean;
   fase?: "a" | "b";
 }) {
-  // Float continuo con el rAF global (TrazoProvider): cada mockup sigue una de
-  // las dos fases del trazo para no bobear todos al unisono. Con reduced-motion
-  // el trazo queda fijo en 0.5 y esto es un desplazamiento estatico inofensivo.
-  const floatVar = fase === "a" ? "--trazo" : "--trazo-b";
+  // Flota en loop con una animacion CSS (compositor). Dos fases para que no
+  // floten todos al unisono; se pausa con la seccion fuera de pantalla.
+  const flota = fase === "a" ? "a-flotar" : "a-flotar-b";
 
   return (
     <div className="group relative mx-auto w-full max-w-[260px] md:max-w-none">
-      {/* Capa que respira: el transform se recalcula cada frame via CSS var.
-          Sin transition, porque el valor ya cambia suave con el trazo. */}
-      <div
-        className="will-change-transform"
-        style={{ transform: `translateY(calc(-6px * var(${floatVar}, 0.5)))` }}
-      >
+      <div className={`loop ${flota}`}>
         {/* La placa: al hover se levanta y su borde se enciende en acento. */}
         <div className="relative border border-[color:var(--hairline)] bg-[color:var(--surface)] p-3 transition-[transform,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:border-[color:var(--accent)]">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute left-1.5 top-1.5 z-10 h-[9px] w-[9px] border-l border-t border-[color:var(--accent)]"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute bottom-1.5 right-1.5 z-10 h-[9px] w-[9px] border-b border-r border-[color:var(--accent)]"
-          />
 
           <div className="relative aspect-[9/16] w-full overflow-hidden bg-[color:var(--bg-deep)]">
             {captura ? (
@@ -86,7 +73,7 @@ function Mockup({
                     "repeating-linear-gradient(45deg, transparent 0 10px, rgba(200,224,255,0.045) 10px 11px)",
                 }}
               >
-                <span className="px-6 text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[color:var(--text-faint)]">
+                <span className="px-6 text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.14em] text-[color:var(--text-faint)]">
                   {etiqueta}
                 </span>
               </div>
@@ -104,7 +91,7 @@ function Bloques({ items }: { items: readonly string[] }) {
       {items.map((bloque) => (
         <li
           key={bloque}
-          className="border border-[color:var(--hairline)] px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]"
+          className="border border-[color:var(--hairline-strong)] px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-dim)]"
         >
           {bloque}
         </li>
@@ -119,111 +106,74 @@ export function Proyectos() {
 
   return (
     <Section id="proyectos">
-      <SectionTitle eyebrow={proyectos.eyebrow} title={proyectos.title} />
+      <SectionTitle eyebrow={proyectos.eyebrow} title={proyectos.title} intro={proyectos.intro} />
 
-      <Reveal>
-        <p className="mb-8 max-w-[62ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
-          {proyectos.intro}
-        </p>
-      </Reveal>
 
       {/* ── El destacado ─────────────────────────────────────────────── */}
       {destacado ? (
         <Reveal>
-          <article className="grid gap-8 border-t border-[color:var(--accent)] pt-8 lg:grid-cols-[420px_1fr] lg:gap-12">
+          <article className="grid gap-10 border-t border-[color:var(--accent-line)] pt-10 lg:grid-cols-[420px_1fr] lg:gap-16">
             <Mockup
               captura={destacado.captura}
-              alt={`Página de producto de ${destacado.marca}`}
+              alt={`${proyectos.altCaptura} ${destacado.marca}`}
               etiqueta={proyectos.sinCaptura}
               grande
             />
 
             <div className="flex flex-col justify-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
                 {destacado.rubro}
               </p>
-              <h3 className="mt-4 font-display text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[0.98] tracking-[-0.03em] text-[color:var(--text)]">
+              <h3 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.5rem)] font-semibold leading-[1] tracking-[-0.012em] text-[color:var(--text)]">
                 {destacado.marca}
               </h3>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.11em] text-[color:var(--text-dim)]">
                 {destacado.producto}
               </p>
-              {proyectos.destacadoStat ? (
-                <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-none tracking-[-0.03em] text-[color:var(--accent)]">
-                    <StatCountUp valor={proyectos.destacadoStat.valor} />
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-faint)]">
-                    {proyectos.destacadoStat.detalle}
-                  </span>
-                </p>
-              ) : null}
-              <p className="mt-6 max-w-[54ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:text-[17px]">
+              <p className="mt-6 max-w-[54ch] text-[17px] leading-[1.6] text-[color:var(--text-dim)] md:text-[19px]">
                 {destacado.descripcion}
               </p>
 
               <div className="mt-8">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-dim)]">
                   {proyectos.bloquesLabel}
                 </p>
                 <Bloques items={destacado.bloques} />
               </div>
-
-              {destacado.url ? (
-                <a
-                  href={destacado.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 inline-flex w-fit items-center gap-2 border border-[color:var(--hairline)] px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)]"
-                >
-                  {proyectos.verLabel} ↗
-                </a>
-              ) : null}
             </div>
           </article>
         </Reveal>
       ) : null}
 
       {/* ── El resto ─────────────────────────────────────────────────── */}
-      <div className="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-20 grid gap-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
         {resto.map((proyecto, index) => (
           <Reveal key={proyecto.id} delay={index * 0.06}>
             <article className="flex h-full flex-col">
               <Mockup
                 captura={proyecto.captura}
-                alt={`Página de producto de ${proyecto.marca}`}
+                alt={`${proyectos.altCaptura} ${proyecto.marca}`}
                 etiqueta={proyectos.sinCaptura}
                 fase={index % 2 === 0 ? "b" : "a"}
               />
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
                 {proyecto.rubro}
               </p>
-              <h3 className="mt-2 font-display text-[1.35rem] font-medium leading-tight tracking-[-0.02em] text-[color:var(--text)]">
+              <h3 className="mt-2 font-display text-[1.6rem] font-semibold leading-tight tracking-[-0.008em] text-[color:var(--text)]">
                 {proyecto.marca}
               </h3>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-[color:var(--text-dim)]">
+              <p className="mt-3 text-[16px] leading-[1.6] text-[color:var(--text-dim)]">
                 {proyecto.descripcion}
               </p>
               <div className="mt-4">
                 <Bloques items={proyecto.bloques} />
               </div>
-
-              {proyecto.url ? (
-                <a
-                  href={proyecto.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex w-fit items-center gap-2 border border-[color:var(--hairline)] px-3 py-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)]"
-                >
-                  {proyectos.verLabel} ↗
-                </a>
-              ) : null}
             </article>
           </Reveal>
         ))}
       </div>
 
-      <p className="mt-10 border-t border-[color:var(--hairline)] pt-6 font-display text-[clamp(1.1rem,2.2vw,1.5rem)] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text-dim)]">
+      <p className="mt-20 max-w-[46ch] border-t border-[color:var(--hairline)] pt-8 font-display text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium leading-snug tracking-[-0.005em] text-[color:var(--text-soft)]">
         {proyectos.pie}
       </p>
     </Section>

@@ -20,13 +20,14 @@ export const alt = content.seo.title;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const BG = "#0A1524";
-const SURFACE = "#0F1E31";
-const TEXT = "#E8EEF6";
-const DIM = "#94A7BF";
-const FAINT = "#5A6E88";
-const ACCENT = "#4FD4FF";
-const HAIRLINE = "rgba(200,224,255,0.14)";
+// Satori no lee variables CSS: estos valores copian los tokens de globals.css.
+const BG = "#060d18";
+const SURFACE = "#0b1626";
+const TEXT = "#eaf0f7";
+const DIM = "#9aabc2";
+const FAINT = "#7084a0";
+const ACCENT = "#4fd4ff";
+const HAIRLINE = "rgba(200,224,255,0.17)";
 
 /** Prueba varias rutas y devuelve la primera que exista. */
 async function cargarFuente(rutas: string[]) {
@@ -38,27 +39,6 @@ async function cargarFuente(rutas: string[]) {
     }
   }
   return null;
-}
-
-function Escuadra({
-  pos,
-}: {
-  pos: "tl" | "tr" | "bl" | "br";
-}) {
-  const base = {
-    position: "absolute" as const,
-    width: 26,
-    height: 26,
-    borderColor: ACCENT,
-    borderStyle: "solid" as const,
-  };
-  const mapa = {
-    tl: { top: 28, left: 28, borderWidth: "3px 0 0 3px" },
-    tr: { top: 28, right: 28, borderWidth: "3px 3px 0 0" },
-    bl: { bottom: 28, left: 28, borderWidth: "0 0 3px 3px" },
-    br: { bottom: 28, right: 28, borderWidth: "0 3px 3px 0" },
-  };
-  return <div style={{ ...base, ...mapa[pos] }} />;
 }
 
 export default async function Image() {
@@ -93,15 +73,12 @@ export default async function Image() {
           flexDirection: "column",
           justifyContent: "space-between",
           backgroundColor: BG,
+          backgroundImage: `radial-gradient(circle at 82% 40%, rgba(79,212,255,0.16), transparent 55%)`,
           padding: 70,
           position: "relative",
           fontFamily: texto,
         }}
       >
-        <Escuadra pos="tl" />
-        <Escuadra pos="tr" />
-        <Escuadra pos="bl" />
-        <Escuadra pos="br" />
 
         {/* fila superior */}
         <div
@@ -117,7 +94,7 @@ export default async function Image() {
           <div style={{ display: "flex" }}>
             {content.identity.firstName} {content.identity.lastName}
           </div>
-          <div style={{ display: "flex" }}>CÓRDOBA · ARGENTINA</div>
+          <div style={{ display: "flex" }}>{content.og.lugar}</div>
         </div>
 
         {/* la tesis */}
@@ -134,9 +111,9 @@ export default async function Image() {
               maxWidth: 880,
             }}
           >
-            <span style={{ marginRight: 16 }}>{content.hero.title.before}</span>
-            <span style={{ color: ACCENT, marginRight: 16 }}>{content.hero.title.accent}</span>
-            <span>{content.hero.title.after}</span>
+            <span style={{ marginRight: 16 }}>{content.og.titular.before}</span>
+            <span style={{ color: ACCENT, marginRight: 16 }}>{content.og.titular.accent}</span>
+            <span>{content.og.titular.after}</span>
           </div>
 
           <div
@@ -164,9 +141,9 @@ export default async function Image() {
           }}
         >
           <div style={{ display: "flex", alignItems: "flex-end" }}>
-            {content.hero.rotulo.cells.map((celda, i) => (
+            {content.hero.cifras.map((celda, i) => (
               <div
-                key={celda.k}
+                key={celda.label}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -176,7 +153,7 @@ export default async function Image() {
                 }}
               >
                 <div style={{ display: "flex", fontSize: 15, letterSpacing: 3, color: FAINT }}>
-                  {celda.k}
+                  {celda.label}
                 </div>
                 <div
                   style={{
@@ -187,7 +164,7 @@ export default async function Image() {
                     color: TEXT,
                   }}
                 >
-                  {celda.v}
+                  {celda.valor}
                 </div>
               </div>
             ))}
@@ -214,7 +191,7 @@ export default async function Image() {
                 marginRight: 12,
               }}
             />
-            SHOPIFY · TIENDA NUBE
+            {content.og.pie}
           </div>
         </div>
       </div>

@@ -1,342 +1,209 @@
-# PLANO · Sistema de diseño del portfolio
+# Sistema de diseño del portfolio · Inmersivo
 
-> **Concepto:** el sitio no es un portfolio, es **el plano técnico de una página que vende**.
-> Fondo azul de plano de obra, líneas de cota, marcas de esquina, anotaciones al margen.
-> Cada bloque del sitio está acotado y anotado como lo estaría en un plano real: no solo se
-> muestra qué hay, se anota **por qué está ahí y qué hace por la conversión**. El riel
-> izquierdo no es decoración: es un medidor de profundidad de scroll, la misma métrica con
-> la que se mide una landing de verdad.
-> **Mensaje en 5 segundos:** "este tipo no diseña páginas lindas, diseña páginas que venden,
-> y sabe explicar cada decisión."
+> **Concepto:** del caos al sistema, de punta a punta. El hero 3D arma una notebook y un
+> celular con el panel de un negocio; cada sección siguiente es una escena de scroll que
+> cuenta una sola idea por pantalla: el desorden que se ordena, la tienda que se desarma en
+> capas, las tarjetas que se dan vuelta, la línea que conecta los pasos.
+> **Mensaje en 5 segundos:** "tu negocio, ordenado: una web que vende y un panel que manejás
+> vos". El protagonista es el negocio del cliente; Benjamín aparece como respaldo.
 
-Design Read: portfolio de desarrollador de ecommerce y especialista en conversión, para
-conseguir clientes (marcas, dropshippers, agencias) en Argentina. Lenguaje técnico-editorial
-premium. Español argentino, voseo profesional.
-Dials: `DESIGN_VARIANCE: 8 / MOTION_INTENSITY: 6 / VISUAL_DENSITY: 4`.
+Design Read: portfolio de un desarrollador que trabaja al nivel de un estudio (criterio de
+producto, UX/UI y conversión, y sistemas a medida) para dueños de negocios que venden
+online en Argentina. Lenguaje técnico y limpio, oscuro, con una sola luz celeste.
+Dials: `DESIGN_VARIANCE: 8 / MOTION_INTENSITY: 8 / VISUAL_DENSITY: 3`.
+
+Lo que cambió respecto del sistema "plano técnico" anterior: **sale la grilla de fondo** y
+se reduce el ruido de plano (sin líneas de cota, marcas de esquina solo en el marco del
+hero). Más aire, tipografía más grande y con más jerarquía, y profundidad real (CSS 3D y la
+escena WebGL) en lugar de decoración.
 
 ---
 
-## 1. Paleta (LOCK, un solo acento, tema único en TODA la página)
+## 1. Paleta (LOCK, un solo acento)
 
-| Token CSS | Valor | Uso |
+Todos los colores salen de las variables de `app/globals.css`. Ningún color escrito a mano
+en componentes. Las dos excepciones documentadas: `themeColor` en `app/layout.tsx` y la
+imagen OG (`app/opengraph-image.tsx`), que no pueden leer variables CSS y copian los valores.
+
+| Token | Valor | Uso |
 |---|---|---|
-| `--bg` | `#0A1524` | Fondo global. Azul de plano, **no negro**. Nunca `#000`, nunca negro cálido. |
-| `--bg-deep` | `#06101C` | Viñeta del hero, footer, fondo de la banda de herramientas |
-| `--surface` | `#0F1E31` | Placas, filas expandidas, inputs |
-| `--text` | `#E8EEF6` | Texto principal (blanco papel frío, nunca `#fff`) |
-| `--text-dim` | `#94A7BF` | Párrafos de apoyo. Contraste 7.5:1 sobre `--bg`, pasa AAA |
-| `--text-faint` | `#5A6E88` | SOLO texto ≥18px o decorativo. Contraste 3.6:1, no sirve para body |
-| `--accent` | `#4FD4FF` | ÚNICO croma: celeste de plotter. Contraste 10.7:1 sobre `--bg` |
-| `--accent-soft` | `rgba(79,212,255,0.12)` | Halos, fills de hover, anillos |
-| `--grid` | `rgba(120,180,230,0.06)` | La grilla del plano (fondo global) |
-| `--hairline` | `rgba(200,224,255,0.10)` | Bordes 1px |
+| `--bg` | `#060d18` | Fondo global: azul noche casi negro. Nunca `#000` |
+| `--bg-deep` | `#03080f` | Footer, profundidad de los bordes del fondo |
+| `--surface` | `#0b1626` | Tarjetas, campos, paneles de las ilustraciones |
+| `--surface-2` | `#0f1e33` | Segundo nivel (burbujas, celdas, carta destacada) |
+| `--text` | `#eaf0f7` | Texto principal (16.9:1 sobre `--bg`) |
+| `--text-soft` | `#c3cfde` | Bajadas y párrafos destacados (12.3:1) |
+| `--text-dim` | `#9aabc2` | Párrafos de apoyo y etiquetas (8.3:1) |
+| `--text-faint` | `#7084a0` | Solo detalles y ≥18px (5.1:1) |
+| `--accent` | `#4fd4ff` | ÚNICO croma: el celeste del sistema (11.3:1) |
+| `--accent-soft` | `rgba(79,212,255,.12)` | Fondos encendidos, halos |
+| `--accent-line` | `rgba(79,212,255,.4)` | Bordes en acento suave |
+| `--accent-glow` | `rgba(79,212,255,.075)` | La luz difusa del fondo |
+| `--hairline` / `--hairline-strong` | `rgba(200,224,255,.09 / .17)` | Bordes de 1px |
+| `--veil` | `rgba(6,13,24,.86)` | Velo de lectura del hero y nav sólida |
 
-**Prohibido:** ámbar, naranja, amarillo, violeta, verde terminal, rosa, gradientes multicolor.
-El único degradado permitido es radial de luz celeste (glow). El acento se raciona: **menos del
-12% de la superficie visible**. Sin `box-shadow` en ninguna caja: la elevación se comunica con
-hairlines, con marcas de esquina y con luz.
+Prohibido: verde, ámbar, violeta, rosa o cualquier croma fuera del celeste; degradados
+multicolor; `box-shadow`. El único degradado permitido es la luz radial celeste. El acento
+se raciona: menos del 12% de la superficie visible.
 
-**Regla del azul:** todos los azules del sitio comparten el mismo hue frío (205-210°). Si un
-azul se ve morado o verdoso, está mal.
+## 2. Fondo
 
----
+- `components/chrome/Fondo.tsx`: capa fija `z-0`. Degradados radiales quietos (el centro
+  apenas más alto, los bordes caen a negro) y **una luz celeste difusa que acompaña el
+  scroll**: arranca donde se arma el sistema del hero (derecha en desktop, abajo en mobile)
+  y viaja de lado a lado sección por sección. Solo cambia su `transform` (compositor).
+- `components/chrome/Grano.tsx`: grano SVG al 2.5%, fijo, `z-70`, sin eventos.
+- Sin grilla, sin cuadrícula, sin cotas.
 
-## 2. Tipografía (tres voces)
+## 3. Tipografía
 
-| Voz | Fuente | Variable CSS | Uso |
+| Voz | Fuente | Variable | Uso |
 |---|---|---|---|
-| **Monumento** | Clash Display 500/600/700 (local, Fontshare) | `--font-display` → clase `font-display` | Titulares. Tracking `-0.03em`. Uppercase solo en hero e índices |
-| **Prosa** | Switzer 400/500/700 (local, Fontshare) | `--font-sans` (default en body) | Párrafos, UI, botones |
-| **Anotación** | JetBrains Mono 400/500 (Google) | `--font-mono` → clase `font-mono` | SOLO cotas, medidas, timestamps, métricas, labels. 11-13px, uppercase, tracking `+0.16em`. **JAMÁS párrafos** |
+| Display | Clash Display 500/600 (local) | `--font-clash` → `font-display` | Titulares |
+| Prosa | Switzer 400/500 (local) | `--font-switzer` → `font-sans` (body) | Párrafos, UI, botones |
+| Etiqueta | JetBrains Mono 400 (Google) | `--font-jetbrains` → `font-mono` | Eyebrows, etiquetas, datos. Nunca párrafos |
 
-Escala display, siempre con `clamp()`:
-- Hero: `clamp(4rem, 10.5vw, 9rem)`
-- Títulos de sección: `clamp(2.5rem, 5vw, 4.5rem)`, peso 600
-- Body: 17-18px, `leading-relaxed`, `max-w-[65ch]`
-- Anotación mono: 11-13px
+El mapeo vive en `@theme inline` de `globals.css` y apunta a las variables que define
+`next/font` en `layout.tsx` (antes se referenciaban a sí mismas y el sitio caía a la fuente
+del sistema). Solo se cargan los pesos que se usan.
 
-La voz mono es la que carga el concepto. Es la letra de las anotaciones de un plano. Por eso se
-usa mucho **como etiqueta** y nunca como texto corrido.
+Escala (siempre `clamp()`): titulares de sección `clamp(2.5rem, 6vw, 5.5rem)` peso 600,
+interlineado .98, tracking `-0.015em` (Clash ya es apretada: más negativo empasta las
+palabras). Frases grandes de escena `clamp(1.9rem, 4.4vw, 4.2rem)`. Bajadas
+`clamp(1.15rem, 1.7vw, 1.5rem)` en `--text-soft`. Cuerpo 17-20px. Etiquetas mono 10-11px,
+mayúsculas, tracking `.11-.15em`.
 
----
+## 4. Forma, espacio y layout
 
-## 3. Forma y espacio (LOCK)
+- Radio 0 en todo (los únicos círculos son avatares y ruedas dentro de ilustraciones).
+- Marcas de esquina: solo las cuatro del marco del hero. Nada de cotas.
+- Bordes de 1px (`--hairline-strong`) en tarjetas; el estado encendido pasa a `--accent`.
+- Secciones normales: `py-28 md:py-44`. Contenedor `max-w-[1400px]`, `px-6 md:px-12`, y en
+  desktop `lg:pl-28 lg:pr-20` para dejar libre el carril del riel.
+- Z-index: fondo 0, contenido 10, riel 30, nav 40, grano 70, cortina 100.
 
-- **Radio de esquinas: 0 en todo.** Un plano no tiene esquinas redondeadas.
-- **Marcas de esquina en vez de bordes completos:** las placas y cards no llevan un borde de
-  4 lados. Llevan cuatro escuadras en L de 10px, 1px `--hairline`, en las esquinas.
-  Es el detalle firma del sistema. Se implementa con `background-image` de gradientes lineales
-  o con cuatro `<span>` absolutos. Al hover, las escuadras pasan a `--accent`.
-- **Líneas de cota:** separador horizontal con dos ticks verticales en los extremos y una
-  etiqueta mono centrada arriba de la línea. Máximo **3 en toda la página**, como transición
-  entre bloques importantes. No decorar con esto.
-- **Grilla del plano:** fondo global fijo, cuadrícula de 40px en `--grid`, más una cuadrícula
-  mayor de 200px levemente más marcada. `fixed inset-0 pointer-events-none z-[5]`,
-  con máscara radial para que se apague en los bordes.
-- **Grano:** overlay SVG turbulence al 2.5%, `fixed inset-0 pointer-events-none z-[70]`.
-  Va **encima** de la grilla, y es lo que evita el look de plantilla.
-- Secciones: `py-28 md:py-40`. Contenedor `max-w-[1400px] mx-auto px-6 md:px-12 lg:pl-28 lg:pr-20`.
-- En desktop (≥lg) el contenido deja un carril izquierdo de ~96px libre para el riel.
-- Z-index (documentado, no inventar): grilla 5, contenido 10, riel 30, nav 40, popup de prueba
-  social 45, cursor 50, preloader 60, grano 70.
+## 5. Motion (el sistema TRAZO, rediseñado)
 
----
+**Un solo `requestAnimationFrame` global** (`lib/raf.ts`, manejado por `TrazoProvider` en
+`lib/trazo.tsx`). Hoy solo lo usa el scroll suave de Lenis. **Nada escribe estilos ni
+variables en `:root` por frame**: antes `--trazo` se escribía en `:root` en cada cuadro y
+recalculaba el estilo de toda la página 60 veces por segundo (la causa principal del TBT).
 
-## 4. El sistema TRAZO (el reloj global)
+- Solo se animan `transform` y `opacity`.
+- Escenas de scroll: `useScroll` de motion sobre la pista de cada escena; transformaciones en
+  forma de función (`lib/escena.ts`: `tramo`, `meseta`, `mapa`, `suave`). Sin listeners de
+  scroll propios.
+- Entradas: `Reveal` y `SectionTitle` con `useInView` (IntersectionObserver), una vez.
+- Loops ambientales: animaciones CSS (`.a-*` en `globals.css`) con la clase `.loop`, que
+  queda en pausa salvo dentro de una sección con `data-activa` (IntersectionObserver de
+  `<Section>`). Con la pestaña oculta el navegador no pinta.
+- Contadores en JS (pedidos que suben, carrito): `setInterval` lento solo con la escena en
+  pantalla y la pestaña visible (`useActiva`).
+- Easing: `--ease` `cubic-bezier(.16,1,.3,1)`; loops `--ease-io`.
+- GSAP no se usa (alcanza con motion y CSS; menos JS).
 
-Un solo reloj para TODO el sitio. Nada se anima por su cuenta.
+**Encendido por sección.** `<Section>` pone `data-viva` (y el contexto `useSeccionViva`)
+recién cuando la sección está a una pantalla y media. El variante de Tailwind `vivo:` aplica
+solo adentro de `[data-viva]`: así cada escena tiene dos layouts, el estático (por defecto)
+y el fijo con pista (`vivo:sticky`, `vivo:h-[...svh]`). Un salto por ancla (`irASeccion`)
+enciende todas antes de medir.
 
-- `lib/trazo.tsx` exporta `TrazoProvider`, que corre **UN** `requestAnimationFrame` global y:
-  - calcula el sobre del trazo `--trazo` (0→1, ataque 140ms, decaimiento suave hasta 900ms)
-    y lo escribe en `:root` cada frame; también `--trazo-b`, la misma señal desfasada medio
-    intervalo, para que no lata todo al unísono.
-  - expone `useTrazo()` → `{ onFrame(cb), onPass(cb), setRate(mult) }` para los canvas.
-  - intervalo base **5200ms**; `setRate` lo acelera (clímax del formulario de contacto: hasta 1400ms).
-  - se pausa con `document.hidden`.
-  - con `prefers-reduced-motion` **no hay loop**: `--trazo: 0.5` fijo y el sitio queda quieto,
-    nítido y perfectamente legible.
-- Cualquier elemento que "vive" usa CSS con la variable, nunca su propio timer:
-  `opacity: calc(0.5 + 0.5 * var(--trazo))` o `transform: scaleY(calc(1 + 0.015 * var(--trazo-b)))`.
+**Hidratación diferida.** Todo lo que está debajo del hero va envuelto en `<Diferida>`: el
+servidor manda el HTML completo, React no lo hidrata al cargar y lo monta recién cuando la
+sección se acerca. La primera carga solo paga el JS del hero y del cromo.
 
-**Qué significa el trazo:** es la pasada del plotter. Cada 5.2s una luz recorre el riel de
-arriba a abajo, como si el plano se estuviera redibujando. No es un latido. No pulsa hacia
-afuera: **viaja hacia abajo**, en el mismo sentido en que se lee el sitio.
+**Visible por defecto, reduced-motion nítido.** Sin JS, con JS que no cargó o con
+`prefers-reduced-motion`, cada escena muestra su versión estática (lista ordenada, pila 3D
+quieta, tarjetas de frente). Los loops quedan en su reposo (`animation: none`). La red de
+seguridad `html:not([data-escenas]) [data-anim]` fuerza opacidad 1 y sin transform.
 
----
+## 6. Primitivas (`components/ui/`)
 
-## 5. El riel de profundidad (`components/plano/RielScroll.tsx`)
+- `Section` + `Contenedor` + `useSeccionViva`: estructura, encendido por sección y pausa de loops.
+- `Diferida`: hidratación diferida de secciones de abajo.
+- `SectionTitle`: eyebrow mono celeste, titular que sube desde una máscara, bajada.
+- `Reveal`: entrada única (sube y aparece).
+- `Palabras`: revelado palabra por palabra atado a un progreso de scroll.
+- `Button` (primario celeste, secundario con borde), `Field`, `TextArea`.
 
-Carril fijo izquierdo, desktop ≥lg. Es el elemento firma ambiental.
+## 7. Cromo (`components/chrome/`)
 
-- Línea vertical de 1.5px en `x ≈ 48px`, color `--hairline`.
-- Encima, una línea `--accent` que **crece con el scroll real** (`useScroll` de motion, `scaleY`
-  con `transformOrigin: top`). No es decoración: es la profundidad de scroll medida.
-- Cada 20% hay un **tick de cota** hacia la derecha (8px) con su porcentaje en mono a 10px.
-- **Waypoints:** un nodo cuadrado de 6px por sección. El activo se enciende en `--accent` y
-  crece a 9px. Al hover aparece el nombre de la sección en mono, alineado a la izquierda.
-  Al click, scrollea. Es indicador y navegación a la vez.
-- Arriba de todo del riel, en vertical (`writing-mode: vertical-rl`), la lectura en mono:
-  `PROFUNDIDAD DE SCROLL · 47%`. Se actualiza real.
-- El trazo del plotter recorre el riel con cada pasada: un gradiente de 120px de alto que baja.
-- Aparece con un crossfade al salir del hero (scrollY 300→700), no está desde el frame 0.
-- **Mobile:** no existe el riel. Degrada a una barra de 2px en el borde izquierdo que solo
-  muestra el progreso, sin canvas, sin waypoints, sin trazo.
+- `Intro`: cortina con el nombre. Existe para darle tiempo a cargar a la escena 3D: el hero
+  baja three y arma el canvas detrás (loop en pausa) y lo enciende al levantarse. Sin WebGL
+  acelerado o con reduced-motion no aparece. Anima solo transform y opacity (WAAPI).
+- `Nav`: nombre, cuatro secciones y "TOMANDO PROYECTOS". Se esconde al bajar.
+- `Riel`: desktop, línea de avance (transform) y un punto por sección (IntersectionObserver).
+  Mobile: barra de 2px.
+- `Fondo`, `Grano`, `Blindaje`, `Analitica` (Clarity con la primera interacción o a los 7 s).
 
----
+## 8. Copy
 
-## 6. Primitivas compartidas (`components/ui/`) — USARLAS, no reinventar
+Todo el texto vive en `content/data.ts`. Voseo, frases cortas, desde el negocio del cliente.
+Sin tecnicismos: si se nombra una tecnología, se dice qué cambia en su día. Sin relleno
+("potenciar", "soluciones integrales"). **Prohibidos el guion largo y el medio en texto
+visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+200 páginas,
++130 marcas, 13 trabajos destacados: 9 tiendas y 4 sistemas). Testimonios: no se inventan.
 
-- **`Section`** · `<Section id bleed? cota?>`: wrapper con el padding estándar y el carril
-  izquierdo. Con `cota`, dibuja una línea de cota arriba de la sección con su etiqueta mono.
-- **`SectionTitle`** · título display con reveal por máscara (`clip-path` rise desde abajo).
-  Prop `eyebrow?` solo mono-label. **Máximo 4 eyebrows en todo el sitio**
-  (presupuesto asignado: Anatomía, Proyectos, Resultados, Contacto). Las demás secciones van
-  con el título pelado.
-- **`Reveal`** · `whileInView` una sola vez: `y: 24→0`, `opacity: 0→1`, `blur: 8→0`,
-  ease `[0.16, 1, 0.3, 1]`. Respeta reduced-motion. Prop `delay`.
-- **`Placa`** · la card del sistema: fondo `--surface`, sin borde, con las cuatro escuadras
-  en L. Al hover las escuadras se encienden en `--accent` y el contenido sube 3px.
-- **`Cota`** · línea de cota horizontal con ticks y etiqueta mono. Máximo 3 por página.
-- **`Button`** · rectangular, radio 0.
-  Primario: fondo `--accent`, texto `--bg`, peso 500.
-  Secundario: hairline + texto claro, hover con fill `--accent-soft`.
-  `:active` baja 1px. Label de máximo 3 palabras, nunca wrappea.
-- **`MonoLabel`** · etiqueta mono 11px uppercase tracking `0.16em`, color `--text-faint`.
-- **`Field`, `SelectField`, `TextArea`** · inputs de radio 0 sobre `--surface`, **label arriba
-  siempre visible** (nunca placeholder como label), focus ring celeste de 1px, error inline
-  abajo en celeste a 13px.
+## 9. Las secciones (una escena cada una)
 
----
-
-## 7. El popup de prueba social (`components/chrome/AvisoPrueba.tsx`)
-
-Guiño honesto al oficio, y el elemento que más rápido explica a qué se dedica.
-
-- Aparece **una sola vez por sesión**, cuando el usuario pasa la sección Anatomía.
-- Tarjeta chica abajo a la izquierda (abajo al centro en mobile), entra con
-  `x: -20 → 0` + fade, 320ms, ease del sistema. Se va sola a los 6 segundos.
-- Contenido: avatar circular, texto tipo "Sofía de Rosario compró hace 3 minutos",
-  y **arriba, en mono a 10px: `COMPONENTE PROPIO · PRUEBA SOCIAL`**.
-- Debajo, en `--text-faint` a 11px: "esto es un bloque que armo para mis clientes".
-- Se puede cerrar con la X y con `Esc`. `aria-live="polite"`.
-
-La gracia es que no finge ser real: se presenta como demo de su propio trabajo. Si se muestra
-más de una vez, deja de ser ingenioso y pasa a ser molesto. **Una vez.**
-
----
-
-## 8. Motion (motivado o no existe)
-
-- Easing global: `[0.16, 1, 0.3, 1]`. Springs: `stiffness 100, damping 20`.
-- Animar **solo** `transform` y `opacity`. Nunca `width`, `height`, `top` ni `left`.
-- **Prohibido `window.addEventListener("scroll")`.** Se usa `useScroll` de motion,
-  ScrollTrigger de GSAP, o IntersectionObserver.
-- GSAP **solo** en dos lugares: el pin de Proyectos y el scrub de Anatomía. Todo lo demás con
-  `motion/react`. Jamás GSAP y motion sobre el mismo nodo.
-- Todo `useEffect` con animación limpia al desmontar (`ctx.revert()` en GSAP).
-- `useReducedMotion()` en cada componente animado: degradar a estático nítido, nunca a "sin nada".
-- Patrón de revelado: **visible por defecto, la animación es un agregado.** Nada arranca en
-  `opacity: 0` sin un fallback: si el JS no carga, el sitio se lee igual.
-
----
-
-## 9. Copy y contenido
-
-- **TODO el texto vive en `content/data.ts`.** Los componentes no hardcodean copy jamás.
-- Español argentino profesional: voseo natural ("armá", "pedime", "podés"), sin lunfardo.
-- Sin palabras de relleno: nada de "revolucionar", "potenciar", "elevar", "soluciones
-  integrales", "seamless", "sinergia".
-- **Prohibido el guion largo (—) y el guion medio (–) en todo texto visible.** Se usa coma,
-  punto o dos puntos. Rangos con guion común: 2024-2026.
-- Punto medio `·` máximo 1 por línea, solo en tiras mono.
-- **Números reales solamente.** Si no hay dato verificable, no se inventa: se omite o se dice
-  con honestidad.
-- Sin numeración decorativa de secciones. La única sección numerada es Proceso, porque ahí el
-  orden **es** información.
-- Testimonios: no se inventan. Si todavía no hay, va el tratamiento honesto (ver sección 11).
-
----
-
-## 10. Las 13 secciones
-
-Una familia de layout por sección, cero repetición.
-
-| # | Sección | id | Archivo | Layout | Motion |
+| # | Sección | id | Archivo | Escena de scroll | Loop ambiental |
 |---|---|---|---|---|---|
-| 1 | Hero | `inicio` | `Hero.tsx` + `components/hero3d/` | Hero fijo (sticky) durante un recorrido de 2.5 pantallas (2.2 en mobile). Texto HTML real a la izquierda (arriba en mobile), escena WebGL a pantalla completa detrás: "del caos al sistema". Escuadras en las esquinas del cuadro y cajetín mono abajo a la derecha con la lectura del ensamblaje | Scroll: unos 180 fragmentos del caos de un negocio chico (chats, celdas de planilla, post-its, tickets, relojes, carritos) vuelan con desfase a sus casilleros y arman una notebook y un celular con su UI. El titular pasa del dolor ("Tu negocio hoy") a la solución ("Con un sistema"). Al final, órbita leve, el sistema se enciende y un pulso celeste lo recorre cada 5.2 s. Ver sección 14 |
-| 2 | Sobre mí | `sobre-mi` | `About.tsx` | Split asimétrico 7/5. Texto dominante a la izquierda; a la derecha tu foto en duotono celeste dentro de un marco con marcas de esquina y una cota que mide el marco, anclada al riel con un conector de 1px | Párrafos revelados línea por línea con máscara; una única pasada de escaneo celeste sobre la foto, una sola vez |
-| 3 | **Anatomía de una landing** | `anatomia` | `Anatomia.tsx` | **La sección firma.** Wireframe grande de una landing (izquierda, sticky) con sus bloques apilados. A la derecha, las anotaciones: al llegar a cada bloque se enciende su cota y aparece la nota de conversión ("bloque 04 · prueba social · va acá porque la objeción de confianza aparece justo después del precio") | Scrub con GSAP ScrollTrigger: el bloque activo se ilumina en `--accent`, los demás bajan a 25%. La anotación entra con blur + 12px |
-| 4 | Proyectos | `proyectos` | `Proyectos.tsx` | Paneles caso apilados con pin GSAP, uno por marca. Cada panel: mockup de celular con captura real de la landing a la izquierda, datos a la derecha, y un anillo de specs mono alrededor del mockup (BUNDLES · STICKY BAR · UGC · FAQ · CHECKOUT DIRECTO) | Pin + los callouts se encienden en secuencia según el progreso del scroll |
-| 5 | Servicios | `servicios` | `Servicios.tsx` | Grid asimétrico 2×2 desigual, la celda de "Landing de producto" dominante (ocupa 2 columnas). Placas con marcas de esquina, sin sombras | Hover: el contenido sube 4px y aparece un tick mono de confirmación |
-| 6 | Proceso | `proceso` | `Proceso.tsx` | Tira horizontal de pasos numerados con una línea de cota que los atraviesa. **Es la única sección numerada del sitio**, porque el orden es información real | La cota se dibuja de izquierda a derecha con el scroll; cada paso se enciende al ser alcanzado |
-| 7 | Herramientas | `herramientas` | `Herramientas.tsx` | Banda horizontal full-bleed sobre `--bg-deep`: módulos rectangulares con el beneficio en criollo grande y el nombre de la herramienta chico en mono. Scroll-snap horizontal contenido en la franja | Al entrar, los módulos se encienden en secuencia; después respiran con `--trazo` en offsets distintos |
-| 8 | Lo que domino | `oficio` | `Oficio.tsx` | Constelación SVG de nodos agrupados (Construcción / Conversión / Contenido / Tráfico), unidos con líneas de 1px. **El peso tipográfico del label indica el dominio real**, sin barras ni porcentajes inventados | Los nodos respiran con `--trazo` y `--trazo-b`; al hover se ilumina la cadena real de dependencias |
-| 9 | Recorrido | `recorrido` | `Recorrido.tsx` | Tabla tipográfica editorial full-width, tipo legajo, en dos bloques (Formación y Trayectoria) separados por una línea de cota. Año en mono al margen izquierdo, título, institución. Acordeón que abre el detalle. **Sin cards.** La fila de la carrera Full Stack va destacada con las escuadras en `--accent` y un sello mono `TOP 10` al margen derecho | Al expandir, el riel emite un pulso lateral hacia la fila |
-| 10 | Resultados | `resultados` | `Resultados.tsx` | Dossier documental: cabecera mono, 3 columnas de datos duros, y abajo una cita del flujo real de una venta | Los números cuentan desde 0 **una sola vez** al entrar, disparados por la pasada del trazo |
-| 11 | Testimonios | `testimonios` | `Testimonios.tsx` | Cita monumental única centrada en Clash Display 500. Si todavía no hay testimonios: achurado diagonal sutil + texto honesto | Transición por blur + 12px de desplazamiento |
-| 12 | Contacto | `contacto` | `Contacto.tsx` | El cotizador: título grande + formulario en 2 columnas (campos a la izquierda, contexto y contacto directo a la derecha). El riel se aplana detrás | El trazo se acelera con cada campo completado (`setRate`); al enviar, golpe de matriz y se abre wa.me |
-| 13 | Footer | (sin id) | `Footer.tsx` | Barra de estado full-width en mono: © 2026, Córdoba AR, uptime de sesión, hora local, colofón de imprenta, link "volver arriba". El riel termina en un punto que sigue trazando | El punto final vive con el reloj global |
+| 1 | Hero 3D | `inicio` | `Hero.tsx` + `hero3d/` | Del caos al sistema (ver sección 10). Al final la cámara entra en la pantalla de la notebook y funde con lo que sigue | Barras que se llenan, contadores que suben, notificación de pedido nuevo en el celular |
+| 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: la frase se revela por palabra, la ilustración pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Chats que siguen llegando, contador de pedidos, "Guardado", productos que caen al carrito, escaneo |
+| 3 | Proyectos | `proyectos` | `Proyectos.tsx` | Provisoria (se reemplaza por el carrusel 3D): entradas y mockups | Mockups que flotan |
+| 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
+| 5 | Servicios | `servicios` | `Servicios.tsx` | Cada tarjeta entra dada vuelta y gira en 3D hasta quedar de frente | Carrito que se llena, filas que cargan, aguja que pasa a rápido, escudo que escanea |
+| 6 | Cómo trabajamos | `proceso` | `Proceso.tsx` | Una línea se dibuja y conecta los pasos; cada nodo se enciende al alcanzarlo | Chat escribiendo, firma, bloques que se apilan, check |
+| 7 | Sobre mí | `sobre-mi` | `SobreMi.tsx` | Frase por palabra; la formación llega como un mazo que se reparte | Números reales que cuentan una vez al entrar |
+| 8 | Testimonios | `testimonios` | `Testimonios.tsx` | No se renderiza mientras esté vacío | |
+| 9 | Contacto | `contacto` | `Contacto.tsx` | Cotizador con preselección desde Servicios | Pulso de "respondo en el día", confirmación con check al enviar |
+| 10 | Footer | | `Footer.tsx` | | Punto que respira |
 
-Familias usadas: editorial-monumental, split-asimétrico, plano-anotado-sticky, paneles-pin,
-grid-asimétrico, tira-de-cota, banda-racks, constelación-SVG, tabla-legajo, dossier,
-cita-monumental, form-2col, barra-de-estado. **13 layouts, cero repetición.**
+## 10. 3D (WebGL, solo el hero)
 
----
+**Aislamiento.** three y React Three Fiber viven solo en `components/hero3d/`:
+`Escena3D.tsx` (único archivo que importa R3F), `geometrias.ts` (geometrías, shaders y
+estado). `plano.ts` (casilleros, tramos, contadores) e `iconos.ts` (íconos del panel) son
+geometría pura que comparten la escena, el texto HTML y los SVG estáticos
+(`IlustracionSistema.tsx`, `IlustracionCaos.tsx`).
 
-## 11. Zonas sin dato (regla de honestidad)
+**Carga.** El texto del hero es HTML del servidor y es el LCP. Durante la cortina, en un
+momento ocioso, se chequea WebGL acelerado (`lib/webgl.ts`), se importa la escena y se arma
+el canvas con `frameloop="never"`: compila los shaders y pinta un cuadro. Al levantarse la
+cortina el loop arranca. Mientras tanto se ve el caos en SVG, que hace crossfade con el
+canvas: el hero nunca queda vacío.
 
-Si falta contenido real (testimonios, métricas, capturas), **no se inventa y no se deja vacío**.
-Va el tratamiento "ZONA SIN RELEVAR": achurado diagonal de 45° a `rgba(200,224,255,0.045)`,
-etiqueta mono, y una línea honesta en `--text-dim`. Ejemplo: "Las primeras marcas están
-vendiendo. Sus palabras van a aparecer acá."
+**Loop.** Corre solo con la cortina levantada, el hero en pantalla y la pestaña visible.
+Todo el movimiento está en el vertex shader; por frame la CPU escribe un puñado de uniforms.
 
-Un placeholder honesto genera más confianza que un testimonio falso, y no expone a nadie.
+**Íconos del panel.** Relojes y carritos del caos se transforman al llegar en íconos
+distintos de un panel real (inicio, productos, pedidos, clientes, estadísticas, WhatsApp,
+ajustes; buscar y campana arriba; carrito en la tienda del celular). La geometría trae un
+casillero de morfeo por ícono y cada instancia enciende solo el suyo. Las líneas de
+contenido tienen largo propio por casillero, así filas y tarjetas no se ven calcadas.
 
----
+**Panel vivo.** Ya armado: las barras del gráfico se llenan en ola, contadores de siete
+segmentos suben solos (KPI y total) y en el celular baja una notificación de pedido nuevo.
+Todo en el shader (`uLoop`, `uTime`).
 
-## 12. Contacto: el cotizador
+**Legibilidad.** Velo del color de fondo detrás del texto (sin borde de caja), el caos
+esquiva la zona del texto al repartirse y se atenúa detrás de ella en el shader. En mobile
+el sistema queda abajo y más chico, sin pisar el texto.
 
-Campos:
-1. Nombre *
-2. Email *
-3. Qué necesitás * (select: Landing de producto / Tienda Shopify completa / Rediseño y optimización de una página que ya tengo / Copy y creativos / Otro)
-4. Contame de tu producto o marca * (textarea)
-5. Link de tu tienda o producto (opcional)
+**Zoom final.** En el último tramo la cámara se pone de frente a la pantalla de la notebook
+y entra hasta llenarla; el texto, el velo y el halo se van y un fundido al color de fondo
+conecta con la sección siguiente.
 
-Validación inline en español, en el submit y en el blur (no mientras escribe). Al enviar:
+**Presupuesto.** Desktop 177 fragmentos, mobile 91; 19 draw calls; dpr máx 1.75/1.5;
+sin postprocesado; máximo 11 atributos por vértice en el shader de fragmentos.
 
-```
-https://wa.me/[[NUMERO]]?text=<encodeURIComponent(mensaje estructurado)>
-```
+**Fallbacks.** Reduced-motion, ahorro de datos, sin WebGL acelerado o sin JS: sin canvas,
+el sistema armado en SVG (con los mismos íconos) y el texto en su estado final
+(`hero3d/estatico.ts`).
 
-El mensaje se arma en `lib/wa.ts`: saludo, nombre, email, tipo, descripción, link, cierre.
-Se abre con `window.open(url, "_blank", "noopener")`. **Sin backend.** Además del formulario,
-se muestran el mail y el WhatsApp directos, por si prefieren escribir sin llenar nada.
+## 11. Performance (innegociable)
 
----
-
-## 13. Performance y accesibilidad (innegociable)
-
-- Un solo `requestAnimationFrame` global (el de `TrazoProvider`). Canvas acotados. Única excepción
-  documentada: el loop de la escena 3D del hero (sección 14).
-- `next/font/local` para Clash y Switzer, `next/font/google` para JetBrains Mono.
-- Las capturas de las landings van optimizadas con `next/image`, con `sizes` correcto.
-  Ninguna imagen de más de 400kb.
-- GSAP se importa solo dentro de los componentes que lo usan.
-- Lenis en un provider client, desactivado con reduced-motion.
-- Focus visible siempre (ring celeste). Navegación completa por teclado. `aria-label` en
-  waypoints e íconos. Contraste AA mínimo en todo texto, AAA en body.
-- El cursor custom se desactiva en `pointer: coarse` y con reduced-motion.
-- **Mobile:** riel → barra de 2px; anatomía → los bloques se apilan sin sticky, con la
-  anotación debajo de cada uno; paneles pin → apilados normales; constelación → lista
-  agrupada; wireframe del hero → versión simplificada, sin seguimiento del cursor.
-- Objetivo: LCP menor a 2s en 4G, sin layout shift.
-
----
-
-## 14. 3D (WebGL)
-
-El hero tiene la única escena 3D del sitio. Estas reglas aplican a esa escena y a cualquier
-otra que se sume.
-
-**Aislamiento.** three y React Three Fiber viven solo en componentes hoja de
-`components/hero3d/`: `Escena3D.tsx` (el `<Canvas>`, único archivo que importa R3F) y
-`geometrias.ts` (geometrías, shaders y estado mutable). `plano.ts` es geometría pura sin three
-(casilleros del sistema y tramos del scroll) y lo comparten la escena, el texto HTML y el SVG
-del fallback. Ningún otro archivo importa three.
-
-**Su loop, la excepción al rAF único.** R3F corre su propio `requestAnimationFrame`. Es la
-única excepción a la sección 4 y tiene límites:
-- `frameloop="always"` solo mientras el hero está en pantalla (IntersectionObserver sobre la
-  sección) y la pestaña está visible (`visibilitychange`). Fuera de eso, `"never"`.
-- Todo el movimiento de los fragmentos se calcula en el vertex shader. Por frame la CPU solo
-  escribe un puñado de uniforms: progreso, tiempo, mouse, pulso.
-- El progreso sale de `useScroll` de motion sobre la sección y se lee con `MotionValue.get()`
-  dentro de `useFrame`. Sin GSAP en este componente, sin listeners de scroll.
-- Las transformaciones del texto ligadas al scroll usan `useTransform` en forma de función:
-  la forma de rangos se acelera con ViewTimeline nativo y con el sticky mide otro rango.
-
-**Carga diferida.** El texto del hero es HTML renderizado en el servidor y es el LCP: no
-depende del JS de la escena. El canvas se importa con `next/dynamic` y `ssr: false`, y se pide
-recién cuando terminó la Intro (`lib/intro.ts`) y el navegador está ocioso
-(`requestIdleCallback`). El chunk de three nunca entra en el JS inicial. El canvas aparece con
-un fade de opacidad cuando ya pintó su primer frame.
-
-**Fallbacks.** No se monta el canvas, se muestra el sistema armado en SVG estático
-(`IlustracionSistema.tsx`, sale de los mismos casilleros) y el texto queda en su estado final
-cuando:
-- `prefers-reduced-motion: reduce` (resuelto por CSS antes de hidratar, sin salto),
-- `navigator.connection.saveData`,
-- no hay WebGL o solo hay WebGL por software (SwiftShader, llvmpipe: PCs sin GPU y servidores
-  de medición). `?webgl=forzar` en la URL saltea ese chequeo, solo para QA con navegadores
-  headless,
-- no hay JS (`<noscript>`).
-Las reglas de ese modo viven en `components/hero3d/estatico.ts`, una sola fuente para los tres
-casos. El titular del caos queda oculto a la vista pero accesible para lectores de pantalla.
-
-**Presupuesto por dispositivo.**
-
-| | Desktop | Mobile (pointer coarse o ancho < 768) |
-|---|---|---|
-| Fragmentos | 178 | 91 |
-| Draw calls | 16 (líneas y relleno por tipo, aparatos, pantallas, halo) | igual |
-| dpr máximo | 1.75 | 1.5 |
-| Antialias | sí | no |
-| Mouse | parallax de cámara y repulsión del caos (solo pointer fine) | sin mouse |
-| Aparatos | con espesor (frente, dorso y aristas) | solo frente |
-| Postprocesado | ninguno: el glow es un sprite radial y un gradiente CSS | ninguno |
-
-**Paleta y estilo de líneas.** Todo es un plano técnico: líneas `gl.LINES` de 1px en
-`--accent`, superficies apenas rellenas (alfa 0.05), blending aditivo, y el blanco papel
-`--text` solo en la punta del plotter y en el pulso. Los colores se leen de las variables CSS
-al montar: ningún color escrito en el código de la escena. Sin sombras, sin texturas, sin
-colores fuera de la paleta. Detrás del texto el caos baja la voz (se atenúa en el shader) y una
-viñeta del color de fondo protege la lectura.
-
-**Ojo con el costo de estilo y con el LCP.** `--trazo` cambia en `:root` en cada frame y eso
-recalcula el estilo de todos los nodos de la página. Por eso el SVG del fallback no se dibuja
-rect por rect (serían unos 120 nodos): cada grupo es un solo `<path>` con muchos subtrazos y el
-dibujo entero son unos 15 nodos. No va como imagen ni como máscara CSS: eso cuenta como
-candidato a LCP y, como aparece cuando se decide el modo estático, se vuelve el LCP de la
-página. Y nada de `<radialGradient>` con `var()` en un SVG inline: se invalida en cada
-recálculo y obliga a repintar el dibujo entero en cada frame. Los halos van con gradiente CSS.
+Objetivo PageSpeed mobile ≥ 90. LCP es el titular del hero (HTML). Medido contra
+`next start` con Lighthouse mobile: ver el reporte de la entrega. Reglas que lo sostienen:
+nada por frame en `:root`; un rAF; loops en CSS y pausados fuera de pantalla; secciones
+encendidas por cercanía; hidratación diferida; three solo con GPU; Clarity diferido.

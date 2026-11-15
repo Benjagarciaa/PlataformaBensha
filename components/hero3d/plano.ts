@@ -12,6 +12,8 @@
  *  - "celular": centro de la pantalla del celular
  */
 
+import { ICONOS, type Icono } from "./iconos";
+
 export type Tipo = "chat" | "celda" | "postit" | "ticket" | "reloj" | "carrito";
 
 export const TIPOS: Tipo[] = ["chat", "celda", "postit", "ticket", "reloj", "carrito"];
@@ -27,21 +29,34 @@ export type Casillero = {
   h: number;
   /** 0 a 1: en que momento del ensamblaje sale este fragmento */
   orden: number;
+  /** relojes y carritos: el icono del panel en el que se transforman */
+  icono?: Icono;
+  /** comportamiento en loop una vez armado (barras que se llenan, KPI) */
+  vivo?: "barra" | "kpi";
 };
+
+/** Indice del icono para el shader (0 si no tiene). */
+export function indiceIcono(c: Casillero) {
+  return c.icono ? ICONOS.indexOf(c.icono) : 0;
+}
 
 /**
  * Tramos del progreso de scroll (0..1 del recorrido fijo del hero).
  * Los comparten la escena WebGL y el texto HTML, asi van sincronizados.
  */
 export const TRAMOS = {
-  ensamble: [0.05, 0.78],
-  dibujo: [0.12, 0.62],
-  encendido: [0.78, 0.92],
-  pulso: [0.8, 0.95],
-  orbita: [0.7, 1],
-  textoCaosSale: [0.16, 0.32],
-  textoSistemaEntra: [0.42, 0.58],
-  indicadorSale: [0, 0.06],
+  ensamble: [0.04, 0.6],
+  dibujo: [0.1, 0.48],
+  encendido: [0.58, 0.7],
+  pulso: [0.6, 0.74],
+  orbita: [0.52, 0.78],
+  textoCaosSale: [0.1, 0.22],
+  textoSistemaEntra: [0.3, 0.42],
+  indicadorSale: [0, 0.04],
+  /** al final la camara entra en la pantalla de la notebook */
+  textoSistemaSale: [0.8, 0.87],
+  zoom: [0.8, 0.985],
+  fundido: [0.93, 1],
 } as const satisfies Record<string, readonly [number, number]>;
 
 /** Medidas fijas del sistema. */
@@ -72,6 +87,10 @@ export const PANEL = {
   trackpad: { x: 0, y: -2.0, w: 1.4, h: 0.66 },
 } as const;
 
+/** Fila de tarjetas de numeros (KPI) arriba del panel. */
+const KPI_Y = 0.83;
+const KPI_ALTO = 0.34;
+
 /**
  * Genera los casilleros del sistema.
  * @param denso true en desktop (178 fragmentos), false en mobile (91)
@@ -89,16 +108,19 @@ export function armarCasilleros(denso: boolean): Casillero[] {
   const barraY = hh - p.margen - 0.075;
   out.push({ tipo: "celda", sup: "pantalla", x: -0.65, y: barraY, w: 1.3, h: 0.12, orden: 0 });
   if (denso) {
-    out.push({ tipo: "reloj", sup: "pantalla", x: 1.52, y: barraY, w: 0.12, h: 0.12, orden: 0.02 });
-    out.push({ tipo: "carrito", sup: "pantalla", x: 1.72, y: barraY, w: 0.12, h: 0.12, orden: 0.03 });
+    out.push({ tipo: "reloj", sup: "pantalla", x: 1.52, y: barraY, w: 0.12, h: 0.12, orden: 0.02, icono: "buscar" });
+    out.push({ tipo: "carrito", sup: "pantalla", x: 1.72, y: barraY, w: 0.12, h: 0.12, orden: 0.03, icono: "campana" });
   }
   out.push({ tipo: "postit", sup: "pantalla", x: 1.92, y: barraY, w: 0.13, h: 0.13, orden: 0.04 });
 
-  // ── barra lateral: iconos ───────────────────────────────────────────
-  const nLateral = denso ? 8 : 5;
-  const pasoLateral = denso ? 0.25 : 0.38;
-  const lado = denso ? 0.13 : 0.19;
-  for (let i = 0; i < nLateral; i++) {
+  // ── barra lateral: los iconos de un panel real, todos distintos ───────
+  // Llegan como relojes y carritos del caos y se transforman al ordenarse.
+  const lateral: Icono[] = denso
+    ? ["inicio", "productos", "pedidos", "clientes", "estadisticas", "whatsapp", "ajustes"]
+    : ["inicio", "productos", "pedidos", "whatsapp", "ajustes"];
+  const pasoLateral = denso ? 0.29 : 0.38;
+  const lado = denso ? 0.14 : 0.19;
+  lateral.forEach((icono, i) => {
     const y = p.barraY - 0.2 - i * pasoLateral;
     out.push({
       tipo: i % 2 === 0 ? "reloj" : "carrito",
@@ -108,8 +130,9 @@ export function armarCasilleros(denso: boolean): Casillero[] {
       w: lado,
       h: lado,
       orden: 0.05 + 0.25 * ordenPantalla(y),
+      icono,
     });
-  }
+  });
 
   // ── tarjetas de numeros (KPI) ───────────────────────────────────────
   const nKpi = denso ? 4 : 3;
@@ -121,10 +144,11 @@ export function armarCasilleros(denso: boolean): Casillero[] {
       tipo: "postit",
       sup: "pantalla",
       x: p.main.x0 + wKpi / 2 + i * (wKpi + gapKpi),
-      y: 0.83,
+      y: KPI_Y,
       w: wKpi,
-      h: 0.34,
+      h: KPI_ALTO,
       orden: 0.12 + i * 0.02,
+      vivo: "kpi",
     });
   }
 
@@ -145,6 +169,7 @@ export function armarCasilleros(denso: boolean): Casillero[] {
       w: paso * 0.62,
       h,
       orden: 0.3 + 0.15 * t,
+      vivo: "barra",
     });
   }
 
@@ -225,7 +250,7 @@ export function armarCasilleros(denso: boolean): Casillero[] {
   const cel = (c: Omit<Casillero, "sup" | "orden">, orden: number) =>
     out.push({ ...c, sup: "celular", orden });
   cel({ tipo: "celda", x: -0.25, y: 0.96, w: 0.36, h: 0.07 }, 0.2);
-  cel({ tipo: "carrito", x: 0.4, y: 0.96, w: 0.1, h: 0.1 }, 0.21);
+  cel({ tipo: "carrito", x: 0.4, y: 0.96, w: 0.1, h: 0.1, icono: "carrito" }, 0.21);
   cel({ tipo: "postit", x: 0, y: 0.6, w: 0.93, h: 0.5 }, 0.24);
   cel({ tipo: "chat", x: -0.06, y: 0.25, w: 0.8, h: 0.08 }, 0.27);
   cel({ tipo: "chat", x: -0.17, y: 0.13, w: 0.58, h: 0.07 }, 0.29);
@@ -240,3 +265,54 @@ export function armarCasilleros(denso: boolean): Casillero[] {
 
   return out;
 }
+
+/** Un contador de siete segmentos que cuenta solo una vez armado el panel. */
+export type Contador = {
+  /** esquina inferior derecha del ultimo digito, en coordenadas de pantalla */
+  x: number;
+  y: number;
+  /** alto de cada digito */
+  alto: number;
+  digitos: number;
+  /** valor inicial y cuantas unidades suma por segundo */
+  base: number;
+  ritmo: number;
+};
+
+/**
+ * Los numeros que cuentan en el panel: uno por tarjeta KPI (a la derecha, donde
+ * las lineas de contenido quedan cortas) y el total grande arriba del grafico.
+ */
+export function armarContadores(denso: boolean): Contador[] {
+  const p = PANEL;
+  const nKpi = denso ? 4 : 3;
+  const anchoMain = p.main.x1 - p.main.x0;
+  const gapKpi = 0.08;
+  const wKpi = (anchoMain - (nKpi - 1) * gapKpi) / nKpi;
+  const out: Contador[] = [];
+  const bases = [318, 74, 952, 41];
+  const ritmos = [0.9, 0.35, 1.6, 0.22];
+  for (let i = 0; i < nKpi; i++) {
+    const x1 = p.main.x0 + (i + 1) * wKpi + i * gapKpi;
+    out.push({
+      x: x1 - wKpi * 0.08,
+      y: KPI_Y - KPI_ALTO * 0.28,
+      alto: KPI_ALTO * 0.36,
+      digitos: 3,
+      base: bases[i],
+      ritmo: ritmos[i],
+    });
+  }
+  out.push({
+    x: p.grafico.x0 + (p.grafico.x1 - p.grafico.x0) * 0.56,
+    y: p.grafico.y1 - 0.24,
+    alto: 0.17,
+    digitos: 5,
+    base: 18240,
+    ritmo: 3.1,
+  });
+  return out;
+}
+
+/** La notificacion de "pedido nuevo" que baja sola en el celular. */
+export const NOTIFICACION = { x: 0, y: 0.68, w: 0.9, h: 0.24 } as const;

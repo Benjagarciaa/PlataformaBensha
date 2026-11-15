@@ -1,38 +1,65 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Tokens (02-DESIGN.md, seccion 1). Ningun color fuera de aca.
+   ============================================================ */
 :root {
-  --bg: #0a1524;
-  --bg-deep: #06101c;
-  --surface: #0f1e31;
-  --text: #e8eef6;
-  --text-dim: #94a7bf;
-  --text-faint: #5a6e88;
+  --bg: #060d18;
+  --bg-deep: #03080f;
+  --surface: #0b1626;
+  --surface-2: #0f1e33;
+  --text: #eaf0f7;
+  --text-soft: #c3cfde;
+  --text-dim: #9aabc2;
+  --text-faint: #7084a0;
   --accent: #4fd4ff;
   --accent-soft: rgba(79, 212, 255, 0.12);
-  --grid: rgba(120, 180, 230, 0.06);
-  --hairline: rgba(200, 224, 255, 0.1);
-  --trazo: 0.5;
-  --trazo-b: 0.5;
+  --accent-line: rgba(79, 212, 255, 0.4);
+  --accent-glow: rgba(79, 212, 255, 0.075);
+  --hairline: rgba(200, 224, 255, 0.09);
+  --hairline-strong: rgba(200, 224, 255, 0.17);
+  --veil: rgba(6, 13, 24, 0.86);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* Las fuentes las define next/font en <html> (app/layout.tsx). Antes estas
+   variables se referenciaban a si mismas y el sitio caia a la fuente del
+   sistema: Clash, Switzer y JetBrains nunca se aplicaban. */
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--text);
-  --font-sans: var(--font-sans);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-switzer), Arial, sans-serif;
+  --font-display: var(--font-clash), var(--font-switzer), Arial, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
+
+/* Escenas vivas: cada <Section> pone data-viva cuando su escena puede
+   animar (JS cargado, sin reduced-motion y cerca de la pantalla). Sin ese
+   atributo todo queda en su version estatica, nitida y legible
+   (02-DESIGN.md, seccion 8). El variante vivo: aplica solo adentro. */
+@custom-variant vivo (&:where([data-viva] *));
 
 html {
   background: var(--bg);
   color: var(--text);
-  scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox: sin barra nativa, el riel es el indicador */
+  scrollbar-width: none;
 }
 
-/* Chrome, Safari y Edge: ocultar la barra de scroll nativa */
 html::-webkit-scrollbar {
   display: none;
+}
+
+/* Lenis maneja el scroll suave: el nativo no tiene que pelearle */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
@@ -40,9 +67,9 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans), Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.7;
+  font-family: var(--font-switzer), Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.65;
   letter-spacing: 0;
 }
 
@@ -57,33 +84,327 @@ body {
 
 :focus-visible {
   outline: 1px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+/* Red de seguridad: sin escenas vivas, lo que anima con motion queda en su
+   estado final aunque haya quedado un estilo inline. */
+html:not([data-escenas]) [data-anim] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* ============================================================
+   Loops ambientales (02-DESIGN.md, seccion 4)
+   Solo transform y opacity, en el compositor. Corren mientras su
+   seccion esta en pantalla: <Section> pone data-activa con un
+   IntersectionObserver. Con la pestaña oculta el navegador no pinta.
+   ============================================================ */
+.loop {
+  animation-play-state: paused !important;
+}
+[data-activa] .loop,
+.loop-libre {
+  animation-play-state: running !important;
+}
+
+@keyframes latido {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.a-latido {
+  animation: latido 5.2s var(--ease-io) infinite;
+}
+.a-latido-b {
+  animation: latido 5.2s var(--ease-io) -2.6s infinite;
+}
+
+@keyframes invita {
+  0%,
+  100% {
+    transform: translateY(-3px);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+.a-invita {
+  animation: invita 1.6s var(--ease-io) infinite;
+}
+
+@keyframes anillo {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.a-anillo {
+  animation: anillo 2.4s var(--ease) infinite;
+}
+
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+.a-flotar {
+  animation: flotar 6s var(--ease-io) infinite;
+}
+.a-flotar-b {
+  animation: flotar 6s var(--ease-io) -3s infinite;
+}
+
+@keyframes mecer {
+  0%,
+  100% {
+    transform: rotateZ(-2.5deg) rotateX(1.5deg);
+  }
+  50% {
+    transform: rotateZ(2.5deg) rotateX(-1.5deg);
+  }
+}
+.a-mecer {
+  animation: mecer 11s var(--ease-io) infinite;
+}
+
+/* llega algo nuevo: entra desde arriba, se queda y se va */
+@keyframes llega {
+  0% {
+    transform: translateY(-14px) scale(0.96);
+    opacity: 0;
+  }
+  12%,
+  70% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  85%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+}
+.a-llega {
+  animation: llega 3.6s var(--ease) infinite;
+}
+
+/* burbuja que aparece y se desvanece */
+@keyframes asoma {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  15%,
+  60% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.a-asoma {
+  animation: asoma 4.2s var(--ease) infinite;
+}
+
+/* barrido de escaneo: arriba hacia abajo */
+@keyframes escanea {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--recorrido, 100px));
+    opacity: 0;
+  }
+}
+.a-escanea {
+  animation: escanea 2.8s var(--ease-io) infinite;
+}
+
+/* algo que se llena de izquierda a derecha y vuelve a empezar */
+@keyframes llena {
+  0% {
+    transform: scaleX(0);
+  }
+  60%,
+  85% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+.a-llena {
+  animation: llena 3.2s var(--ease) infinite;
+}
+
+/* fila que carga: esqueleto que se vuelve dato */
+@keyframes carga {
+  0%,
+  20% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  32%,
+  88% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+.a-carga {
+  animation: carga 4s var(--ease) infinite;
+}
+
+/* producto que cae al carrito */
+@keyframes cae {
+  0% {
+    transform: translateY(-46px) rotate(-8deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  45%,
+  80% {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+    opacity: 0;
+  }
+}
+.a-cae {
+  animation: cae 3.6s var(--ease) infinite;
+}
+
+/* aguja de un velocimetro: de lento a rapido */
+@keyframes aguja {
+  0%,
+  8% {
+    transform: rotate(-78deg);
+  }
+  55%,
+  85% {
+    transform: rotate(58deg);
+  }
+  100% {
+    transform: rotate(-78deg);
+  }
+}
+.a-aguja {
+  animation: aguja 4.4s var(--ease-io) infinite;
+}
+
+/* tres puntos de "escribiendo..." */
+@keyframes tipea {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+.a-tipea {
+  animation: tipea 1.2s var(--ease-io) infinite;
+}
+
+/* bloque que se apila */
+@keyframes apila {
+  0% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  25%,
+  85% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+.a-apila {
+  animation: apila 3.6s var(--ease) infinite;
+}
+
+/* trazo que se dibuja (firma, check) */
+@keyframes traza {
+  0%,
+  10% {
+    transform: scaleX(0);
+  }
+  45%,
+  85% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+.a-traza {
+  animation: traza 3.4s var(--ease) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  /* los loops quedan en su estado de reposo, no en un fotograma cualquiera */
+  .loop,
+  .loop-libre {
+    animation: none !important;
+  }
 }
+
 /* ============================================================
    Blindaje anticopia
    El atributo data-blindado lo pone <Blindaje /> y solo aparece
    en producción, así en desarrollo podés seguir seleccionando.
    ============================================================ */
- 
+
 html[data-blindado="1"] body {
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
 }
- 
+
 /* Lo que SÍ se puede seleccionar y copiar: el formulario y los datos
    de contacto. Bloquear esto sería impedirle copiar el mail justo al
    visitante que te quiere escribir. */
@@ -93,10 +414,9 @@ html[data-blindado="1"] [data-copiable] {
   -webkit-user-select: text;
   user-select: text;
 }
- 
+
 /* Las imágenes no se arrastran al escritorio */
 html[data-blindado="1"] img {
   -webkit-user-drag: none;
   pointer-events: none;
 }
- 

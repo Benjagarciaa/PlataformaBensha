@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { content } from "@/content/data";
 import { marcarIntroFin } from "@/lib/intro";
+import { hayWebGLAcelerado } from "@/lib/webgl";
 
 /**
  * Intro. La cortina que "traza el plano" al entrar y se abre revelando el sitio.
@@ -13,10 +14,13 @@ import { marcarIntroFin } from "@/lib/intro";
  *    caso sin JS traen la pagina limpia, sin cortina encima.
  *  - Aparece cada vez que se entra o se recarga la pagina.
  *  - Salteable: cualquier click, scroll, tecla o toque la cierra al instante.
- *  - Con reduced-motion no aparece.
+ *  - Con reduced-motion no aparece. Tampoco sin WebGL acelerado: ahi el hero
+ *    es el SVG estatico y no hay escena que esperar.
  *  - Bloquea el scroll mientras dura y lo suelta al terminar.
- *  - Al terminar avisa (lib/intro.ts): el hero 3D espera eso para cargar
- *    WebGL, asi la escena no se arma debajo de la cortina.
+ *  - Al terminar avisa (lib/intro.ts). Mientras dura, el hero baja three y
+ *    arma la escena con el loop en pausa; cuando la cortina se levanta, la
+ *    escena ya esta. Por eso todo lo que anima aca es transform y opacity
+ *    (WAAPI en el compositor): sigue fluido aunque el hilo principal trabaje.
  */
 
 const DURACION = 1500;
@@ -26,8 +30,12 @@ const contenedor: Variants = {
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 const item: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, transform: "translateY(14px)" },
+  show: {
+    opacity: 1,
+    transform: "translateY(0px)",
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+  },
 };
 
 export function Intro() {
@@ -49,7 +57,7 @@ export function Intro() {
       }
     ).connection;
     const slow = !!conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType ?? ""));
-    if (reduce || slow) {
+    if (reduce || slow || !hayWebGLAcelerado()) {
       setVisible(false);
       marcarIntroFin();
       return;
@@ -90,15 +98,10 @@ export function Intro() {
         <motion.div
           key="intro"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-[color:var(--bg-deep)] px-6"
-          exit={{ y: "-100%" }}
+          initial={{ transform: "translateY(0%)" }}
+          exit={{ transform: "translateY(-100%)" }}
           transition={{ duration: 0.6, ease: [0.83, 0, 0.17, 1] }}
         >
-          {/* Escuadras en L: el marco del plano. */}
-          <span aria-hidden className="pointer-events-none absolute left-6 top-6 h-4 w-4 border-l border-t border-[color:var(--accent)] md:left-10 md:top-10" />
-          <span aria-hidden className="pointer-events-none absolute right-6 top-6 h-4 w-4 border-r border-t border-[color:var(--accent)] md:right-10 md:top-10" />
-          <span aria-hidden className="pointer-events-none absolute bottom-6 left-6 h-4 w-4 border-b border-l border-[color:var(--accent)] md:bottom-10 md:left-10" />
-          <span aria-hidden className="pointer-events-none absolute bottom-6 right-6 h-4 w-4 border-b border-r border-[color:var(--accent)] md:bottom-10 md:right-10" />
-
           <motion.div
             variants={contenedor}
             initial="hidden"
@@ -107,14 +110,14 @@ export function Intro() {
           >
             <motion.p
               variants={item}
-              className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-[color:var(--text-faint)] md:text-[11px]"
+              className="mb-5 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-dim)] md:text-[11px]"
             >
               {content.identity.locationShort}
             </motion.p>
 
             <motion.h1
               variants={item}
-              className="font-display text-[clamp(2.4rem,9vw,5.5rem)] font-semibold uppercase leading-[0.92] tracking-[-0.03em] text-[color:var(--text)]"
+              className="font-display text-[clamp(2.4rem,9vw,5.5rem)] font-semibold uppercase leading-[0.92] tracking-[-0.01em] text-[color:var(--text)]"
             >
               {content.identity.firstName}{" "}
               <span className="text-[color:var(--accent)]">
@@ -126,14 +129,14 @@ export function Intro() {
             <motion.span
               aria-hidden
               className="mt-7 block h-px w-[min(320px,70vw)] origin-left bg-[color:var(--accent)]"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
+              initial={{ transform: "scaleX(0)" }}
+              animate={{ transform: "scaleX(1)" }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
             />
 
             <motion.p
               variants={item}
-              className="mt-6 font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--text-faint)]"
+              className="mt-6 font-mono text-[10px] uppercase tracking-[0.11em] text-[color:var(--text-dim)]"
             >
               {content.identity.role}
             </motion.p>

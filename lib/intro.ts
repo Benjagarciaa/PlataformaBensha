@@ -1,9 +1,9 @@
 /**
  * Aviso de que la cortina de entrada (Intro) termino.
  *
- * El hero 3D espera a esto para cargar WebGL: mientras la cortina tapa la
- * pagina no tiene sentido gastar CPU en una escena que nadie ve, y asi la
- * carga pesada no compite con la primera pintura.
+ * El hero 3D carga three y arma el canvas DURANTE la cortina (con el loop en
+ * pausa) y lo enciende cuando la cortina se levanta: asi la escena ya esta
+ * cuando se ve el hero, sin un instante vacio.
  */
 
 const EVENTO = "plano:intro-fin";
@@ -13,6 +13,10 @@ export function marcarIntroFin() {
   if (terminada) return;
   terminada = true;
   window.dispatchEvent(new Event(EVENTO));
+}
+
+export function introTerminada() {
+  return terminada;
 }
 
 /** Resuelve cuando la intro termino (o enseguida si ya termino). */

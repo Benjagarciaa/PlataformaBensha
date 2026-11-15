@@ -9,9 +9,11 @@ import { CAM, crearEscena } from "./geometrias";
  * Escena WebGL del hero: del caos al sistema.
  *
  * Componente hoja. Es lo unico del sitio que importa three y R3F, y se carga
- * con next/dynamic (ssr: false) recien cuando el texto ya pinto. Su loop es la
- * excepcion documentada al rAF unico (02-DESIGN.md, seccion 3D): corre solo
- * mientras el hero esta en pantalla y con la pestaña visible.
+ * con next/dynamic (ssr: false). Se arma DETRAS de la cortina de entrada con
+ * el loop en pausa: compila los shaders y pinta un primer cuadro, asi cuando
+ * la cortina se levanta la escena ya esta. Su loop es la excepcion documentada
+ * al rAF unico (02-DESIGN.md, seccion 3D): corre solo con la cortina ya
+ * levantada, el hero en pantalla y la pestaña visible.
  */
 
 type Props = {
@@ -27,9 +29,13 @@ type Props = {
 
 type Movimiento = { p: number; mx: number; my: number; repel: number };
 
-function Sistema({ progreso, movil, puntero, zonaPuntero }: Omit<Props, "activo" | "onListo">) {
+function Sistema({ progreso, movil, puntero, zonaPuntero, onListo }: Omit<Props, "activo">) {
   const ancho = useThree((s) => s.size.width);
   const alto = useThree((s) => s.size.height);
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+  const advance = useThree((s) => s.advance);
 
   // Se arma una sola vez: casilleros y geometrias no dependen del tamaño.
   const escena = useMemo(() => crearEscena(movil), [movil]);
@@ -43,6 +49,18 @@ function Sistema({ progreso, movil, puntero, zonaPuntero }: Omit<Props, "activo"
 
   // Encuadre: donde va el sistema y por donde flota el caos.
   useEffect(() => escena.encuadrar(ancho, alto), [escena, ancho, alto]);
+
+  // Precalentado: compila los shaders y pinta un cuadro con el loop en pausa.
+  // Asi el primer cuadro visible no paga la compilacion. Va despues del
+  // encuadre (los efectos corren en orden).
+  const avisado = useRef(false);
+  useEffect(() => {
+    if (avisado.current) return;
+    avisado.current = true;
+    gl.compile(scene, camera);
+    advance(performance.now());
+    onListo();
+  }, [gl, scene, camera, advance, onListo]);
 
   // Mouse: posicion normalizada. Pointer events, nada de listeners de scroll.
   const mouse = useRef({ x: 0, y: 0, adentro: false });
@@ -113,12 +131,14 @@ export default function Escena3D({ progreso, activo, movil, puntero, zonaPuntero
       }}
       camera={{ fov: CAM.fov, position: [0, 0, CAM.z], near: 0.1, far: 60 }}
       style={{ pointerEvents: "none" }}
-      onCreated={() => {
-        // un frame pintado antes de mostrarse: el fade in nunca deja ver el vacio
-        window.requestAnimationFrame(() => onListo());
-      }}
     >
-      <Sistema progreso={progreso} movil={movil} puntero={puntero} zonaPuntero={zonaPuntero} />
+      <Sistema
+        progreso={progreso}
+        movil={movil}
+        puntero={puntero}
+        zonaPuntero={zonaPuntero}
+        onListo={onListo}
+      />
     </Canvas>
   );
 }

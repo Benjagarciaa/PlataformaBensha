@@ -3,326 +3,169 @@
 Fuente de verdad del copy. Se traduce 1 a 1 a `content/data.ts`.
 Ningún componente escribe texto adentro.
 
-**Versión 2:** reescrito con la escala real del trabajo. El posicionamiento anterior
-("hago landings que venden") era de commodity y subvendía por mucho.
+**Versión 3:** sitio inmersivo de punta a punta. El protagonista es el negocio del
+cliente; Benjamín aparece como respaldo (Sobre mí, Cómo trabajamos, los números).
 
 ---
 
 ## EL POSICIONAMIENTO
 
-Antes: un desarrollador más que hace páginas de producto.
-Ahora: **el que ya hizo 200 y sabe lo que pasa cuando entran 5.000 personas por día.**
+**Tiendas que venden y sistemas para manejarlas, con criterio de producto.**
+Al nivel de un estudio de software: diseño de producto (UX/UI y conversión) y capacidad de
+construir sistemas a medida. No "el que hace páginas lindas" ni "el que hace animaciones".
 
-Tres pilares, en orden de fuerza:
+Mensaje en una línea: **una web que vende y un panel que manejás vos.**
 
-1. **Volumen.** 200 páginas, 130 marcas, Argentina y exterior. Nadie con quien te comparen tiene eso.
-2. **Programadas, no armadas.** Liquid y JavaScript adentro del tema, no un page builder con abono.
-3. **Blindaje.** La página no se copia fácil. Casi nadie lo ofrece.
+Tres pilares:
+
+1. **Criterio de producto.** Formación en Diseño UX/UI (Coderhouse, certificado por
+   PedidosYa). Sabe qué le falta a una tienda para vender: orden de la información, fotos,
+   prueba social, oferta, carrito y upsell, confianza, velocidad.
+2. **Sistemas a medida.** Catálogos con panel, gestión de clientes, cobros y finanzas. El
+   dueño maneja todo solo, desde el celular.
+3. **Sin ataduras.** Sin abonos obligatorios: lo que se hace queda del cliente. Si un
+   sistema necesita mantenimiento, se acuerda aparte.
+
+## VOZ
+
+- Voseo, frases cortas y concretas. Desde la operación del cliente, no desde la tecnología.
+- Sin tecnicismos: si se nombra una tecnología, se traduce a lo que cambia en su día.
+- Poca primera persona: "tu tienda vende", "tu negocio se ordena", "manejás todo vos".
+- Sin relleno, sin guiones largos ni medios en texto visible.
+
+## NÚMEROS (solo los reales)
+
+| Dato | Cómo va |
+|---|---|
+| Páginas | `+200 páginas hechas` |
+| Marcas | `+130 marcas` (Argentina y exterior) |
+| Trabajos destacados | `13 trabajos destacados: 9 tiendas y 4 sistemas` |
+
+No van: facturación de clientes, porcentajes de mejora, "25 millones en un día" ni ningún
+otro dato que no esté confirmado por escrito.
 
 ---
 
-## ⚠️ PENDIENTE
+## HERO (3D, del caos al sistema)
 
-- [ ] **Permiso por escrito de Lautaro Cardozo** para nombrarlo. Sin eso, va anónimo
-- [ ] Dominio
-- [ ] Capturas mobile de 4 a 6 páginas en `.webp` para `public/proyectos/`
-- [ ] Foto tuya
-- [ ] Un solo testimonio. Con 130 clientes, un audio de WhatsApp transcripto alcanza
-- [ ] Confirmar el dato del caso de +200%: qué marca, en qué período, contra qué base
+- Caos · kicker: `Tu negocio hoy` · titular: **Pedidos por WhatsApp, precios en una
+  planilla, todo en tu cabeza.** · bajada: Así, cada venta nueva es más trabajo.
+- Indicador: `Bajá y mirá cómo se ordena`
+- Sistema · kicker: `Tu negocio, ordenado` · titular: **Una web *que vende* y un panel que
+  manejás vos.** · bajada: Los pedidos llegan ordenados, el stock se actualiza solo y
+  manejás todo desde el celular. Sin plantillas que te limiten ni abonos que te aten.
+- CTA: `Ordená tu negocio` · `Ver proyectos`
+- Cifras: +200 páginas hechas · +130 marcas · 13 trabajos destacados
 
----
+## LO QUE TE RESUELVO
 
-## SOBRE LOS NÚMEROS
+Intro: Casi nadie busca una web porque sí. La busca por lo que le saca tiempo y plata todos
+los días.
 
-Los que van al sitio tienen que ser los que puedas defender en una llamada sin dudar.
-
-| Dato | Cómo va escrito | Por qué |
+| Dolor | Detalle | Cómo se resuelve |
 |---|---|---|
-| 200 páginas | `+200 páginas de producto` | Contable, tuyo, verificable |
-| 130 marcas | `+130 marcas en Argentina y el exterior` | Idem |
-| Facturación de clientes | `Páginas que hoy sostienen tiendas facturando millones de pesos por día` | El volumen es del cliente, no tuyo. Escrito así es cierto y no se te puede refutar |
-| +200% | `En una marca de indumentaria, las ventas semanales se triplicaron` | Un caso puntual, no un promedio. Prometer eso como norma te expone |
-| Blindaje | `Protección contra copia` | Nunca "100% segura" |
+| Cargás todo a mano. | El pedido entra por WhatsApp, lo pasás a la planilla, después al stock y después a la tienda. | Cargás una sola vez, en un panel, y se actualiza solo en todos lados. Los pedidos llegan en fila y con su estado. |
+| Para cambiar un precio, dependés de otro. | Una plataforma que te cobra todos los meses o alguien que tarda días en contestar. | Un panel propio y simple: cambiás precios, stock y fotos vos, al momento, desde el celular. Y queda tuyo, sin abonos obligatorios. |
+| Tu tienda es linda, pero no vende. | La gente entra, mira y se va. Y nadie te dice por qué. | Se ordena como la recorre alguien que está por comprar: qué ve primero, qué le da confianza, dónde duda. Linda y clara, para que el carrito se llene. |
+| No sabés qué te falta para vender más. | ¿Las fotos? ¿El precio? ¿Que tarda en cargar? Probás cosas a ciegas. | Una revisión completa de tu tienda, con prioridades: qué cambiar primero para que venda más, empezando por lo que más rinde. |
 
-**Regla:** si no lo podés respaldar con una captura o un cliente que lo confirme, no va.
+## PROYECTOS (provisorio, se reemplaza por el carrusel)
 
----
+Eyebrow `TODO ESTO ESTÁ ANDANDO` · intro: 13 trabajos destacados, 9 tiendas y 4 sistemas,
+todos en uso hoy. Acá van cuatro, con lo que cambió en cada negocio.
+Solo el nombre de la marca, sin links a las tiendas.
 
-## IDENTITY
+## QUÉ MIRO CUANDO ARMO O REVISO UNA TIENDA
 
-```ts
-name: "Benjamin Garcia"
-firstName: "BENJAMIN"
-lastName: "GARCIA"
-role: "Desarrollador de ecommerce y especialista en conversión"
-location: "Córdoba, Argentina"
-locationShort: "CBA · AR"
-email: "bmurgarcia@gmail.com"
-phoneDisplay: "+54 9 351 512 2108"
-whatsappNumber: "5493515122108"
-```
+Intro: Una tienda que vende se arma en capas. Cada una tiene un trabajo, y si una falla, la
+venta se pierde aunque el resto esté perfecto. Respaldo: diseño de producto y conversión,
+aplicado tienda por tienda.
 
-**Tesis del hero** (una sola línea, "programadas" en `--accent`, sin cortar):
+1. **Primer pantallazo y promesa.** En segundos se decide si se queda. Arriba va qué es,
+   para quién es y por qué le conviene, dicho como lo diría tu cliente.
+2. **Fotos de producto.** La foto vende antes que el texto. Producto real, en uso, con
+   medidas y detalles. Si no hay fotos, se generan con IA, sin sesión.
+3. **Prueba social.** Opiniones, fotos de clientes y ventas reales, justo donde aparece la
+   duda. Nadie quiere ser el primero en comprar.
+4. **Oferta y precio.** El precio aparece cuando el valor ya quedó claro. Combos de una,
+   dos o tres unidades, con la opción del medio destacada.
+5. **Carrito y upsell.** El carrito se abre al costado sin sacarte de la página y sugiere
+   el complemento justo. Cada compra suma un poco más, sin insistir.
+6. **Confianza.** Envíos, cuotas, cambios y pago seguro, a la vista y cerca del botón.
+7. **Velocidad.** Es la base de todo. Si la página tarda, la gente se va antes de ver la
+   primera foto.
 
-> Más de 200 páginas de producto, programadas una por una.
+Cierre: Todo junto, eso es una tienda que vende.
 
-**Bajada:**
+## SERVICIOS · Formas de sacarte trabajo de encima
 
-> 130 marcas en Argentina y el exterior. Liquid y JavaScript adentro de tu tema, no un
-> page builder con abono mensual. El copy, el diseño, las imágenes y el código los hago yo.
+| Servicio | Claves | Texto |
+|---|---|---|
+| Tiendas y landings que venden | Shopify · Tiendanube · A medida · Landings | Tu tienda lista para vender desde el primer día, ordenada para que la gente encuentre, entienda y compre. En Shopify, en Tiendanube o hecha a medida: lo que más le convenga a tu negocio. |
+| Sistemas y paneles a medida | Catálogos con panel · Clientes · Cobros · Finanzas | Cuando lo enlatado no alcanza, un sistema que sigue tu forma de trabajar: el catálogo que actualizás desde el celular, tus clientes y pedidos en un solo lugar, los cobros y la plata del mes a la vista. |
+| Optimización de tu tienda | Orden · Velocidad · Carrito · Upsell · Fotos | Si ya tenés tienda, no hace falta tirarla. Se encuentra dónde se pierde la venta y se arregla. |
+| Protección de tu tienda | Anticopia · Accesos · Seguridad | Que tu competencia no te copie la página en una tarde y que nadie entre donde no debe. Ninguna web es imposible de copiar, pero sí se puede lograr que no valga la pena. |
 
-CTA primario: `Pedí tu presupuesto` · CTA secundario: `Ver proyectos`
+Tocar "Consultar por esto" preselecciona el servicio en el cotizador.
 
-**Tira de telemetría** (reemplaza el uptime de sesión, que no decía nada):
+## CÓMO TRABAJAMOS
 
-```
-PÁGINAS EN PRODUCCIÓN   +200
-MARCAS                  +130 · AR Y EXTERIOR
-PLATAFORMAS             SHOPIFY · TIENDA NUBE
-CÓRDOBA                 [hora real]
-ESTADO                  TOMANDO PROYECTOS
-```
+Intro: Sabés qué vas a recibir, cuánto sale y cuándo, antes de poner un peso.
 
----
+1. **Charla y diagnóstico** (sin costo)
+2. **Propuesta por escrito** (antes de arrancar)
+3. **Avances por etapas** (lo ves andando)
+4. **Entrega y capacitación** (queda en tus manos)
+
+Cierre: **Sin abonos obligatorios.** Lo que te hago queda tuyo. Si un sistema necesita
+mantenimiento, se acuerda aparte.
 
 ## SOBRE MÍ
 
-**Título:** Doscientas páginas después.
+Frase: **Hablás directo con quien diseña y programa tu tienda.**
+Soy Benjamín García, de Córdoba. Desde 2022 más de 200 páginas para más de 130 marcas.
+Estudió programación y diseño de producto; conoce cómo se compra acá.
 
-**Párrafos:**
+Formación (solo texto, sin imágenes de certificados, sin DNI):
 
-> Soy Benjamin, desarrollador de ecommerce en Córdoba. Hice más de 200 páginas de producto
-> para unas 130 marcas, en Argentina y afuera. Muchas siguen vendiendo hoy, todos los días.
+| Año | Título | Institución | Nota |
+|---|---|---|---|
+| 2026 | IA y automatización de flujos de trabajo | Universidad Nacional de Córdoba | |
+| 2024 | **Diseño UX/UI Avanzado** (destacado) | Coderhouse, certificado por PedidosYa | Respalda que diseña producto, no solo programa |
+| 2024 | Carrera de Desarrollo Full Stack | Coderhouse | 1° de la camada, con beca (usada para JavaScript) |
+| 2024 | Ciberseguridad | Coderhouse, certificado por Delta Protect | |
+| 2022 | Tecnicatura en Programación | Universidad Tecnológica Nacional | |
+| 2022 | Seguridad Informática | educ.ar, Ministerio de Educación | |
 
-> Ese volumen es la diferencia. Cuando una página se cae en un lanzamiento, cuando el checkout
-> falla en móviles viejos, cuando la conversión se desploma un martes sin motivo aparente:
-> ya lo vi, y sé dónde mirar. No es teoría de curso.
-
-> Me formé como desarrollador full stack y terminé la carrera entre los diez mejores de mi
-> camada. Por eso trabajo en Liquid y JavaScript adentro de tu tema, en lugar de depender de
-> un page builder con abono mensual que te limita a lo que trae la plantilla.
-
-> Y trabajo para el mercado argentino, que cambia todo: precio en pesos, cuotas, Mercado Pago,
-> cómo se habla acá. Una página traducida del inglés se nota, y se nota en la conversión.
-
-**Ficha:**
-
-```
-BASE          Córdoba, AR
-PÁGINAS       +200 construidas
-MARCAS        +130 · AR y exterior
-FORMACIÓN     Full Stack, top 10 de camada
-PLATAFORMAS   Shopify · Tienda Nube
-DISPONIBLE    Nuevos proyectos
-```
-
----
-
-## ANATOMÍA DE UNA LANDING (sección firma)
-
-**Eyebrow:** `LO QUE APRENDÍ EN 200 PÁGINAS`
-**Título:** Anatomía de una página que vende.
-**Bajada:** Una landing no es una página larga con fotos lindas. Es una secuencia. Cada bloque
-está donde está porque responde la objeción que aparece justo antes.
-
-| # | Bloque | Anotación |
-|---|---|---|
-| 01 | Hero y promesa | Tenés menos de 3 segundos. Va el problema en las palabras del cliente, no el nombre del producto. |
-| 02 | El problema | Antes de vender hay que nombrar lo que le pasa. Si se siente identificado, sigue bajando. |
-| 03 | Cómo funciona | El mecanismo, explicado simple. Sin esto, el producto es una promesa sin respaldo. |
-| 04 | Prueba social | Va acá porque la desconfianza aparece cuando la promesa suena demasiado buena. |
-| 05 | Antes y después | Lo visual convence donde el texto ya no alcanza. |
-| 06 | Bundles y precio | El precio se muestra recién cuando el valor ya está construido. Tres opciones, la del medio destacada. |
-| 07 | Garantía | Saca el riesgo de encima justo cuando está por decidir. |
-| 08 | Preguntas frecuentes | Las objeciones que quedaron. Cada pregunta es una venta que se estaba por perder. |
-| 09 | Cierre y CTA fijo | La barra que sigue al scroll. El botón no se puede perder de vista nunca. |
-
----
-
-## PROYECTOS
-
-**Eyebrow:** `PÁGINAS EN PRODUCCIÓN`
-**Título:** Proyectos
-
-Mostrar 4 a 6, no más. El resto se resume en una línea al pie.
-
-1. **Lautaro Cardozo** `[[pendiente de permiso]]` · ecommerce de Córdoba. `[[qué se hizo]]`
-2. **Marca de indumentaria** · página de producto completa. Las ventas semanales se triplicaron
-   tras el rediseño. `[[confirmar período y base de comparación]]`
-3. **Mentorías de ecommerce** · páginas de venta para formaciones, con estructura de advertorial
-   larga y bundles. Cliente bajo acuerdo de confidencialidad.
-4. **Suplementos** · páginas editoriales con ángulo de advertorial: hook, problema, mecanismo,
-   testimonios, comparativa de precio, bundles, FAQ y barra fija.
-5. **Cosmética y skincare** · identidad visual propia por producto, imágenes generadas con IA.
-
-Al pie: **"Más de 200 páginas para unas 130 marcas. Acá hay cinco."**
-
----
-
-## SERVICIOS
-
-**Título:** Qué hago
-
-1. **Página de producto que vende** (celda dominante)
-   Copy, diseño, imágenes, código y medición. Bloque por bloque adentro de tu tienda,
-   sin apps que la frenen.
-2. **Tienda completa, Shopify o Tienda Nube**
-   Desde cero: estructura, catálogo, checkout, medios de pago y envíos, lista para vender.
-3. **Blindaje de la página**
-   Protección contra copia: sin click derecho, sin selección de texto, sin arrastrar imágenes,
-   con los atajos de inspección bloqueados y el código ofuscado. Que tu competencia no te
-   clone la página en una tarde.
-4. **Optimización de lo que ya tenés**
-   Reviso tu página actual, marco dónde se pierde la venta y lo arreglo bloque por bloque.
-
-*Nota interna: el blindaje frena la copia manual y automatizada casual, que es el escenario
-real. No prometas seguridad absoluta: todo lo que corre en el navegador es inspeccionable
-por alguien con conocimiento, y un comprador técnico lo sabe.*
-
----
-
-## PROCESO
-
-1. **Charla** · Me contás el producto, a quién le vendés y qué te está pasando hoy.
-2. **Investigación** · Miro tu competencia, tus reseñas y lo que dicen tus clientes. De ahí sale el ángulo.
-3. **Copy** · Escribo la página entera antes de diseñar nada. Si el texto no vende, el diseño no lo salva.
-4. **Diseño e imágenes** · Identidad visual del producto y las imágenes que hagan falta.
-5. **Programación** · Bloque por bloque, en tu tienda. Vos vas viendo cada uno.
-6. **Publicación y medición** · Sale al aire y miramos qué pasa. Lo que no funciona, se cambia.
-
----
-
-## HERRAMIENTAS
-
-| Beneficio | Herramienta |
-|---|---|
-| Tu tienda, tu control | Shopify |
-| También en Tienda Nube | Tienda Nube |
-| Bloques a medida | Liquid |
-| Sin apps que la frenen | HTML y CSS |
-| Animaciones propias | JavaScript |
-| Que no te la copien | Blindaje |
-| Imágenes que no existían | IA generativa |
-| Cobros al toque | Mercado Pago |
-| Todo medido | Analytics |
-
----
-
-## LO QUE DOMINO
-
-- **Construcción:** Shopify (700), Tienda Nube (600), Liquid (700), HTML y CSS (700), JavaScript (700), Responsive (700)
-- **Conversión:** Estructura de landing (700), Bundles y precios (700), Prueba social (700), Barra fija y popups (700), Tests (500)
-- **Contenido:** Copy en español argentino (700), Advertorials (700), Imágenes con IA (600), Edición de video (600)
-- **Protección:** Blindaje anticopia (700), Ofuscación (600)
-
----
-
-## RECORRIDO
-
-**Título:** Recorrido
-
-### Formación
-
-| Año | Título | Institución |
-|---|---|---|
-| 2026 | IA y automatización de flujos de trabajo | Universidad Nacional de Córdoba · 20 hs |
-| 2024 | **Carrera de Desarrollo Full Stack** | Coderhouse · 64 semanas · **top 10 de camada** |
-| 2024 | Ciberseguridad | Coderhouse, certificado por Delta Protect · 30 hs |
-| 2023 | JavaScript | Coderhouse, certificado por PedidosYa · 40.5 hs |
-| 2022 | Desarrollo Web | Coderhouse · 38 hs |
-| 2022 | Seguridad Informática | Educ.ar, Ministerio de Educación |
-| 2022 | Programación visual de imágenes: Processing | Educ.ar, Ministerio de Educación |
-| 2022 | Reparación y mantenimiento de PC | Educ.ar, Ministerio de Educación |
-| 2021 | Fundamentos de la codificación | Grasshopper, Google |
-| 2021 | Bachiller con orientación en Idiomas | IPEM N°43 Hipólito Yrigoyen |
-
-*La ciberseguridad no es un adorno acá: es lo que respalda el servicio de blindaje.*
-
-### Trayectoria
-
-| Año | Rol | Dónde |
-|---|---|---|
-| 2022-hoy | Desarrollo de ecommerce | Freelance · +200 páginas, +130 marcas, AR y exterior |
-| 2024-hoy | Coordinación y producción | Role Media · gestión de proyectos, edición y postproducción |
-
-`[[Confirmá el año de arranque del freelance]]`
-
----
-
-## RESULTADOS
-
-**Eyebrow:** `DATOS REALES`
-**Título:** Resultados
-
-Tres columnas, número grande, label mono, una línea de contexto:
-
-```
-+200        PÁGINAS EN PRODUCCIÓN
-            Para marcas de suplementos, indumentaria, cosmética y formación.
-
-+130        MARCAS
-            En Argentina y el exterior.
-
-x3          VENTAS SEMANALES
-            En una marca de indumentaria, tras rediseñar la página de producto.
-```
-
-Cita al pie: **"Hay páginas mías sosteniendo tiendas que facturan millones de pesos por día."**
-
----
+No va Grasshopper. Herramientas y recorrido van absorbidos en esta sección (Shopify y
+Tiendanube, sistemas propios, IA generativa, Mercado Pago, mapas de calor; freelance
+2022-hoy y Role Media 2024-hoy).
 
 ## TESTIMONIOS
 
-Mientras no haya:
-
-> Ciento treinta marcas pasaron por acá. Sus palabras van a aparecer en este lugar, tal cual
-> las digan, apenas termine de pedirlas.
-
-*Con ese volumen, esta sección debería durar una semana en placeholder. Un audio de WhatsApp
-transcripto y autorizado alcanza.*
-
----
+No se inventan. Con la lista vacía la sección no se muestra.
 
 ## CONTACTO
 
-**Eyebrow:** `PRESUPUESTO`
-**Título:** Contame qué querés vender.
-**Bajada:** Respondo el mismo día. Si me pasás el link de tu producto, te digo qué haría antes
-de cobrarte nada.
-
-Select "Qué necesitás": Página de producto / Tienda completa / Rediseño y optimización /
-Blindaje de una página existente / Copy y creativos / Otro
-
-**Columna derecha:**
-
-```
-ESCRIBIME DIRECTO
-WhatsApp  +54 9 351 512 2108
-Email     bmurgarcia@gmail.com
-
-CÓMO TRABAJO
-Presupuesto cerrado, sin sorpresas.
-Te muestro cada bloque antes de seguir.
-La página queda tuya, en tu tienda.
-```
-
----
-
-## FOOTER
-
-```
-© 2026 · BENJAMIN GARCIA   ·   CÓRDOBA, AR   ·   [hora local]
-Compuesto en Clash Display, Switzer y JetBrains Mono. Corriendo en Next.js. Córdoba, 2026.
-                                                                    ↑ VOLVER ARRIBA
-```
-
----
+Eyebrow `LA PRIMERA CHARLA NO SE COBRA` · título: Contame qué necesita tu negocio.
+Opciones: Tienda o landing · Sistema o panel · Mejorar mi tienda · Proteger mi tienda ·
+Otra cosa. Al enviar se abre WhatsApp con el mensaje armado y aparece la confirmación.
 
 ## SEO
 
-```ts
-title: "Benjamin Garcia · +200 páginas de producto para ecommerce | Córdoba"
-description: "Desarrollador de ecommerce en Córdoba. Más de 200 páginas de producto programadas para Shopify y Tienda Nube, para 130 marcas en Argentina y el exterior."
-url: "https://[[dominio]]"
-locale: "es_AR"
 ```
+title: Benjamín García · Tiendas online que venden y sistemas a medida | Córdoba
+description: Tiendas online que venden y sistemas para manejar tu negocio: Shopify,
+Tiendanube o a medida, con un panel que manejás vos. Más de 200 páginas para más de 130
+marcas, desde Córdoba.
+url: [[dominio]] (hoy plataformabensha.vercel.app)
+```
+
+## PENDIENTE
+
+- [ ] [[dominio]] propio, y actualizar `seo.url`.
+- [ ] Testimonios reales con permiso (la sección aparece sola al cargar el primero).
+- [ ] Foto de Benjamín para Sobre mí (opcional).
+- [ ] Confirmar si el dato "25 millones en un día" del shampoo con tinte es publicable; hoy
+      no se muestra.
+- [ ] Permiso para nombrar marcas en el carrusel de trabajos.

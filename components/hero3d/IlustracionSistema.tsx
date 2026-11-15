@@ -1,4 +1,5 @@
 import { ALTO_PANTALLA_SOBRE_BISAGRA, MEDIDAS, PANEL, armarCasilleros, type Casillero } from "./plano";
+import { FORMAS_ICONO } from "./iconos";
 
 /**
  * El sistema ya armado, en SVG estatico.
@@ -8,12 +9,11 @@ import { ALTO_PANTALLA_SOBRE_BISAGRA, MEDIDAS, PANEL, armarCasilleros, type Casi
  * (version liviana), asi el dibujo es el mismo plano que se ve armado en 3D.
  * Sin texto adentro: es decorativo, el mensaje lo lleva el HTML.
  *
- * RENDIMIENTO. --trazo cambia en :root en cada frame y eso recalcula el
- * estilo de todos los nodos de la pagina. Dibujado rect por rect serian unos
- * 120 nodos SVG; aca cada grupo es UN <path> con muchos subtrazos, asi el
- * dibujo entero son unos 15 nodos. No va como imagen ni como mascara CSS: eso
- * cuenta como candidato a LCP y, como aparece tarde (cuando se decide el modo
- * estatico), se volvia el LCP de la pagina.
+ * RENDIMIENTO. Dibujado rect por rect serian unos 120 nodos SVG; aca cada
+ * grupo es UN <path> con muchos subtrazos, asi el dibujo entero son unos 15
+ * nodos. No va como imagen ni como mascara CSS: eso cuenta como candidato a
+ * LCP y, como aparece tarde (cuando se decide el modo estatico), se volvia el
+ * LCP de la pagina. Los iconos del panel son los mismos que arma la escena.
  */
 
 const U = 100; // unidades de escena a unidades SVG
@@ -49,6 +49,16 @@ function casilleroRect(c: Casillero, ox: number, oy: number) {
   return rect(ox + c.x - c.w / 2, oy + c.y + c.h / 2, c.w, c.h);
 }
 
+/** El icono de un casillero, con sus trazos escalados al lugar. */
+function casilleroIcono(c: Casillero, ox: number, oy: number) {
+  if (!c.icono) return "";
+  const cx = ox + c.x;
+  const cy = oy + c.y;
+  return FORMAS_ICONO[c.icono]
+    .map(([a, b]) => linea(cx + a[0] * c.w, cy + a[1] * c.h, cx + b[0] * c.w, cy + b[1] * c.h))
+    .join("");
+}
+
 type Trazo = { d: string; trazo: number; relleno: number };
 
 /** Un grupo del dibujo: un solo path, con trazo y relleno opcional. */
@@ -73,7 +83,8 @@ function armarDibujo() {
   const celH = sx(2 * (cel.hh + cel.bisel + 0.04));
   const recorte = `M${v.x},${v.y}h${v.w}v${v.h}h${-v.w}zM${celX0},${celY0}h${celW}v${celH}h${-celW}z`;
 
-  const sobre = (sup: Casillero["sup"]) => casilleros.filter((c) => c.sup === sup);
+  const sobre = (sup: Casillero["sup"]) => casilleros.filter((c) => c.sup === sup && !c.icono);
+  const iconos = (sup: Casillero["sup"]) => casilleros.filter((c) => c.sup === sup && c.icono);
 
   const notebook = [
     // base y teclado
@@ -96,6 +107,7 @@ function armarDibujo() {
       0.25
     ),
     grupo(sobre("pantalla").map((c) => casilleroRect(c, 0, oy)).join(""), 0.5, 0.06),
+    grupo(iconos("pantalla").map((c) => casilleroIcono(c, 0, oy)).join(""), 0.75),
   ];
 
   const celular = [
@@ -107,6 +119,7 @@ function armarDibujo() {
     ),
     grupo(rect(cel.x - cel.hw, cel.y + cel.hh, 2 * cel.hw, 2 * cel.hh), 0.65, 0.04),
     grupo(sobre("celular").map((c) => casilleroRect(c, cel.x, cel.y)).join(""), 0.55, 0.06),
+    grupo(iconos("celular").map((c) => casilleroIcono(c, cel.x, cel.y)).join(""), 0.75),
   ];
 
   return { recorte, notebook, celular };
