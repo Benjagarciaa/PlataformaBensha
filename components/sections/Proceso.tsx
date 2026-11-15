@@ -60,7 +60,9 @@ function Pasos() {
   // debajo de 1024 px la fila se desliza: tambien con teclado
   const [deslizable, setDeslizable] = useState(false);
 
-  const { scrollYProgress: vertical } = useScroll({ target: filaRef, offset: ["start 0.85", "end 0.6"] });
+  // la linea termina cuando la fila entera ya se ve: llegando desde el menu
+  // (seccion arriba de todo) los cuatro pasos quedan encendidos
+  const { scrollYProgress: vertical } = useScroll({ target: filaRef, offset: ["start 0.85", "end 0.9"] });
   const { scrollXProgress: horizontal } = useScroll({ container: carrilRef });
   const avance = useTransform([vertical, horizontal, desktop], ([v, h, d]: number[]) => (d ? v : h));
 

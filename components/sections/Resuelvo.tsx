@@ -452,13 +452,14 @@ function Estado({ pedido }: { pedido: Pedido }) {
       : "border-[color:var(--hairline-strong)] text-[color:var(--text-dim)]";
   return (
     <span className="relative grid h-[24px] w-[88px] place-items-center">
-      <AnimatePresence initial={false}>
+      {/* primero se va el estado viejo y despues entra el nuevo: los dos textos nunca se pisan */}
+      <AnimatePresence initial={false} mode="wait">
         <motion.span
           key={pedido.estado}
           className={`absolute inset-0 grid place-items-center border ${ETIQUETA} ${tono}`}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 0, transition: { duration: 0.16, ease: EASE } }}
           transition={{ duration: 0.4, ease: EASE }}
         >
           {pedido.estado}
