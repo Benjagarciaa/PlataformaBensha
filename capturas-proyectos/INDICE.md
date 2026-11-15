@@ -2,7 +2,7 @@
 
 Archivo de vistas, bloques y animaciones de scroll de las tiendas que hizo Benjamín García, guardado antes de que se den de baja. Pensado como materia prima para el carrusel 3D de proyectos del portfolio.
 
-Formato: capturas en WebP calidad 82 (desktop 1440x900 dsf 1, mobile 390x844 dsf 2 con user agent de iPhone). Videos MP4 H.264 sin audio, 30 fps, ancho máximo 1280 (desktop) o 720 (mobile), crf 28 o más, +faststart.
+Formato: capturas en WebP calidad 82 (desktop 1440x900 dsf 1, mobile 390x844 dsf 2 con user agent de iPhone). Videos MP4 H.264 sin audio, 30 fps, crf 28 o más, +faststart: desktop a 1280x800 y mobile a 390x844 (el screencast de Chrome headless entrega los frames mobile en píxeles CSS, no a 2x; las capturas mobile sí están a 780x1688).
 Las páginas completas muy altas se reescalaron para no pasar el límite de 16000 px de WebP. Los videos se grabaron en cámara lenta (reloj de la página dilatado) y se exportaron a velocidad real, así quedan fluidos aunque el navegador headless renderice lento.
 
 ## Atlas (straps y muñequeras)
@@ -12,6 +12,7 @@ Tienda de straps con anilla en D y muñequeras para gimnasio. Estética rojo, ne
 **URLs capturadas**
 
 - `home`: https://atlasshopar.myshopify.com/
+- `munequeras`: https://atlasshopar.myshopify.com/products/munequeras-premium
 - `straps`: https://atlasshopar.myshopify.com/products/straps-con-anilla-en-d
 
 **Archivos**
@@ -21,6 +22,7 @@ Tienda de straps con anilla en D y muñequeras para gimnasio. Estética rojo, ne
 - `atlas/videos/home-scroll-desktop.mp4` (1280x800, 11.1 s, 1.1 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `atlas/videos/home-scroll-mobile.mp4` (390x844, 11.3 s, 498 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `atlas/videos/munequeras-scroll-desktop.mp4` (1280x800, 12.8 s, 1.8 MB): Landing muñequeras premium: scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `atlas/videos/munequeras-scroll-mobile.mp4` (390x844, 13.0 s, 1.1 MB): Landing muñequeras premium: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `atlas/videos/straps-scroll-desktop.mp4` (1280x800, 12.8 s, 2.1 MB): Landing straps con anilla en D: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `atlas/videos/straps-scroll-mobile.mp4` (390x844, 13.4 s, 1.1 MB): Landing straps con anilla en D: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 
@@ -33,12 +35,12 @@ Tienda de straps con anilla en D y muñequeras para gimnasio. Estética rojo, ne
 - `atlas/desktop/home-bloque-05-dudas-te-las-sacamos.webp` (1440x1048, 55 KB): Home: bloque 5 «¿Dudas? Te las sacamos.» (desktop 1440x900)
 - `atlas/desktop/home-fold.webp` (1440x900, 60 KB): Home: primer pantallazo (desktop 1440x900)
 - `atlas/desktop/home-full.webp` (1440x5034, 294 KB): Home: página completa (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-01-munequeras-premium.webp` (1440x1528, 119 KB): Landing muñequeras premium: bloque 1 (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-02-tu-muneca-se-dobla-la.webp` (1440x824, 57 KB): Landing muñequeras premium: bloque 2 (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-03-cada-detalle-pensado-para-empujar.webp` (1440x746, 62 KB): Landing muñequeras premium: bloque 3 (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-04-tres-pasos-y-a-empujar.webp` (1440x754, 43 KB): Landing muñequeras premium: bloque 4 (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-05-hechas-para-tus-empujes.webp` (1440x797, 43 KB): Landing muñequeras premium: bloque 5 (desktop 1440x900)
-- `atlas/desktop/munequeras-bloque-06-suma-straps-el-pack-se.webp` (1440x652, 60 KB): Landing muñequeras premium: bloque 6 (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-01-munequeras-premium.webp` (1440x1528, 119 KB): Landing muñequeras premium: bloque 1 «Muñequeras Premium» (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-02-tu-muneca-se-dobla-la.webp` (1440x824, 57 KB): Landing muñequeras premium: bloque 2 «Tu muñeca se dobla. La barra no sube.» (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-03-cada-detalle-pensado-para-empujar.webp` (1440x746, 62 KB): Landing muñequeras premium: bloque 3 «Cada detalle, pensado para empujar pesado.» (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-04-tres-pasos-y-a-empujar.webp` (1440x754, 43 KB): Landing muñequeras premium: bloque 4 «Tres pasos y a empujar.» (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-05-hechas-para-tus-empujes.webp` (1440x797, 43 KB): Landing muñequeras premium: bloque 5 «Hechas para tus empujes.» (desktop 1440x900)
+- `atlas/desktop/munequeras-bloque-06-suma-straps-el-pack-se.webp` (1440x652, 60 KB): Landing muñequeras premium: bloque 6 «Sumá straps. El pack se arma igual.» (desktop 1440x900)
 - `atlas/desktop/munequeras-fold.webp` (1440x900, 100 KB): Landing muñequeras premium: primer pantallazo (desktop 1440x900)
 - `atlas/desktop/munequeras-full.webp` (1440x8008, 520 KB): Landing muñequeras premium: página completa (desktop 1440x900)
 - `atlas/desktop/straps-bloque-01-straps-con-anilla-en-d.webp` (1440x1528, 122 KB): Landing straps con anilla en D: bloque 1 «Straps con anilla en D» (desktop 1440x900)
@@ -59,12 +61,12 @@ Tienda de straps con anilla en D y muñequeras para gimnasio. Estética rojo, ne
 - `atlas/mobile/home-bloque-05-dudas-te-las-sacamos.webp` (780x2798, 109 KB): Home: bloque 5 «¿Dudas? Te las sacamos.» (mobile 390x844 @2x)
 - `atlas/mobile/home-fold.webp` (780x1688, 79 KB): Home: primer pantallazo (mobile 390x844 @2x)
 - `atlas/mobile/home-full.webp` (780x11850, 463 KB): Home: página completa (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-01-munequeras-premium.webp` (780x3928, 204 KB): Landing muñequeras premium: bloque 1 (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-02-tu-muneca-se-dobla-la.webp` (780x1946, 89 KB): Landing muñequeras premium: bloque 2 (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-03-cada-detalle-pensado-para-empujar.webp` (780x1630, 87 KB): Landing muñequeras premium: bloque 3 (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-04-tres-pasos-y-a-empujar.webp` (780x1872, 67 KB): Landing muñequeras premium: bloque 4 (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-05-hechas-para-tus-empujes.webp` (780x1560, 55 KB): Landing muñequeras premium: bloque 5 (mobile 390x844 @2x)
-- `atlas/mobile/munequeras-bloque-06-suma-straps-el-pack-se.webp` (780x1548, 91 KB): Landing muñequeras premium: bloque 6 (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-01-munequeras-premium.webp` (780x3928, 204 KB): Landing muñequeras premium: bloque 1 «Muñequeras Premium» (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-02-tu-muneca-se-dobla-la.webp` (780x1946, 89 KB): Landing muñequeras premium: bloque 2 «Tu muñeca se dobla. La barra no sube.» (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-03-cada-detalle-pensado-para-empujar.webp` (780x1630, 87 KB): Landing muñequeras premium: bloque 3 «Cada detalle, pensado para empujar pesado.» (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-04-tres-pasos-y-a-empujar.webp` (780x1872, 67 KB): Landing muñequeras premium: bloque 4 «Tres pasos y a empujar.» (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-05-hechas-para-tus-empujes.webp` (780x1560, 55 KB): Landing muñequeras premium: bloque 5 «Hechas para tus empujes.» (mobile 390x844 @2x)
+- `atlas/mobile/munequeras-bloque-06-suma-straps-el-pack-se.webp` (780x1548, 91 KB): Landing muñequeras premium: bloque 6 «Sumá straps. El pack se arma igual.» (mobile 390x844 @2x)
 - `atlas/mobile/munequeras-fold.webp` (780x1688, 110 KB): Landing muñequeras premium: primer pantallazo (mobile 390x844 @2x)
 - `atlas/mobile/munequeras-full.webp` (690x15998, 666 KB): Landing muñequeras premium: página completa (mobile 390x844 @2x)
 - `atlas/mobile/straps-bloque-01-straps-con-anilla-en-d.webp` (780x4012, 208 KB): Landing straps con anilla en D: bloque 1 «Straps con anilla en D» (mobile 390x844 @2x)
@@ -83,6 +85,7 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 **URLs capturadas**
 
 - `gorra-atenas`: https://azterstudio.myshopify.com/products/azter-atenas-gorra-snapback
+- `gorra-mykonos`: https://azterstudio.myshopify.com/products/azter-mykonos-gorra-curva
 - `home`: https://azterstudio.myshopify.com/
 - `remera-grecia`: https://azterstudio.myshopify.com/products/azter-grecia-jersey-oversize
 
@@ -90,12 +93,16 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 
 `videos/`
 
+- `azter/videos/gorra-atenas-scroll-cinematico-desktop.mp4` (1280x800, 12.1 s, 672 KB): Landing gorra Atenas: scroll lento y constante por las primeras secciones editoriales (desktop)
+- `azter/videos/gorra-atenas-scroll-cinematico-mobile.mp4` (390x844, 12.1 s, 330 KB): Landing gorra Atenas: scroll lento y constante por las primeras secciones editoriales (mobile)
 - `azter/videos/gorra-atenas-scroll-desktop.mp4` (1280x800, 10.5 s, 816 KB): Landing gorra Atenas: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `azter/videos/gorra-atenas-scroll-mobile.mp4` (390x844, 10.4 s, 454 KB): Landing gorra Atenas: scroll completo de arriba a abajo con pausas en los bloques (mobile)
+- `azter/videos/gorra-mykonos-scroll-desktop.mp4` (1280x800, 10.4 s, 821 KB): Landing gorra Mykonos: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `azter/videos/home-scroll-desktop.mp4` (1280x800, 10.3 s, 840 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `azter/videos/home-scroll-mobile.mp4` (390x844, 11.5 s, 755 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `azter/videos/remera-grecia-scroll-desktop.mp4` (1280x800, 10.2 s, 762 KB): Landing jersey Grecia: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `azter/videos/remera-grecia-scroll-mobile.mp4` (390x844, 10.3 s, 418 KB): Landing jersey Grecia: scroll completo de arriba a abajo con pausas en los bloques (mobile)
+- `azter/videos/remera-star-scroll-desktop.mp4` (1280x800, 10.1 s, 849 KB): Landing jersey Star: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 
 `desktop/`
 
@@ -104,17 +111,21 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 - `azter/desktop/gorra-atenas-bloque-03-la-atenas-pide-jersey.webp` (1440x1497, 59 KB): Landing gorra Atenas: bloque 3 «La Atenas pide jersey.» (desktop 1440x900)
 - `azter/desktop/gorra-atenas-fold.webp` (1440x900, 58 KB): Landing gorra Atenas: primer pantallazo (desktop 1440x900)
 - `azter/desktop/gorra-atenas-full.webp` (1440x4303, 197 KB): Landing gorra Atenas: página completa (desktop 1440x900)
-- `azter/desktop/home-bloque-01-azter.webp` (1440x790, 42 KB): Home: bloque 1 «AZTER» (desktop 1440x900)
-- `azter/desktop/home-bloque-02-cuatro-piezas.webp` (1440x976, 71 KB): Home: bloque 2 «CUATRO PIEZAS» (desktop 1440x900)
-- `azter/desktop/home-bloque-03-una-historia-que-se-escribe.webp` (1440x1177, 62 KB): Home: bloque 3 «Una historia que se escribe por capítulos.» (desktop 1440x900)
-- `azter/desktop/home-bloque-04-section-template-27226706739309-cust.webp` (1440x493, 14 KB): Home: bloque 4 «.section-template--27226706739309__custom_liquid_RTHmYm-padding {…» (desktop 1440x900)
-- `azter/desktop/home-fold.webp` (1440x900, 48 KB): Home: primer pantallazo (desktop 1440x900)
-- `azter/desktop/home-full.webp` (1440x4069, 209 KB): Home: página completa (desktop 1440x900)
+- `azter/desktop/gorra-mykonos-bloque-01-mykonos.webp` (1440x1047, 69 KB): Landing gorra Mykonos: bloque 1 «MYKONOS» (desktop 1440x900)
+- `azter/desktop/gorra-mykonos-bloque-02-el-bordado.webp` (1440x1279, 42 KB): Landing gorra Mykonos: bloque 2 «El bordado» (desktop 1440x900)
+- `azter/desktop/gorra-mykonos-bloque-03-la-mykonos-pide-jersey.webp` (1440x1497, 59 KB): Landing gorra Mykonos: bloque 3 «La Mykonos pide jersey.» (desktop 1440x900)
+- `azter/desktop/gorra-mykonos-fold.webp` (1440x900, 70 KB): Landing gorra Mykonos: primer pantallazo (desktop 1440x900)
+- `azter/desktop/gorra-mykonos-full.webp` (1440x4325, 200 KB): Landing gorra Mykonos: página completa (desktop 1440x900)
 - `azter/desktop/remera-grecia-bloque-01-grecia.webp` (1440x1121, 53 KB): Landing jersey Grecia: bloque 1 «GRECIA» (desktop 1440x900)
 - `azter/desktop/remera-grecia-bloque-02-el-azter.webp` (1440x1279, 74 KB): Landing jersey Grecia: bloque 2 «El AZTER» (desktop 1440x900)
 - `azter/desktop/remera-grecia-bloque-03-la-grecia-pide-gorra.webp` (1440x1224, 63 KB): Landing jersey Grecia: bloque 3 «La Grecia pide gorra.» (desktop 1440x900)
 - `azter/desktop/remera-grecia-fold.webp` (1440x900, 52 KB): Landing jersey Grecia: primer pantallazo (desktop 1440x900)
 - `azter/desktop/remera-grecia-full.webp` (1440x4127, 190 KB): Landing jersey Grecia: página completa (desktop 1440x900)
+- `azter/desktop/remera-star-bloque-01-star.webp` (1440x1121, 53 KB): Landing jersey Star: bloque 1 (desktop 1440x900)
+- `azter/desktop/remera-star-bloque-02-la-estampa.webp` (1440x1279, 68 KB): Landing jersey Star: bloque 2 (desktop 1440x900)
+- `azter/desktop/remera-star-bloque-03-la-star-pide-gorra.webp` (1440x1224, 63 KB): Landing jersey Star: bloque 3 (desktop 1440x900)
+- `azter/desktop/remera-star-fold.webp` (1440x900, 52 KB): Landing jersey Star: primer pantallazo (desktop 1440x900)
+- `azter/desktop/remera-star-full.webp` (1440x4127, 180 KB): Landing jersey Star: página completa (desktop 1440x900)
 
 `mobile/`
 
@@ -123,17 +134,18 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 - `azter/mobile/gorra-atenas-bloque-03-la-atenas-pide-jersey.webp` (780x2558, 63 KB): Landing gorra Atenas: bloque 3 «La Atenas pide jersey.» (mobile 390x844 @2x)
 - `azter/mobile/gorra-atenas-fold.webp` (780x1688, 54 KB): Landing gorra Atenas: primer pantallazo (mobile 390x844 @2x)
 - `azter/mobile/gorra-atenas-full.webp` (780x10252, 312 KB): Landing gorra Atenas: página completa (mobile 390x844 @2x)
-- `azter/mobile/home-bloque-01-azter.webp` (780x1800, 53 KB): Home: bloque 1 «AZTER» (mobile 390x844 @2x)
-- `azter/mobile/home-bloque-02-star.webp` (724x4050, 117 KB): Home: bloque 2 «STAR» (mobile 390x844 @2x)
-- `azter/mobile/home-bloque-03-una-historia-que-se-escribe.webp` (780x3088, 96 KB): Home: bloque 3 «Una historia que se escribe por capítulos.» (mobile 390x844 @2x)
-- `azter/mobile/home-bloque-04-section-template-27226706739309-cust.webp` (780x1216, 25 KB): Home: bloque 4 «.section-template--27226706739309__custom_liquid_RTHmYm-padding {…» (mobile 390x844 @2x)
-- `azter/mobile/home-fold.webp` (780x1688, 52 KB): Home: primer pantallazo (mobile 390x844 @2x)
-- `azter/mobile/home-full.webp` (780x13570, 400 KB): Home: página completa (mobile 390x844 @2x)
+- `azter/mobile/gorra-mykonos-bloque-01-mykonos.webp` (780x3678, 142 KB): Landing gorra Mykonos: bloque 1 «MYKONOS» (mobile 390x844 @2x)
+- `azter/mobile/gorra-mykonos-bloque-02-el-bordado.webp` (780x2478, 73 KB): Landing gorra Mykonos: bloque 2 «El bordado» (mobile 390x844 @2x)
+- `azter/mobile/gorra-mykonos-bloque-03-la-mykonos-pide-jersey.webp` (780x2524, 64 KB): Landing gorra Mykonos: bloque 3 «La Mykonos pide jersey.» (mobile 390x844 @2x)
+- `azter/mobile/gorra-mykonos-fold.webp` (780x1688, 75 KB): Landing gorra Mykonos: primer pantallazo (mobile 390x844 @2x)
+- `azter/mobile/gorra-mykonos-full.webp` (780x10426, 330 KB): Landing gorra Mykonos: página completa (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-bloque-01-grecia.webp` (780x3640, 104 KB): Landing jersey Grecia: bloque 1 «GRECIA» (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-bloque-02-el-azter.webp` (780x2478, 66 KB): Landing jersey Grecia: bloque 2 «El AZTER» (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-bloque-03-la-grecia-pide-gorra.webp` (780x1672, 58 KB): Landing jersey Grecia: bloque 3 «La Grecia pide gorra.» (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-fold.webp` (780x1688, 46 KB): Landing jersey Grecia: primer pantallazo (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-full.webp` (780x9536, 272 KB): Landing jersey Grecia: página completa (mobile 390x844 @2x)
+- `azter/mobile/remera-star-fold.webp` (780x1688, 46 KB): Landing jersey Star: primer pantallazo (mobile 390x844 @2x)
+- `azter/mobile/remera-star-full.webp` (780x9452, 268 KB): Landing jersey Star: página completa (mobile 390x844 @2x)
 
 ## Baron Mens (vitaminas para barba)
 
@@ -141,18 +153,29 @@ Landing de vitaminas activadoras de barba, estética negro y dorado con ilustrac
 
 **URLs capturadas**
 
+- `home`: https://baronmensarg.myshopify.com/
 - `producto-vitaminas`: https://baronmensarg.myshopify.com/products/vitaminas-activadoras-de-barba
 
 **Archivos**
 
 `videos/`
 
+- `baron-mens/videos/home-scroll-desktop.mp4` (1280x800, 12.4 s, 2.4 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `baron-mens/videos/home-scroll-mobile.mp4` (390x844, 15.0 s, 1.4 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `baron-mens/videos/producto-diagnostico-fases-desktop.mp4` (1280x800, 14.7 s, 632 KB): Landing: toggle afuera/adentro del folículo (ilustración animada) y diagnóstico de barba por fases con el rostro ilustrado que marca cada zona (desktop)
 - `baron-mens/videos/producto-vitaminas-scroll-desktop.mp4` (1280x800, 15.6 s, 2.5 MB): Landing vitaminas activadoras de barba: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `baron-mens/videos/producto-vitaminas-scroll-mobile.mp4` (390x844, 18.0 s, 1.5 MB): Landing vitaminas activadoras de barba: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 
 `desktop/`
 
+- `baron-mens/desktop/home-bloque-01-tu-barba-desde-adentro.webp` (1440x756, 67 KB): Home: bloque 1 «Tu barba, desde adentro» (desktop 1440x900)
+- `baron-mens/desktop/home-bloque-02-elegi-tu-tratamiento.webp` (1440x829, 71 KB): Home: bloque 2 «Elegí tu tratamiento» (desktop 1440x900)
+- `baron-mens/desktop/home-bloque-03-que-le-pasa-a-tu.webp` (1440x869, 66 KB): Home: bloque 3 «¿Qué le pasa a tu barba?» (desktop 1440x900)
+- `baron-mens/desktop/home-bloque-04-lo-que-tiene-adentro.webp` (1440x887, 80 KB): Home: bloque 4 «Lo que tiene adentro» (desktop 1440x900)
+- `baron-mens/desktop/home-bloque-05-antes-y-despues.webp` (1440x1099, 139 KB): Home: bloque 5 «Antes y después» (desktop 1440x900)
+- `baron-mens/desktop/home-bloque-06-antes-de-empezar.webp` (1440x721, 73 KB): Home: bloque 6 «Antes de empezar» (desktop 1440x900)
+- `baron-mens/desktop/home-fold.webp` (1440x900, 83 KB): Home: primer pantallazo (desktop 1440x900)
+- `baron-mens/desktop/home-full.webp` (1440x7823, 722 KB): Home: página completa (desktop 1440x900)
 - `baron-mens/desktop/producto-vitaminas-bloque-01-vitaminas-activadoras-de-barba.webp` (1440x1563, 122 KB): Landing vitaminas activadoras de barba: bloque 1 «Vitaminas Activadoras de Barba» (desktop 1440x900)
 - `baron-mens/desktop/producto-vitaminas-bloque-02-tu-barba-tambien-se-alimenta.webp` (1440x739, 45 KB): Landing vitaminas activadoras de barba: bloque 2 «Tu barba también se alimenta desde adentro» (desktop 1440x900)
 - `baron-mens/desktop/producto-vitaminas-bloque-03-si-tu-barba-crece-despareja.webp` (1440x886, 72 KB): Landing vitaminas activadoras de barba: bloque 3 «Si tu barba crece despareja, no sos el único» (desktop 1440x900)
@@ -164,6 +187,14 @@ Landing de vitaminas activadoras de barba, estética negro y dorado con ilustrac
 
 `mobile/`
 
+- `baron-mens/mobile/home-bloque-01-tu-barba-desde-adentro.webp` (780x1796, 93 KB): Home: bloque 1 «Tu barba, desde adentro» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-bloque-02-elegi-tu-tratamiento.webp` (780x2686, 117 KB): Home: bloque 2 «Elegí tu tratamiento» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-bloque-03-que-le-pasa-a-tu.webp` (780x2360, 107 KB): Home: bloque 3 «¿Qué le pasa a tu barba?» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-bloque-04-lo-que-tiene-adentro.webp` (780x2458, 114 KB): Home: bloque 4 «Lo que tiene adentro» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-bloque-05-antes-y-despues.webp` (780x1974, 151 KB): Home: bloque 5 «Antes y después» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-bloque-06-antes-de-empezar.webp` (780x2204, 113 KB): Home: bloque 6 «Antes de empezar» (mobile 390x844 @2x)
+- `baron-mens/mobile/home-fold.webp` (780x1688, 90 KB): Home: primer pantallazo (mobile 390x844 @2x)
+- `baron-mens/mobile/home-full.webp` (614x15998, 759 KB): Home: página completa (mobile 390x844 @2x)
 - `baron-mens/mobile/producto-vitaminas-bloque-01-vitaminas-activadoras-de-barba.webp` (780x4050, 218 KB): Landing vitaminas activadoras de barba: bloque 1 «Vitaminas Activadoras de Barba» (mobile 390x844 @2x)
 - `baron-mens/mobile/producto-vitaminas-bloque-02-tu-barba-tambien-se-alimenta.webp` (780x2190, 90 KB): Landing vitaminas activadoras de barba: bloque 2 «Tu barba también se alimenta desde adentro» (mobile 390x844 @2x)
 - `baron-mens/mobile/producto-vitaminas-bloque-03-si-tu-barba-crece-despareja.webp` (780x2482, 109 KB): Landing vitaminas activadoras de barba: bloque 3 «Si tu barba crece despareja, no sos el único» (mobile 390x844 @2x)
@@ -180,6 +211,8 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 **URLs capturadas**
 
 - `almohadon`: https://www.bustani.store/products/almohada-ergonomica-para-parejas-1vpjh
+- `catalogo`: https://www.bustani.store/collections/all
+- `encuesta-almohadon`: https://www.bustani.store/pages/encuesta-almohadon
 - `home`: https://www.bustani.store/
 
 **Archivos**
@@ -188,8 +221,11 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 
 - `bustani/videos/almohadon-scroll-desktop.mp4` (1280x800, 16.2 s, 1.1 MB): Landing almohadón ergonómico para parejas: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `bustani/videos/almohadon-scroll-mobile.mp4` (390x844, 18.0 s, 788 KB): Landing almohadón ergonómico para parejas: scroll completo de arriba a abajo con pausas en los bloques (mobile)
+- `bustani/videos/catalogo-scroll-desktop.mp4` (1280x800, 8.5 s, 467 KB): Catálogo: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `bustani/videos/encuesta-almohadon-quiz-desktop.mp4` (1280x800, 11.0 s, 203 KB): Encuesta del almohadón: pantalla inicial, Empezar y el quiz avanzando 3 preguntas (desktop). No se completó ni se envió
 - `bustani/videos/encuesta-almohadon-quiz-mobile.mp4` (390x844, 9.1 s, 188 KB): Encuesta del almohadón: el quiz avanzando en mobile. No se completó ni se envió
+- `bustani/videos/encuesta-almohadon-scroll-desktop.mp4` (1280x800, 4.2 s, 114 KB): Encuesta quiz del almohadón: scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `bustani/videos/encuesta-almohadon-scroll-mobile.mp4` (390x844, 4.3 s, 100 KB): Encuesta quiz del almohadón: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `bustani/videos/home-hero-animado-desktop.mp4` (1280x800, 12.2 s, 463 KB): Home: hero animado (almohadón flotando sobre la escena CSS con los recortes de regalo) y entrada al bloque siguiente (desktop)
 - `bustani/videos/home-hero-animado-mobile.mp4` (390x844, 9.6 s, 198 KB): Home: hero animado en mobile
 - `bustani/videos/home-scroll-desktop.mp4` (1280x800, 13.2 s, 1.1 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
@@ -205,6 +241,12 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 - `bustani/desktop/almohadon-bloque-06-lo-que-dicen-los-que.webp` (1440x1384, 70 KB): Landing almohadón ergonómico para parejas: bloque 6 «Lo que dicen los que ya lo usaronReseñas reales de compradores…» (desktop 1440x900)
 - `bustani/desktop/almohadon-fold.webp` (1440x900, 89 KB): Landing almohadón ergonómico para parejas: primer pantallazo (desktop 1440x900)
 - `bustani/desktop/almohadon-full.webp` (1440x10932, 542 KB): Landing almohadón ergonómico para parejas: página completa (desktop 1440x900)
+- `bustani/desktop/catalogo-bloque-01-todo-bustani.webp` (1440x1568, 129 KB): Catálogo: bloque 1 «Todo Bustani» (desktop 1440x900)
+- `bustani/desktop/catalogo-fold.webp` (1440x900, 78 KB): Catálogo: primer pantallazo (desktop 1440x900)
+- `bustani/desktop/catalogo-full.webp` (1440x2548, 169 KB): Catálogo: página completa (desktop 1440x900)
+- `bustani/desktop/encuesta-almohadon-bloque-01-el-almohadon-bustani-es-para.webp` (1440x900, 35 KB): Encuesta quiz del almohadón: bloque 1 «¿El Almohadón Bustani es para ustedes?» (desktop 1440x900)
+- `bustani/desktop/encuesta-almohadon-fold.webp` (1440x900, 36 KB): Encuesta quiz del almohadón: primer pantallazo (desktop 1440x900)
+- `bustani/desktop/encuesta-almohadon-full.webp` (1440x900, 35 KB): Encuesta quiz del almohadón: página completa (desktop 1440x900)
 - `bustani/desktop/encuesta-almohadon-paso-4.webp` (1440x900, 36 KB): Encuesta del almohadón: pregunta 4 del quiz
 - `bustani/desktop/home-bloque-01-intimidad-sin-limites.webp` (1440x720, 45 KB): Home: bloque 1 «Intimidad sin límites» (desktop 1440x900)
 - `bustani/desktop/home-bloque-02-todo-esto-llega-en-tu.webp` (1440x839, 46 KB): Home: bloque 2 «Todo esto llega en tu pedido» (desktop 1440x900)
@@ -225,6 +267,12 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 - `bustani/mobile/almohadon-bloque-06-lo-que-dicen-los-que.webp` (780x2862, 115 KB): Landing almohadón ergonómico para parejas: bloque 6 «Lo que dicen los que ya lo usaronReseñas reales de compradores…» (mobile 390x844 @2x)
 - `bustani/mobile/almohadon-fold.webp` (780x1688, 94 KB): Landing almohadón ergonómico para parejas: primer pantallazo (mobile 390x844 @2x)
 - `bustani/mobile/almohadon-full.webp` (464x16000, 553 KB): Landing almohadón ergonómico para parejas: página completa (mobile 390x844 @2x)
+- `bustani/mobile/catalogo-bloque-01-todo-bustani.webp` (780x2944, 154 KB): Catálogo: bloque 1 «Todo Bustani» (mobile 390x844 @2x)
+- `bustani/mobile/catalogo-fold.webp` (780x1688, 82 KB): Catálogo: primer pantallazo (mobile 390x844 @2x)
+- `bustani/mobile/catalogo-full.webp` (780x5108, 222 KB): Catálogo: página completa (mobile 390x844 @2x)
+- `bustani/mobile/encuesta-almohadon-bloque-01-el-almohadon-bustani-es-para.webp` (780x1688, 55 KB): Encuesta quiz del almohadón: bloque 1 «¿El Almohadón Bustani es para ustedes?» (mobile 390x844 @2x)
+- `bustani/mobile/encuesta-almohadon-fold.webp` (780x1688, 57 KB): Encuesta quiz del almohadón: primer pantallazo (mobile 390x844 @2x)
+- `bustani/mobile/encuesta-almohadon-full.webp` (780x1688, 57 KB): Encuesta quiz del almohadón: página completa (mobile 390x844 @2x)
 - `bustani/mobile/encuesta-almohadon-paso-4.webp` (780x1688, 81 KB): Encuesta del almohadón: pregunta 4 del quiz
 - `bustani/mobile/home-bloque-01-intimidad-sin-limites.webp` (780x1888, 47 KB): Home: bloque 1 «Intimidad sin límites» (mobile 390x844 @2x)
 - `bustani/mobile/home-bloque-02-todo-esto-llega-en-tu.webp` (780x2436, 69 KB): Home: bloque 2 «Todo esto llega en tu pedido» (mobile 390x844 @2x)
@@ -241,6 +289,7 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 
 **URLs capturadas**
 
+- `home`: https://chaupelo.myshopify.com/
 - `producto`: https://chaupelo.myshopify.com/products/aditivo-para-lavado-antipelusa-elimina-pelos-y-olores
 
 **Archivos**
@@ -248,6 +297,7 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 `videos/`
 
 - `chau-pelo/videos/home-scroll-desktop.mp4` (1280x800, 13.2 s, 899 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `chau-pelo/videos/home-scroll-mobile.mp4` (390x844, 14.0 s, 461 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `chau-pelo/videos/producto-antes-despues-desktop.mp4` (1280x800, 8.2 s, 293 KB): Landing: antes y después de un solo lavado, scroll que corre la línea y arrastre manual de la línea (desktop)
 - `chau-pelo/videos/producto-frota-la-foto-desktop.mp4` (1280x800, 8.0 s, 146 KB): Landing: bloque «Frotá la foto y sacale los pelos», el mouse frota la foto (canvas) y el contador de pelo afuera sube (desktop)
 - `chau-pelo/videos/producto-frota-la-foto-mobile.mp4` (390x844, 8.0 s, 104 KB): Landing: bloque «Frotá la foto» frotado con el dedo en mobile
@@ -256,12 +306,12 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 
 `desktop/`
 
-- `chau-pelo/desktop/home-bloque-01-mas-mimos-menos-pelos.webp` (1440x738, 68 KB): Home: bloque 1 (desktop 1440x900)
-- `chau-pelo/desktop/home-bloque-02-hecho-para-casas-con-mucho.webp` (1440x797, 42 KB): Home: bloque 2 (desktop 1440x900)
-- `chau-pelo/desktop/home-bloque-03-mas-potes-mas-ahorro.webp` (1440x941, 58 KB): Home: bloque 3 (desktop 1440x900)
-- `chau-pelo/desktop/home-bloque-04-se-suma-a-tu-lavado.webp` (1440x825, 49 KB): Home: bloque 4 (desktop 1440x900)
-- `chau-pelo/desktop/home-bloque-05-miles-de-hogares-ya-le.webp` (1440x1120, 106 KB): Home: bloque 5 (desktop 1440x900)
-- `chau-pelo/desktop/home-bloque-06-tu-proximo-lavado-sin-pelos.webp` (1440x688, 42 KB): Home: bloque 6 (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-01-mas-mimos-menos-pelos.webp` (1440x738, 68 KB): Home: bloque 1 «Más mimos, menos pelos.» (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-02-hecho-para-casas-con-mucho.webp` (1440x797, 42 KB): Home: bloque 2 «Hecho para casas con mucho amor y mucho pelo» (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-03-mas-potes-mas-ahorro.webp` (1440x941, 58 KB): Home: bloque 3 «Más potes, más ahorro» (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-04-se-suma-a-tu-lavado.webp` (1440x825, 49 KB): Home: bloque 4 «Se suma a tu lavado sin cambiar nada» (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-05-miles-de-hogares-ya-le.webp` (1440x1120, 106 KB): Home: bloque 5 «Miles de hogares ya le dijeron chau» (desktop 1440x900)
+- `chau-pelo/desktop/home-bloque-06-tu-proximo-lavado-sin-pelos.webp` (1440x688, 42 KB): Home: bloque 6 «Tu próximo lavado, sin pelos.» (desktop 1440x900)
 - `chau-pelo/desktop/home-fold.webp` (1440x900, 83 KB): Home: primer pantallazo (desktop 1440x900)
 - `chau-pelo/desktop/home-full.webp` (1440x8423, 452 KB): Home: página completa (desktop 1440x900)
 - `chau-pelo/desktop/producto-bloque-01-disolvente-de-pelos-de-mascotas.webp` (1440x1556, 152 KB): Landing aditivo antipelusa: bloque 1 «Disolvente de Pelos de Mascotas» (desktop 1440x900)
@@ -276,12 +326,12 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 
 `mobile/`
 
-- `chau-pelo/mobile/home-bloque-01-mas-mimos-menos-pelos.webp` (780x1566, 75 KB): Home: bloque 1 (mobile 390x844 @2x)
-- `chau-pelo/mobile/home-bloque-02-hecho-para-casas-con-mucho.webp` (780x1558, 64 KB): Home: bloque 2 (mobile 390x844 @2x)
-- `chau-pelo/mobile/home-bloque-03-mas-potes-mas-ahorro.webp` (780x2362, 88 KB): Home: bloque 3 (mobile 390x844 @2x)
-- `chau-pelo/mobile/home-bloque-04-se-suma-a-tu-lavado.webp` (780x1790, 74 KB): Home: bloque 4 (mobile 390x844 @2x)
-- `chau-pelo/mobile/home-bloque-05-miles-de-hogares-ya-le.webp` (780x2290, 97 KB): Home: bloque 5 (mobile 390x844 @2x)
-- `chau-pelo/mobile/home-bloque-06-tu-proximo-lavado-sin-pelos.webp` (780x1534, 63 KB): Home: bloque 6 (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-01-mas-mimos-menos-pelos.webp` (780x1566, 75 KB): Home: bloque 1 «Más mimos, menos pelos.» (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-02-hecho-para-casas-con-mucho.webp` (780x1558, 64 KB): Home: bloque 2 «Hecho para casas con mucho amor y mucho pelo» (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-03-mas-potes-mas-ahorro.webp` (780x2362, 88 KB): Home: bloque 3 «Más potes, más ahorro» (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-04-se-suma-a-tu-lavado.webp` (780x1790, 74 KB): Home: bloque 4 «Se suma a tu lavado sin cambiar nada» (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-05-miles-de-hogares-ya-le.webp` (780x2290, 97 KB): Home: bloque 5 «Miles de hogares ya le dijeron chau» (mobile 390x844 @2x)
+- `chau-pelo/mobile/home-bloque-06-tu-proximo-lavado-sin-pelos.webp` (780x1534, 63 KB): Home: bloque 6 «Tu próximo lavado, sin pelos.» (mobile 390x844 @2x)
 - `chau-pelo/mobile/home-fold.webp` (780x1688, 80 KB): Home: primer pantallazo (mobile 390x844 @2x)
 - `chau-pelo/mobile/home-full.webp` (690x16000, 518 KB): Home: página completa (mobile 390x844 @2x)
 - `chau-pelo/mobile/producto-bloque-01-disolvente-de-pelos-de-mascotas.webp` (780x3690, 199 KB): Landing aditivo antipelusa: bloque 1 «Disolvente de Pelos de Mascotas» (mobile 390x844 @2x)
@@ -380,50 +430,20 @@ Marca boliviana de shorts de lino con hero camaleón editorial (el fondo cambia 
 - `fosters/videos/home-hero-camaleon-mobile.mp4` (390x844, 8.0 s, 131 KB): Home: hero camaleón en mobile
 - `fosters/videos/home-scroll-desktop.mp4` (1280x800, 13.4 s, 1.4 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fosters/videos/home-scroll-mobile.mp4` (390x844, 14.6 s, 816 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
-- `fosters/videos/short-formulario-whatsapp-desktop.mp4` (1280x800, 12.7 s, 415 KB): Landing short: «Pedir ahora» abre el formulario de pedido que termina en WhatsApp, suma una unidad y recorre el formulario (desktop). No se escribió ni se envió nada
+- `fosters/videos/home-un-dia-de-lino-desktop.mp4` (1280x800, 10.3 s, 651 KB): Home: escena fijada «Arrancás con un café», un día con el short que avanza con el scroll (desktop)
+- `fosters/videos/home-un-dia-de-lino-mobile.mp4` (390x844, 10.3 s, 376 KB): Home: escena fijada «Arrancás con un café» en mobile
+- `fosters/videos/short-formulario-whatsapp-desktop.mp4` (1280x800, 10.6 s, 308 KB): Landing short: «Pedir ahora» abre el formulario de pedido que termina en WhatsApp, suma una unidad y recorre el formulario (desktop). No se escribió ni se envió nada
 - `fosters/videos/short-formulario-whatsapp-mobile.mp4` (390x844, 10.8 s, 242 KB): Landing short: formulario de pedido a WhatsApp abierto como bottom sheet en mobile. No se escribió ni se envió nada
 - `fosters/videos/short-scroll-desktop.mp4` (1280x800, 13.5 s, 1.7 MB): Landing short de lino: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fosters/videos/short-scroll-mobile.mp4` (390x844, 15.5 s, 1.1 MB): Landing short de lino: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 
 `desktop/`
 
-- `fosters/desktop/home-bloque-01-esenciales-para-todos-los-dias.webp` (1440x876, 59 KB): Home: bloque 1 «Esenciales para todos los días.» (desktop 1440x900)
-- `fosters/desktop/home-bloque-02-mira-de-cerca.webp` (1440x986, 34 KB): Home: bloque 2 «Mirá de cerca.» (desktop 1440x900)
-- `fosters/desktop/home-bloque-03-arrancas-con-un-cafe.webp` (1440x899, 45 KB): Home: bloque 3 «Arrancás con un café.» (desktop 1440x900)
-- `fosters/desktop/home-bloque-04-por-que-fosters.webp` (1440x901, 54 KB): Home: bloque 4 «¿Por qué Fosters?» (desktop 1440x900)
-- `fosters/desktop/home-bloque-05-por-que-lino.webp` (1440x746, 30 KB): Home: bloque 5 «¿Por qué lino?» (desktop 1440x900)
-- `fosters/desktop/home-bloque-06-comprar-es-asi-de-simple.webp` (1440x779, 30 KB): Home: bloque 6 «Comprar es así de simple.» (desktop 1440x900)
-- `fosters/desktop/home-fold.webp` (1440x900, 60 KB): Home: primer pantallazo (desktop 1440x900)
-- `fosters/desktop/home-full.webp` (1440x8776, 332 KB): Home: página completa (desktop 1440x900)
-- `fosters/desktop/short-bloque-01-short-de-lino.webp` (1440x834, 42 KB): Landing short de lino: bloque 1 «Short de Lino» (desktop 1440x900)
-- `fosters/desktop/short-bloque-02-por-que-este-short.webp` (1440x778, 75 KB): Landing short de lino: bloque 2 «Por qué este short.» (desktop 1440x900)
-- `fosters/desktop/short-bloque-03-cuatro-colores-cuatro-planes.webp` (1440x817, 51 KB): Landing short de lino: bloque 3 «Cuatro colores, cuatro planes.» (desktop 1440x900)
-- `fosters/desktop/short-bloque-04-facil-de-cuidar.webp` (1440x753, 29 KB): Landing short de lino: bloque 4 «Fácil de cuidar.» (desktop 1440x900)
-- `fosters/desktop/short-bloque-05-te-quedo-alguna-duda.webp` (1440x1474, 50 KB): Landing short de lino: bloque 5 «¿Te quedó alguna duda?» (desktop 1440x900)
-- `fosters/desktop/short-bloque-06-elegi-el-tuyo.webp` (1440x741, 42 KB): Landing short de lino: bloque 6 «Elegí el tuyo.» (desktop 1440x900)
-- `fosters/desktop/short-fold.webp` (1440x900, 54 KB): Landing short de lino: primer pantallazo (desktop 1440x900)
-- `fosters/desktop/short-formulario-whatsapp-abierto.webp` (1440x900, 46 KB): Landing short: formulario de pedido a WhatsApp abierto (sin enviar)
-- `fosters/desktop/short-full.webp` (1440x8544, 457 KB): Landing short de lino: página completa (desktop 1440x900)
+- `fosters/desktop/short-formulario-whatsapp-abierto.webp` (1440x900, 43 KB): Landing short: formulario de pedido a WhatsApp abierto (sin enviar)
 
 `mobile/`
 
-- `fosters/mobile/home-bloque-01-esenciales-para-todos-los-dias.webp` (780x1730, 79 KB): Home: bloque 1 «Esenciales para todos los días.» (mobile 390x844 @2x)
-- `fosters/mobile/home-bloque-02-mira-de-cerca.webp` (780x1538, 40 KB): Home: bloque 2 «Mirá de cerca.» (mobile 390x844 @2x)
-- `fosters/mobile/home-bloque-03-arrancas-con-un-cafe.webp` (780x1688, 54 KB): Home: bloque 3 «Arrancás con un café.» (mobile 390x844 @2x)
-- `fosters/mobile/home-bloque-04-por-que-fosters.webp` (780x3300, 104 KB): Home: bloque 4 «¿Por qué Fosters?» (mobile 390x844 @2x)
-- `fosters/mobile/home-bloque-05-por-que-lino.webp` (780x1824, 55 KB): Home: bloque 5 «¿Por qué lino?» (mobile 390x844 @2x)
-- `fosters/mobile/home-bloque-06-comprar-es-asi-de-simple.webp` (780x1644, 56 KB): Home: bloque 6 «Comprar es así de simple.» (mobile 390x844 @2x)
-- `fosters/mobile/home-fold.webp` (780x1688, 67 KB): Home: primer pantallazo (mobile 390x844 @2x)
-- `fosters/mobile/home-full.webp` (638x16000, 388 KB): Home: página completa (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-01-short-de-lino.webp` (780x2628, 81 KB): Landing short de lino: bloque 1 «Short de Lino» (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-02-por-que-este-short.webp` (780x1198, 59 KB): Landing short de lino: bloque 2 «Por qué este short.» (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-03-cuatro-colores-cuatro-planes.webp` (780x1832, 100 KB): Landing short de lino: bloque 3 «Cuatro colores, cuatro planes.» (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-04-facil-de-cuidar.webp` (780x1946, 55 KB): Landing short de lino: bloque 4 «Fácil de cuidar.» (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-05-te-quedo-alguna-duda.webp` (780x2760, 94 KB): Landing short de lino: bloque 5 «¿Te quedó alguna duda?» (mobile 390x844 @2x)
-- `fosters/mobile/short-bloque-06-elegi-el-tuyo.webp` (780x1842, 76 KB): Landing short de lino: bloque 6 «Elegí el tuyo.» (mobile 390x844 @2x)
-- `fosters/mobile/short-fold.webp` (780x1688, 56 KB): Landing short de lino: primer pantallazo (mobile 390x844 @2x)
 - `fosters/mobile/short-formulario-whatsapp-abierto.webp` (780x1688, 60 KB): Landing short: formulario de pedido a WhatsApp abierto (sin enviar)
-- `fosters/mobile/short-full.webp` (580x16000, 562 KB): Landing short de lino: página completa (mobile 390x844 @2x)
 
 ## Solvex (almohadón ortopédico y crema lumbar)
 
@@ -571,4 +591,4 @@ Landing muy interactiva y dopamínica de detergente en polvo 3 en 1, azul eléct
 - `lava-plus/mobile/producto-frota-la-mancha-resultado.webp` (780x1688, 73 KB): Landing: «Frotá la mancha» después de frotar, remera limpia
 - `lava-plus/mobile/producto-full.webp` (414x16000, 602 KB): Landing LAVA+ 3 en 1: página completa (mobile 390x844 @2x)
 
-Tamaño total de capturas: 97 MB.
+Tamaño total de capturas: 108 MB.
