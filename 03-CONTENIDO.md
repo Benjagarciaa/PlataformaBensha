@@ -39,7 +39,7 @@ Tres pilares:
 |---|---|
 | Páginas | `+200 páginas hechas` |
 | Marcas | `+130 marcas` (Argentina y exterior) |
-| Trabajos destacados | `13 trabajos destacados: 9 tiendas y 4 sistemas` |
+| Trabajos destacados | `15 trabajos destacados: 11 tiendas y 4 sistemas` |
 
 No van: facturación de clientes, porcentajes de mejora, "25 millones en un día" ni ningún
 otro dato que no esté confirmado por escrito.
@@ -55,7 +55,7 @@ otro dato que no esté confirmado por escrito.
   manejás vos.** · bajada: Los pedidos llegan ordenados, el stock se actualiza solo y
   manejás todo desde el celular. Sin plantillas que te limiten ni abonos que te aten.
 - CTA: `Ordená tu negocio` · `Ver proyectos`
-- Cifras: +200 páginas hechas · +130 marcas · 13 trabajos destacados
+- Cifras: +200 páginas hechas · +130 marcas · 15 trabajos destacados
 
 ## LO QUE TE RESUELVO
 
@@ -69,11 +69,13 @@ los días.
 | Tu tienda es linda, pero no vende. | La gente entra, mira y se va. Y nadie te dice por qué. | Se ordena como la recorre alguien que está por comprar: qué ve primero, qué le da confianza, dónde duda. Linda y clara, para que el carrito se llene. |
 | No sabés qué te falta para vender más. | ¿Las fotos? ¿El precio? ¿Que tarda en cargar? Probás cosas a ciegas. | Una revisión completa de tu tienda, con prioridades: qué cambiar primero para que venda más, empezando por lo que más rinde. |
 
-## PROYECTOS (provisorio, se reemplaza por el carrusel)
+## TRABAJOS (carrusel 3D)
 
-Eyebrow `TODO ESTO ESTÁ ANDANDO` · intro: 13 trabajos destacados, 9 tiendas y 4 sistemas,
-todos en uso hoy. Acá van cuatro, con lo que cambió en cada negocio.
-Solo el nombre de la marca, sin links a las tiendas.
+Eyebrow `TRABAJOS REALES` · título `Abrilos y mirá cómo funcionan.` · intro: tiendas que venden
+y sistemas para manejarlas, cada uno con el nombre de su marca.
+15 trabajos (11 tiendas y 4 sistemas), Tinte Pro primero como mejor caso (25 millones en un
+día). Solo el nombre de la marca, sin links a las tiendas (decisión de Benjamín). Cada ficha:
+resumen en lenguaje de dueño, qué se resolvió, qué hice, con qué, video y galería.
 
 ## QUÉ MIRO CUANDO ARMO O REVISO UNA TIENDA
 

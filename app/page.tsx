@@ -1,6 +1,6 @@
 import { Hero } from "@/components/sections/Hero";
 import { Resuelvo } from "@/components/sections/Resuelvo";
-import { Proyectos } from "@/components/sections/Proyectos";
+import { Trabajos } from "@/components/trabajos/Trabajos";
 import { Criterio } from "@/components/sections/Criterio";
 import { Servicios } from "@/components/sections/Servicios";
 import { Proceso } from "@/components/sections/Proceso";
@@ -26,7 +26,7 @@ export default function Home() {
         <Resuelvo />
       </Diferida>
       <Diferida>
-        <Proyectos />
+        <Trabajos />
       </Diferida>
       <Diferida>
         <Criterio />

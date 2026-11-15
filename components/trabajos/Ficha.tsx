@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { animate } from "motion/react";
 import { ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
-import type { TextosTrabajos, Trabajo } from "@/content/trabajos";
+import type { TextosTrabajos, Trabajo } from "@/content/data";
 import type { Rect } from "./plano";
 
 /**

@@ -142,7 +142,7 @@ Todo el texto vive en `content/data.ts`. Voseo, frases cortas, desde el negocio 
 Sin tecnicismos: si se nombra una tecnología, se dice qué cambia en su día. Sin relleno
 ("potenciar", "soluciones integrales"). **Prohibidos el guion largo y el medio en texto
 visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+200 páginas,
-+130 marcas, 13 trabajos destacados: 9 tiendas y 4 sistemas). Testimonios: no se inventan.
++130 marcas, 15 trabajos destacados: 11 tiendas y 4 sistemas). Testimonios: no se inventan.
 
 ## 9. Las secciones (una escena cada una)
 
@@ -150,7 +150,7 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 |---|---|---|---|---|---|
 | 1 | Hero 3D | `inicio` | `Hero.tsx` + `hero3d/` | Del caos al sistema (ver sección 10). Al final la cámara entra en la pantalla de la notebook y funde con lo que sigue | Barras que se llenan, contadores que suben, notificación de pedido nuevo en el celular |
 | 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: la frase se revela por palabra, la ilustración pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Chats que siguen llegando, contador de pedidos, "Guardado", productos que caen al carrito, escaneo |
-| 3 | Proyectos | `proyectos` | `Proyectos.tsx` | Provisoria (se reemplaza por el carrusel 3D): entradas y mockups | Mockups que flotan |
+| 3 | Trabajos | `proyectos` | `trabajos/` | Carrusel 3D: anillo de 15 trabajos fijado que avanza con el scroll y se arrastra con inercia; al tocar una tarjeta vuela a la cámara y abre la ficha a pantalla completa (FLIP sobre un `<dialog>`) con video, galería y qué se resolvió | El anillo gira solo y una banda de luz recorre las tarjetas |
 | 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
 | 5 | Servicios | `servicios` | `Servicios.tsx` | Cada tarjeta entra dada vuelta y gira en 3D hasta quedar de frente | Carrito que se llena, filas que cargan, aguja que pasa a rápido, escudo que escanea |
 | 6 | Cómo trabajamos | `proceso` | `Proceso.tsx` | Una línea se dibuja y conecta los pasos; cada nodo se enciende al alcanzarlo | Chat escribiendo, firma, bloques que se apilan, check |
@@ -159,7 +159,7 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 | 9 | Contacto | `contacto` | `Contacto.tsx` | Cotizador con preselección desde Servicios | Pulso de "respondo en el día", confirmación con check al enviar |
 | 10 | Footer | | `Footer.tsx` | | Punto que respira |
 
-## 10. 3D (WebGL, solo el hero)
+## 10. 3D (WebGL: el hero y el carrusel de trabajos)
 
 **Aislamiento.** three y React Three Fiber viven solo en `components/hero3d/`:
 `Escena3D.tsx` (único archivo que importa R3F), `geometrias.ts` (geometrías, shaders y
@@ -200,6 +200,13 @@ sin postprocesado; máximo 11 atributos por vértice en el shader de fragmentos.
 **Fallbacks.** Reduced-motion, ahorro de datos, sin WebGL acelerado o sin JS: sin canvas,
 el sistema armado en SVG (con los mismos íconos) y el texto en su estado final
 (`hero3d/estatico.ts`).
+
+Segunda escena: `components/trabajos/` (carrusel). Mismas reglas que el hero: R3F aislado en
+componentes hoja, three compartido y diferido, loop solo con la sección en pantalla y la pestaña
+visible, en pausa con la ficha abierta, `?webgl=forzar` para headless, y fallback de grilla HTML
+con la misma ficha (reduced-motion, ahorro de datos, sin WebGL acelerado). Las tarjetas son
+botones reales del DOM ubicados sobre su plano proyectado. Texturas de 512 px; galería y video
+solo al abrir la ficha. Copy y media en el export `trabajos` de `content/data.ts` y `public/trabajos/`.
 
 ## 11. Performance (innegociable)
 

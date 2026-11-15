@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useScroll } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { trabajos } from "@/content/trabajos";
+import { trabajos } from "@/content/data";
 import { esperarIntro } from "@/lib/intro";
 import { CSS_ESTATICO, CSS_FICHA, CSS_SIN_JS } from "./estatico";
 import { crearPuente, type Puente, type Rect } from "./plano";
