@@ -770,7 +770,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Migración", "Shopify", "Identidad"],
     resumen:
-      "Pasó de Tiendanube a Shopify y se mejoró entera: identidad nueva, portada de 11 bloques, catálogo y una página para el almohadón y otra para la crema, con las imágenes regeneradas con IA en voseo. La forma de contar el problema y sus animaciones después sirvieron de base para otra marca.",
+      "Pasó de Tiendanube a Shopify y se mejoró entera: identidad nueva, portada de 11 bloques, catálogo y una página para el almohadón y otra para la crema, con imágenes rehechas con IA y todos los textos en voseo. La forma de contar el problema y sus animaciones después sirvieron de base para otra marca.",
     logros: [
       "Antes y después que movés con el dedo para ver cómo cambia la postura.",
       "Al agregar el almohadón se abre el carrito con la crema de regalo.",
