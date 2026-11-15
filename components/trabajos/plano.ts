@@ -24,12 +24,17 @@ export function radioAnillo(n: number) {
 export const GIRO = {
   /** giro solo, en radianes por segundo (una vuelta en ~2 minutos) */
   auto: 0.05,
-  /** cuanto avanza el anillo en todo el tramo fijo de la seccion */
-  scroll: Math.PI,
+  /**
+   * giro leve mientras la seccion pasa por la pantalla (radianes en todo el
+   * paso, poco mas de una tarjeta): acompaña el scroll sin fijar la pagina
+   */
+  scroll: 0.5,
   /** freno de la inercia despues de soltar */
   friccion: 2.2,
   /** tope de velocidad al soltar, en radianes por segundo */
   velMax: 5,
+  /** celular: segundos de reposo antes de pasar solo a la tarjeta siguiente */
+  pausa: 4.5,
 };
 
 export const VUELO = {
@@ -60,37 +65,37 @@ export type Encuadre = {
 };
 
 /**
- * Encuadre segun el tamaño del lienzo. En pantallas anchas el anillo entra
- * casi entero y la tarjeta de frente ocupa un cuarto del ancho; en el celular
- * la camara se acerca, la de frente ocupa casi todo el ancho y las vecinas
- * asoman por los costados, como un mazo.
+ * Encuadre segun el tamaño del lienzo. El escenario ya no ocupa la pantalla
+ * entera: es una franja apaisada en la compu y casi cuadrada en el celular.
+ * En pantallas anchas la tarjeta de frente ocupa algo mas de un cuarto del
+ * ancho y el anillo entra entero; en el celular la camara se acerca, la de
+ * frente ocupa tres cuartos del ancho y las vecinas asoman por los costados.
  */
 export function calcularEncuadre(ancho: number, alto: number): Encuadre {
   const aspecto = ancho / Math.max(1, alto);
-  const estrecho = aspecto < 1 || ancho < 768;
-  const fov = estrecho ? 38 : 30;
+  const estrecho = aspecto < 1.15 || ancho < 768;
+  const fov = estrecho ? 36 : 30;
   const t = Math.tan((fov * Math.PI) / 360);
 
-  let objetivo =
-    aspecto >= 1
-      ? ancho * lerp(0.44, 0.3, clamp01((aspecto - 1) / 0.6))
-      : ancho * lerp(0.8, 0.52, clamp01((aspecto - 0.5) / 0.5));
-  // la tarjeta nunca pasa de poco mas de la mitad del alto
-  objetivo = Math.min(objetivo, alto * (estrecho ? 0.34 : 0.4) * (TARJETA.ancho / TARJETA.alto));
+  let objetivo = estrecho
+    ? ancho * lerp(0.76, 0.66, clamp01((aspecto - 0.7) / 0.45))
+    : ancho * lerp(0.36, 0.27, clamp01((aspecto - 1.4) / 1.3));
+  // la tarjeta nunca pasa de la mitad del alto: arriba asoma el fondo del anillo
+  objetivo = Math.min(objetivo, alto * (estrecho ? 0.46 : 0.5) * (TARJETA.ancho / TARJETA.alto));
 
   const distancia = (TARJETA.ancho * alto) / (2 * t * objetivo);
   const anchoVuelo = estrecho
-    ? Math.min(ancho * 0.92, alto * 0.5 * 1.6)
-    : Math.min(ancho * 0.46, alto * 0.56 * 1.6);
+    ? Math.min(ancho * 0.9, alto * 0.62 * 1.6)
+    : Math.min(ancho * 0.42, alto * 0.7 * 1.6);
 
   return {
     estrecho,
     fov,
     distancia,
-    elevacion: estrecho ? 0.34 : 0.27,
-    frenteY: estrecho ? 0.5 : 0.58,
+    elevacion: estrecho ? 0.3 : 0.24,
+    frenteY: estrecho ? 0.56 : 0.58,
     anchoFrente: objetivo,
-    vuelo: { ancho: anchoVuelo, cx: ancho / 2, cy: alto * (estrecho ? 0.45 : 0.5) },
+    vuelo: { ancho: anchoVuelo, cx: ancho / 2, cy: alto * 0.52 },
   };
 }
 

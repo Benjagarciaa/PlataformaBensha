@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { animate } from "motion/react";
 import { ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
-import type { TextosTrabajos, Trabajo } from "@/content/data";
+import type { MarcoMedio, TextosTrabajos, Trabajo } from "@/content/data";
 import type { Rect } from "./plano";
 
 /**
@@ -15,7 +15,13 @@ import type { Rect } from "./plano";
  *
  * El escenario arranca mostrando la misma miniatura que la tarjeta (la
  * textura ya esta en cache), asi el relevo 3D a HTML no se nota; el video y
- * la galeria se piden recien ahora.
+ * la galeria se piden recien con la ficha abierta.
+ *
+ * Cada medio se presenta en su marco: las capturas de compu en una ventana de
+ * navegador, las del celular en un celular y las laminas ya compuestas sin
+ * marco, siempre sobre la luz celeste del visor. Los controles del video y de
+ * la galeria viven en una barra propia debajo del visor: nunca tapan la
+ * captura.
  */
 
 const EASE_SALE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -98,7 +104,7 @@ export function Ficha({
     indiceRef.current = indice;
   }, [indice]);
 
-  /** lo que entra despues del escenario: cabecera, tira y texto */
+  /** lo que entra despues del escenario: cabecera, controles, tira y texto */
   const secundarios = () =>
     Array.from(panel.current?.querySelectorAll<HTMLElement>("[data-ficha-sec]") ?? []);
 
@@ -198,6 +204,7 @@ export function Ficha({
     const fon = fondo.current;
     if (!s || !p || !sup || !fon) return;
     let y0 = 0;
+    let x0 = 0;
     let t0 = 0;
     let dy = 0;
     let siguiendo = false;
@@ -205,6 +212,7 @@ export function Ficha({
     const inicio = (e: TouchEvent) => {
       if (cerrando.current || s.scrollTop > 0 || e.touches.length > 1) return;
       y0 = e.touches[0].clientY;
+      x0 = e.touches[0].clientX;
       t0 = e.timeStamp;
       dy = 0;
       siguiendo = true;
@@ -212,8 +220,10 @@ export function Ficha({
     const mover = (e: TouchEvent) => {
       if (!siguiendo) return;
       dy = e.touches[0].clientY - y0;
-      if (dy <= 0) {
-        if (dy < -6) siguiendo = false;
+      const dx = e.touches[0].clientX - x0;
+      // un gesto de costado es para la galeria, no para cerrar
+      if (dy <= 0 || Math.abs(dx) > Math.abs(dy)) {
+        if (dy < -6 || Math.abs(dx) > 10) siguiendo = false;
         return;
       }
       e.preventDefault();
@@ -298,10 +308,10 @@ export function Ficha({
       <div
         ref={superficie}
         aria-hidden
-        className="pointer-events-none absolute inset-0 origin-top-left bg-[color:var(--bg)] lg:inset-5 lg:border lg:border-[color:var(--hairline)]"
+        className="pointer-events-none absolute inset-0 origin-top-left bg-[color:var(--bg)] lg:inset-4 lg:border lg:border-[color:var(--hairline)]"
       />
 
-      <div ref={panel} className="absolute inset-0 flex flex-col lg:inset-5">
+      <div ref={panel} className="absolute inset-0 flex flex-col lg:inset-4">
         <header
           data-ficha-sec
           className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-[color:var(--hairline)] px-4 md:h-16 md:px-6"
@@ -310,8 +320,8 @@ export function Ficha({
             <span className="text-[color:var(--text)]">
               {pad(indice + 1)} / {pad(n)}
             </span>
-            <span className="hidden h-3 w-px bg-[color:var(--hairline)] sm:block" />
-            <span className="hidden truncate sm:block">{textos.tipos[t.tipo]}</span>
+            <span className="h-3 w-px bg-[color:var(--hairline-strong)]" />
+            <span className="truncate">{textos.tipos[t.tipo]}</span>
           </p>
           <p className="sr-only" aria-live="polite">
             {`${indice + 1} ${f.de} ${n}: ${t.marca}${t.subtitulo ? `, ${t.subtitulo}` : ""}`}
@@ -323,6 +333,7 @@ export function Ficha({
             <BotonIcono etiqueta={f.siguiente} onClick={() => cambiar(1)}>
               <ChevronRight aria-hidden className="h-4 w-4" />
             </BotonIcono>
+            <span aria-hidden className="mx-1 h-6 w-px bg-[color:var(--hairline)]" />
             <BotonIcono ref={cerrarBtn} etiqueta={f.cerrar} onClick={cerrar} acento>
               <X aria-hidden className="h-4 w-4" />
             </BotonIcono>
@@ -331,7 +342,7 @@ export function Ficha({
 
         <div
           ref={desplazable}
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:overflow-hidden"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain lg:grid lg:grid-cols-[minmax(0,1.62fr)_minmax(0,1fr)] lg:overflow-hidden"
         >
           <Medios
             key={`m-${t.slug}`}
@@ -345,28 +356,28 @@ export function Ficha({
           <div
             key={`t-${t.slug}`}
             data-ficha-sec
-            className="px-5 pb-16 pt-2 md:px-8 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:border-[color:var(--hairline)] lg:px-10 lg:pb-12 lg:pt-10"
+            className="px-5 pb-16 pt-4 md:px-8 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:border-[color:var(--hairline)] lg:px-10 lg:pb-12 lg:pt-9"
           >
-            <div className={navego ? "trabajos-entra" : undefined}>
+            <div className={`max-w-[38rem] ${navego ? "trabajos-entra" : ""}`}>
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--accent)]">
                 {t.rubro}
               </p>
               <h2
                 id={idTitulo}
-                className="mt-3 font-display text-[clamp(2.4rem,4.4vw,4rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
+                className="mt-3 text-balance font-display text-[clamp(2.3rem,3.9vw,3.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
               >
                 {t.marca}
               </h2>
               {t.subtitulo ? (
-                <p className="mt-2 text-[18px] text-[color:var(--text-dim)]">{t.subtitulo}</p>
+                <p className="mt-2 text-[18px] leading-snug text-[color:var(--text-soft)]">{t.subtitulo}</p>
               ) : null}
 
               {t.destacado ? (
-                <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-[color:var(--accent)] pt-4">
-                  <span className="font-display text-[clamp(2.2rem,3.6vw,3.25rem)] font-semibold leading-none tracking-[-0.03em] text-[color:var(--accent)]">
+                <p className="mt-6 border-l-2 border-[color:var(--accent)] pl-4">
+                  <span className="block font-display text-[clamp(2.1rem,3.2vw,3rem)] font-semibold leading-none tracking-[-0.03em] text-[color:var(--accent)]">
                     {t.destacado.valor}
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[color:var(--text-dim)]">
+                  <span className="mt-2 block text-[15px] leading-snug text-[color:var(--text-dim)]">
                     {t.destacado.detalle}
                   </span>
                 </p>
@@ -376,40 +387,49 @@ export function Ficha({
                 {t.etiquetas.map((e) => (
                   <li
                     key={e}
-                    className="border border-[color:var(--hairline)] px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-dim)]"
+                    className="border border-[color:var(--hairline-strong)] px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-dim)]"
                   >
                     {e}
                   </li>
                 ))}
               </ul>
 
-              <p id={idResumen} className="mt-7 max-w-[60ch] text-[17px] leading-relaxed text-[color:var(--text)] md:text-[18px]">
+              <p
+                id={idResumen}
+                className="mt-7 text-pretty text-[17px] leading-[1.65] text-[color:var(--text-soft)] md:text-[18px]"
+              >
                 {t.resumen}
               </p>
 
-              <section className="mt-9">
+              <section className="mt-10">
                 <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
                   {f.logros}
                 </h3>
-                <ul className="mt-4 space-y-3">
-                  {t.logros.map((l) => (
-                    <li key={l} className="flex gap-3 text-[16px] leading-snug text-[color:var(--text-dim)]">
-                      <span aria-hidden className="mt-[0.45em] h-[6px] w-[6px] shrink-0 bg-[color:var(--accent)]" />
-                      <span>{l}</span>
+                <ol className="mt-3 border-t border-[color:var(--hairline)]">
+                  {t.logros.map((l, k) => (
+                    <li
+                      key={l}
+                      className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-2 border-b border-[color:var(--hairline)] py-3.5"
+                    >
+                      <span aria-hidden className="pt-[0.2em] font-mono text-[11px] tracking-[0.12em] text-[color:var(--accent)]">
+                        {pad(k + 1)}
+                      </span>
+                      <span className="text-[16px] leading-snug text-[color:var(--text)]">{l}</span>
                     </li>
                   ))}
-                </ul>
+                </ol>
               </section>
 
-              <div className="mt-9 grid gap-8 sm:grid-cols-2">
+              <div className="mt-10 grid gap-x-8 gap-y-9 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
                 <section>
                   <h3 className="font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
                     {f.queHice}
                   </h3>
-                  <ul className="mt-4 space-y-2 text-[15px] leading-snug text-[color:var(--text-dim)]">
+                  <ul className="mt-4 space-y-2.5 text-[15px] leading-snug text-[color:var(--text-dim)]">
                     {t.queHice.map((q) => (
-                      <li key={q} className="border-b border-[color:var(--hairline)] pb-2">
-                        {q}
+                      <li key={q} className="flex gap-3">
+                        <span aria-hidden className="mt-[0.55em] h-px w-3 shrink-0 bg-[color:var(--accent)]" />
+                        <span>{q}</span>
                       </li>
                     ))}
                   </ul>
@@ -423,7 +443,7 @@ export function Ficha({
               </div>
 
               {t.nota ? (
-                <p className="mt-8 border-l border-[color:var(--accent)] pl-3 text-[13px] leading-relaxed text-[color:var(--text-dim)]">
+                <p className="mt-9 border-l border-[color:var(--accent-line)] pl-3 text-[14px] leading-relaxed text-[color:var(--text-dim)]">
                   {t.nota}
                 </p>
               ) : null}
@@ -432,7 +452,7 @@ export function Ficha({
                 <button
                   type="button"
                   onClick={() => irA(indicePar)}
-                  className="group mt-9 flex w-full cursor-pointer items-center justify-between gap-4 border border-[color:var(--hairline)] px-4 py-4 text-left transition-colors duration-300 hover:bg-[color:var(--accent-soft)]"
+                  className="group mt-9 flex w-full cursor-pointer items-center justify-between gap-4 border border-[color:var(--hairline-strong)] px-4 py-4 text-left transition-colors duration-300 hover:border-[color:var(--accent-line)] hover:bg-[color:var(--accent-soft)]"
                 >
                   <span>
                     <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
@@ -480,7 +500,7 @@ function BotonIcono({ etiqueta, onClick, acento = false, children, ref }: BotonI
       className={`flex h-10 w-10 cursor-pointer items-center justify-center border transition-colors duration-300 active:translate-y-px ${
         acento
           ? "border-[color:var(--accent)] text-[color:var(--accent)] hover:bg-[color:var(--accent-soft)]"
-          : "border-[color:var(--hairline)] text-[color:var(--text)] hover:bg-[color:var(--accent-soft)]"
+          : "border-[color:var(--hairline-strong)] text-[color:var(--text)] hover:border-[color:var(--accent-line)] hover:bg-[color:var(--accent-soft)]"
       }`}
     >
       {children}
@@ -488,11 +508,23 @@ function BotonIcono({ etiqueta, onClick, acento = false, children, ref }: BotonI
   );
 }
 
-// ── escenario: video estrella y galeria ─────────────────────────────────
+// ── visor: video estrella y galeria, cada uno en su marco ───────────────
 
-type Medio =
-  | { tipo: "video"; src: string; poster: string; vertical: boolean; alt: string }
-  | { tipo: "imagen"; src: string; ancho: number; alto: number; vertical: boolean; alt: string };
+type Medio = {
+  tipo: "video" | "imagen";
+  src: string;
+  /** la imagen de la miniatura: el poster del video o la misma captura */
+  vista: string;
+  ancho: number;
+  alto: number;
+  marco: MarcoMedio;
+  alt: string;
+};
+
+/** alto de la barra del navegador, en px */
+const BARRA = 30;
+/** bisel del celular: arriba (con el parlante), abajo y a los costados, en px */
+const BISEL = { arriba: 20, abajo: 14, lado: 6 };
 
 function Medios({
   trabajo,
@@ -508,126 +540,272 @@ function Medios({
   escenarioRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const f = textos.ficha;
+  const v = trabajo.media.video;
   const medios: Medio[] = [
-    ...(trabajo.media.video
+    ...(v
       ? [
           {
             tipo: "video" as const,
-            src: trabajo.media.video.src,
-            poster: trabajo.media.video.poster,
-            vertical: trabajo.media.video.alto > trabajo.media.video.ancho,
-            alt: trabajo.media.video.descripcion,
+            src: v.src,
+            vista: v.poster,
+            ancho: v.ancho,
+            alto: v.alto,
+            marco: (v.alto > v.ancho ? "celular" : "navegador") as MarcoMedio,
+            alt: v.descripcion,
           },
         ]
       : []),
     ...trabajo.media.galeria.map((g) => ({
       tipo: "imagen" as const,
       src: g.src,
+      vista: g.src,
       ancho: g.ancho,
       alto: g.alto,
-      vertical: g.alto > g.ancho,
+      marco: g.marco,
       alt: g.alt,
     })),
   ];
+  const total = medios.length;
 
+  /** el medio pedido */
   const [sel, setSel] = useState(0);
-  const [cargado, setCargado] = useState(false);
+  /** el que se ve: el pedido apenas termina de cargar, mientras tanto el anterior */
+  const [mostrado, setMostrado] = useState(0);
+  const [cargados, setCargados] = useState<ReadonlySet<number>>(() => new Set());
   const [pausado, setPausado] = useState(reducido);
+  const selRef = useRef(0);
   const video = useRef<HTMLVideoElement>(null);
-  const actual = medios[sel];
+  const toque = useRef<{ id: number; x: number; y: number } | null>(null);
+
   const abierta = fase === "abierta";
-  // el medio se muestra una vez terminada la apertura; al cerrar vuelve la miniatura
-  const visible = abierta && cargado;
+  // la galeria se pide recien cuando termina la apertura: el vuelo no compite con la red
+  const montar = fase !== "abriendo";
+  const listo = abierta && cargados.has(mostrado);
+  const actual = medios[mostrado];
+  const pedido = medios[sel];
+  const horizontal = actual.ancho >= actual.alto;
+  const conBarra = listo && horizontal && actual.marco === "navegador";
 
   useEffect(() => {
-    const v = video.current;
-    if (!v || actual.tipo !== "video") return;
-    if (abierta && !pausado) v.play().catch(() => setPausado(true));
-    else v.pause();
-  }, [abierta, pausado, actual.tipo]);
+    const el = video.current;
+    if (!el) return;
+    if (abierta && !pausado && medios[mostrado].tipo === "video") el.play().catch(() => setPausado(true));
+    else el.pause();
+    // medios se deriva de las props en cada render; alcanza con el indice
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [abierta, pausado, mostrado]);
+
+  const alCargar = (k: number) => {
+    setCargados((prev) => {
+      if (prev.has(k)) return prev;
+      const s = new Set(prev);
+      s.add(k);
+      return s;
+    });
+    if (selRef.current === k) setMostrado(k);
+  };
 
   const elegir = (k: number) => {
-    setSel((k + medios.length) % medios.length);
-    setCargado(false);
+    const j = (k + total) % total;
+    selRef.current = j;
+    setSel(j);
+    if (cargados.has(j)) setMostrado(j);
+  };
+
+  // en pantallas tactiles, deslizar de costado sobre el visor pasa de imagen
+  const alBajar = (e: React.PointerEvent) => {
+    if (e.pointerType !== "touch") return;
+    toque.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+  };
+  const alSoltar = (e: React.PointerEvent) => {
+    const t0 = toque.current;
+    toque.current = null;
+    if (!t0 || t0.id !== e.pointerId || total < 2) return;
+    const dx = e.clientX - t0.x;
+    const dy = e.clientY - t0.y;
+    if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.4) elegir(sel + (dx < 0 ? 1 : -1));
+  };
+
+  /** se monta el video solo si esta pedido o a la vista */
+  const montado = (m: Medio, k: number) => montar && (m.tipo === "imagen" || k === sel || k === mostrado);
+
+  const capa = (m: Medio, k: number) => {
+    const visible = listo && k === mostrado;
+    const clase = `absolute inset-0 h-full w-full transition-opacity duration-300 ${
+      m.marco === "lamina" ? "object-contain" : "object-cover object-top"
+    }`;
+    if (!montado(m, k)) return null;
+    return m.tipo === "video" ? (
+      <video
+        key={m.src}
+        ref={video}
+        src={m.src}
+        poster={m.vista}
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-label={m.alt}
+        onLoadedData={() => alCargar(k)}
+        className={clase}
+        style={{ opacity: visible ? 1 : 0 }}
+      />
+    ) : (
+      <Image
+        key={m.src}
+        src={m.src}
+        alt={visible ? m.alt : ""}
+        fill
+        loading="eager"
+        sizes={m.ancho >= m.alto ? "(max-width: 1023px) 100vw, 58vw" : "(max-width: 1023px) 60vw, 340px"}
+        onLoad={() => alCargar(k)}
+        className={clase}
+        style={{ opacity: visible ? 1 : 0 }}
+      />
+    );
   };
 
   return (
-    <div className="px-4 pb-6 pt-4 md:px-6 lg:flex lg:flex-col lg:justify-center lg:overflow-y-auto lg:overscroll-contain lg:px-10 lg:py-10">
+    <div className="flex flex-col px-4 pb-6 pt-4 md:px-6 lg:h-full lg:min-h-0 lg:px-8 lg:pb-6 lg:pt-6">
+      {/* el visor: luz celeste de fondo y el medio en su marco */}
       <div
-        ref={escenarioRef}
-        className="relative aspect-[16/10] w-full origin-top-left overflow-hidden border border-[color:var(--hairline)] bg-[color:var(--bg-deep)]"
+        className="relative h-[clamp(280px,50svh,480px)] touch-pan-y select-none [container-type:size] lg:h-auto lg:min-h-0 lg:flex-1"
+        onPointerDown={alBajar}
+        onPointerUp={alSoltar}
+        onPointerCancel={() => (toque.current = null)}
       >
-        {/* la miniatura: la misma imagen que la tarjeta, para el relevo */}
         <div
           aria-hidden
-          className="absolute inset-0 transition-opacity duration-500"
-          style={{ opacity: visible && actual.vertical ? 0.1 : 1 }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element -- misma URL que la textura 3D, ya en cache: el relevo tiene que ser instantaneo */}
-          <img src={trabajo.media.textura} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          {/* eslint-disable-next-line @next/next/no-img-element -- la version nitida de la misma miniatura, encima */}
-          <img src={trabajo.media.miniatura} alt="" className="absolute inset-0 h-full w-full object-cover" />
-        </div>
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_52%_at_50%_56%,var(--accent-soft),transparent_72%)]"
+        />
 
-        <div
-          className="absolute inset-0 transition-opacity duration-200"
-          style={{ opacity: visible ? 1 : 0 }}
-        >
-          {actual.tipo === "video" ? (
-            <video
-              ref={video}
-              key={actual.src}
-              src={actual.src}
-              poster={actual.poster}
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-label={actual.alt}
-              onLoadedData={() => setCargado(true)}
-              className={`absolute inset-0 h-full w-full ${actual.vertical ? "object-contain" : "object-cover"}`}
-            />
-          ) : (
-            <Image
-              key={actual.src}
-              src={actual.src}
-              alt={actual.alt}
-              fill
-              sizes="(max-width: 1023px) 100vw, 60vw"
-              onLoad={() => setCargado(true)}
-              className={actual.vertical ? "object-contain" : "object-cover object-top"}
-            />
-          )}
-        </div>
+        {/* pantalla apaisada: compu y laminas. Es tambien el elemento del FLIP */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            ref={escenarioRef}
+            className="relative aspect-[16/10] origin-top-left"
+            style={{
+              width: `min(calc(100cqw - 8px), calc((100cqh - ${BARRA + 8}px) * 1.6))`,
+              marginTop: BARRA,
+            }}
+          >
+            {/* marco del navegador: barra y borde, sin direccion (solo la marca) */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-[-1px] bottom-[-1px] border border-[color:var(--accent-line)] transition-opacity duration-300"
+              style={{ top: -BARRA - 1, opacity: conBarra ? 1 : 0 }}
+            >
+              <div
+                className="flex items-center gap-3 border-b border-[color:var(--hairline-strong)] bg-[color:var(--surface)] px-3"
+                style={{ height: BARRA }}
+              >
+                <span className="flex gap-1.5">
+                  <span className="h-[7px] w-[7px] bg-[color:var(--hairline-strong)]" />
+                  <span className="h-[7px] w-[7px] bg-[color:var(--hairline-strong)]" />
+                  <span className="h-[7px] w-[7px] bg-[color:var(--hairline-strong)]" />
+                </span>
+                <span className="mx-auto flex h-[18px] w-[min(46%,22rem)] items-center justify-center border border-[color:var(--hairline)] bg-[color:var(--bg-deep)] px-2">
+                  <span className="truncate font-mono text-[9px] uppercase tracking-[0.18em] text-[color:var(--text-faint)]">
+                    {trabajo.marca}
+                  </span>
+                </span>
+                <span className="w-[33px]" />
+              </div>
+            </div>
 
-        {medios.length > 1 ? (
-          <div data-ficha-sec className="absolute bottom-3 right-3 flex items-center gap-1.5">
-            <span className="mr-1 bg-[color:var(--bg-deep)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--text-dim)]">
-              {sel + 1} / {medios.length}
-            </span>
-            <BotonMedio etiqueta={f.mediaAnterior} onClick={() => elegir(sel - 1)}>
-              <ChevronLeft aria-hidden className="h-4 w-4" />
-            </BotonMedio>
-            <BotonMedio etiqueta={f.mediaSiguiente} onClick={() => elegir(sel + 1)}>
-              <ChevronRight aria-hidden className="h-4 w-4" />
-            </BotonMedio>
+            <div className="absolute inset-0 overflow-hidden bg-[color:var(--bg-deep)] transition-opacity duration-300" style={{ opacity: listo && !horizontal ? 0 : 1 }}>
+              {/* la miniatura: la misma imagen que la tarjeta, para el relevo */}
+              <div aria-hidden className="absolute inset-0 transition-opacity duration-500" style={{ opacity: listo ? 0 : 1 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- misma URL que la textura 3D, ya en cache: el relevo tiene que ser instantaneo */}
+                <img src={trabajo.media.textura} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                {/* eslint-disable-next-line @next/next/no-img-element -- la version nitida de la misma miniatura, encima */}
+                <img src={trabajo.media.miniatura} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              </div>
+              {medios.map((m, k) => (m.ancho >= m.alto ? capa(m, k) : null))}
+            </div>
           </div>
-        ) : null}
+        </div>
 
-        {actual.tipo === "video" ? (
-          <div data-ficha-sec className="absolute bottom-3 left-3">
+        {/* columna vertical: el celular (o la lamina vertical, sin bisel) */}
+        <div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300"
+          style={{
+            opacity: listo && !horizontal ? 1 : 0,
+            ["--alto-tel" as string]: `min(calc(100cqh - 8px), calc((100cqw - ${2 * BISEL.lado + 8}px) * 844 / 390 + ${BISEL.arriba + BISEL.abajo}px))`,
+          }}
+        >
+          <div
+            className={`flex flex-col items-center ${
+              actual.marco === "celular"
+                ? "border border-[color:var(--accent-line)] bg-[color:var(--surface)]"
+                : ""
+            }`}
+            style={
+              actual.marco === "celular"
+                ? { padding: `0 ${BISEL.lado}px ${BISEL.abajo}px` }
+                : { paddingTop: BISEL.arriba, paddingBottom: BISEL.abajo }
+            }
+          >
+            {actual.marco === "celular" ? (
+              <span aria-hidden className="flex items-center justify-center" style={{ height: BISEL.arriba }}>
+                <span className="h-[3px] w-9 bg-[color:var(--hairline-strong)]" />
+              </span>
+            ) : null}
+            <div
+              className={`relative overflow-hidden bg-[color:var(--bg-deep)] ${
+                actual.marco === "celular" ? "border border-[color:var(--hairline)]" : ""
+              }`}
+              style={{
+                height: `calc(var(--alto-tel) - ${BISEL.arriba + BISEL.abajo}px)`,
+                aspectRatio: "390 / 844",
+              }}
+            >
+              {medios.map((m, k) => (m.ancho < m.alto ? capa(m, k) : null))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* controles: en su propia barra, nunca encima de la captura */}
+      <div data-ficha-sec className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
+        <p
+          aria-live="polite"
+          className="order-2 min-w-0 basis-full text-[14px] leading-snug text-[color:var(--text-dim)] sm:order-none sm:flex-1 sm:basis-0 md:text-[15px]"
+        >
+          {pedido.tipo === "video" ? (
+            <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--accent)]">
+              {f.videoMiniatura}
+            </span>
+          ) : null}
+          {pedido.alt}
+        </p>
+        <div className="flex w-full shrink-0 items-center gap-1.5 sm:w-auto">
+          {pedido.tipo === "video" ? (
             <BotonMedio etiqueta={pausado ? f.reproducir : f.pausar} onClick={() => setPausado((p) => !p)}>
               {pausado ? <Play aria-hidden className="h-4 w-4" /> : <Pause aria-hidden className="h-4 w-4" />}
             </BotonMedio>
-          </div>
-        ) : null}
+          ) : null}
+          {total > 1 ? (
+            <>
+              <span className="mr-auto min-w-[4.25rem] text-center font-mono text-[11px] tracking-[0.14em] text-[color:var(--text-faint)] sm:mr-0">
+                <span className="text-[color:var(--text)]">{pad(sel + 1)}</span> / {pad(total)}
+              </span>
+              <BotonMedio etiqueta={f.mediaAnterior} onClick={() => elegir(sel - 1)}>
+                <ChevronLeft aria-hidden className="h-4 w-4" />
+              </BotonMedio>
+              <BotonMedio etiqueta={f.mediaSiguiente} onClick={() => elegir(sel + 1)}>
+                <ChevronRight aria-hidden className="h-4 w-4" />
+              </BotonMedio>
+            </>
+          ) : null}
+        </div>
       </div>
 
-      {medios.length > 1 ? (
+      {total > 1 ? (
         <ul
           data-ficha-sec
           aria-label={f.galeria}
-          className="mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]"
+          className="-mx-1 mt-3 flex shrink-0 gap-2 overflow-x-auto px-1 pb-1 pt-1 [scrollbar-width:none]"
         >
           {medios.map((m, k) => (
             <li key={m.src} className="shrink-0">
@@ -636,20 +814,25 @@ function Medios({
                 aria-label={`${f.verMedia}: ${m.alt}`}
                 aria-current={k === sel ? "true" : undefined}
                 onClick={() => elegir(k)}
-                className={`relative block h-14 cursor-pointer overflow-hidden border bg-[color:var(--bg-deep)] transition-colors duration-300 md:h-16 ${
-                  m.vertical ? "w-8 md:w-9" : "w-[5.6rem] md:w-[6.4rem]"
-                } ${k === sel ? "border-[color:var(--accent)]" : "border-[color:var(--hairline)] opacity-70 hover:opacity-100"}`}
+                className={`relative block h-[4.25rem] cursor-pointer overflow-hidden border bg-[color:var(--bg-deep)] transition-[opacity,border-color] duration-300 md:h-[4.75rem] ${
+                  m.ancho >= m.alto ? "w-[6.8rem] md:w-[7.6rem]" : "w-[3.4rem] md:w-[3.8rem]"
+                } ${
+                  k === sel
+                    ? "border-[color:var(--accent)]"
+                    : "border-[color:var(--hairline-strong)] opacity-60 hover:opacity-100"
+                }`}
               >
                 <Image
-                  src={m.tipo === "video" ? m.poster : m.src}
+                  src={m.vista}
                   alt=""
                   fill
-                  sizes="112px"
-                  className="object-cover object-top"
+                  loading="eager"
+                  sizes="128px"
+                  className={m.marco === "lamina" ? "object-cover" : "object-cover object-top"}
                 />
                 {m.tipo === "video" ? (
-                  <span className="absolute inset-0 flex items-center justify-center">
-                    <Play aria-hidden className="h-3.5 w-3.5 text-[color:var(--text)]" />
+                  <span className="absolute bottom-1 left-1 flex h-5 w-5 items-center justify-center bg-[color:var(--bg-deep)] text-[color:var(--accent)]">
+                    <Play aria-hidden className="h-3 w-3" />
                   </span>
                 ) : null}
               </button>
@@ -676,7 +859,7 @@ function BotonMedio({
       aria-label={etiqueta}
       title={etiqueta}
       onClick={onClick}
-      className="flex h-8 w-8 cursor-pointer items-center justify-center border border-[color:var(--hairline)] bg-[color:var(--bg-deep)] text-[color:var(--text)] transition-colors duration-300 hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+      className="flex h-9 w-9 cursor-pointer items-center justify-center border border-[color:var(--hairline-strong)] text-[color:var(--text)] transition-colors duration-300 hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] active:translate-y-px"
     >
       {children}
     </button>
