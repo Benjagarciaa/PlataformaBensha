@@ -11,9 +11,9 @@ px de ancho). Las capturas "completa" son la página entera.
 Proyectos:
 
 1. `salguero-admin/`: panel interno de gestión de Salguero Gourmet (datos de DEMO).
-2. `salguero-landing/`: landing pública de Salguero Gourmet (pendiente en este índice hasta que se capture).
+2. `salguero-landing/`: landing pública de Salguero Gourmet (sitio publicado).
 3. `descartables-panel/`: panel de carga del catálogo de Descartables Multipacking (local, rama `panel-v2`).
-4. `descartables-catalogo/`: catálogo público de Descartables Multipacking en producción.
+4. `descartables-catalogo/`: catálogo público de Descartables Multipacking (sitio en producción).
 
 ---
 
@@ -241,3 +241,79 @@ Videos (`videos/`):
 | --- | --- | --- |
 | `hero-caja-que-se-abre-desktop.mp4` | 18 s | La caja que se abre (scrub de ida y vuelta) en desktop. |
 | `hero-caja-que-se-abre-mobile.mp4` | 16,5 s | Lo mismo en el celular. |
+
+---
+
+## 4. Descartables Multipacking, catálogo público (`descartables-catalogo/`)
+
+Capturado del sitio en producción, https://descartablesmultipacking.com (solo
+el host público; nunca se entró a `admin.`; analítica bloqueada y los links a
+WhatsApp bloqueados para que no se abran).
+
+### Ficha (para el texto del portfolio)
+
+Catálogo de consulta que reemplazó la tienda de Tienda Nube de un mayorista de
+descartables de Córdoba: sin carrito ni precios públicos, cada producto tiene
+su ficha y un botón "Consultar por WhatsApp" que abre el chat con el mensaje
+ya escrito (producto y link a la ficha).
+
+- **Portada:** buscador grande, franja de datos (517 productos en 21
+  categorías, precios por WhatsApp, local en Lomas de San Martín, por unidad o
+  por cantidad), "¿Para qué lo necesitás?" por rubro, categorías con
+  miniaturas, recién agregados, "Cómo consultar" en tres pasos, preguntas
+  frecuentes y "Dónde estamos" con mapa y horarios.
+- **Buscador con sugerencias** mientras se escribe (hasta 6 productos con foto
+  y lo que coincide en negrita, tolera errores de tipeo), con los mismos
+  resultados que el catálogo.
+- **Categorías y catálogo** con subcategorías en chips, filtros por rubro y
+  material y orden.
+- **Ficha de producto:** galería con miniaturas, chips de material, ficha
+  técnica, ubicación del local, relacionados y el botón de WhatsApp (en el
+  celular, una barra pegada abajo).
+- SEO cuidado (sitemap con imágenes, canonical, noindex en vistas filtradas),
+  dado de alta en Google Search Console y Bing.
+- Stack: el mismo proyecto que el panel (Next.js 16, Tailwind v4, Drizzle,
+  Neon, Vercel Blob), con el enrutado por host en `proxy.ts`.
+
+**Botón "Consultar por WhatsApp":** es un link directo a wa.me (no hay
+formulario intermedio), así que solo se capturó el botón. El link de la ficha
+de BANDEJA F200 es:
+`https://wa.me/5493512005374?text=%C2%A1Hola!%20Quiero%20consultar%20por%20BANDEJA%20F200.%20https%3A%2F%2Fdescartablesmultipacking.com%2Fproducto%2Fbandeja-f200`
+(mensaje armado: "¡Hola! Quiero consultar por BANDEJA F200. https://descartablesmultipacking.com/producto/bandeja-f200").
+El "Consultar" del encabezado usa el mensaje general "¡Hola! Quiero hacer una consulta."
+
+### Mejores para el carrusel
+
+- **Miniatura:** `descartables-catalogo/desktop/01-home-fold.webp` (portada con buscador y mosaico de productos) o `descartables-catalogo/desktop/11-producto-ficha.webp` (ficha con galería, ficha técnica y botón de WhatsApp).
+- **Video estrella:** `descartables-catalogo/videos/consulta-producto-mobile.mp4` (10 s: escribe "f200", aparece la sugerencia, abre la ficha, pasa fotos y llega a la ficha técnica con el botón de WhatsApp).
+- **Tercera:** `descartables-catalogo/desktop/09-buscador-sugerencias.webp` (sugerencias con foto mientras se escribe) o `descartables-catalogo/mobile/03-home-categorias.webp`.
+
+### Archivos
+
+Desktop (`desktop/`, 1440x900) y mobile (`mobile/`, 390x844 @2x), mismos nombres:
+
+| Archivo | Qué muestra |
+| --- | --- |
+| `00-home-completa.webp` | Portada entera (armada pegando pantallazos de arriba a abajo). |
+| `01-home-fold.webp` | Primer pantallazo de la portada. |
+| `02-home-para-que-lo-necesitas.webp` | Rubros: gastronomía, repostería, cotillón, librería, hogar, embalaje. |
+| `03-home-categorias.webp` | Grilla de categorías con cantidad de productos. |
+| `04-home-recien-agregados.webp` | Recién agregados. |
+| `05-home-como-consultar.webp` | "Cómo consultar" en tres pasos. |
+| `06-home-preguntas.webp` | Preguntas frecuentes. |
+| `06b-home-donde-estamos.webp` | "Dónde estamos" con mapa, dirección y horarios. |
+| `07-categoria-bolsas.webp` / `08-categoria-bolsas-completa.webp` | Categoría BOLSAS (64 productos) con subcategorías en chips y filtros. |
+| `09-buscador-sugerencias.webp` | Sugerencias con foto mientras se escribe "bandeja". |
+| `10-buscador-resultados.webp` | Resultados para "bandeja" (67 productos) con filtros. |
+| `11-producto-ficha.webp` / `12-producto-ficha-completa.webp` | Ficha de BANDEJA F200: galería de 6 fotos, material, ficha técnica, local y relacionados. |
+| `13-producto-boton-whatsapp.webp` | La ficha con el botón de WhatsApp a la vista (en mobile, la barra pegada abajo sobre la ficha técnica). |
+| `14-boton-whatsapp-detalle.webp` | Recorte del bloque "¿Te interesa?" con el botón (en mobile, la barra inferior). |
+| `15-catalogo.webp` | Catálogo completo (517 productos) con filtros. |
+
+Videos (`videos/`):
+
+| Archivo | Duración | Qué muestra |
+| --- | --- | --- |
+| `consulta-producto-mobile.mp4` | 10 s | Búsqueda con sugerencias, ficha, galería y botón de WhatsApp (se señala, no se toca). |
+| `scroll-home-mobile.mp4` | 17 s | Recorrido de la portada en el celular. |
+| `scroll-home-desktop.mp4` | 16 s | Recorrido de la portada en desktop. |
