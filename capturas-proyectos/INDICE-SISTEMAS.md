@@ -8,6 +8,13 @@ ancho máximo 1280 (desktop) o 720 (mobile), crf 28, preset slow, faststart.
 Desktop a 1440x900 (dsf 1). Mobile a 390x844 con dsf 2 (los webp quedan a 780
 px de ancho). Las capturas "completa" son la página entera.
 
+Cómo se grabaron los videos: cuadro a cuadro con el reloj de la página
+controlado (cada cuadro avanza 1/30 s de tiempo de la página), así las
+animaciones con scroll salen fluidas aunque la máquina de captura sea lenta.
+El video corto de privacidad en desktop se grabó en tiempo real. En los videos
+mobile hay un círculo gris que marca cada toque, y en los de desktop un cursor
+dibujado; los dos los agrega la captura, no son del sitio.
+
 Proyectos:
 
 1. `salguero-admin/`: panel interno de gestión de Salguero Gourmet (datos de DEMO).
@@ -241,6 +248,7 @@ Videos (`videos/`):
 | --- | --- | --- |
 | `hero-caja-que-se-abre-desktop.mp4` | 18 s | La caja que se abre (scrub de ida y vuelta) en desktop. |
 | `hero-caja-que-se-abre-mobile.mp4` | 16,5 s | Lo mismo en el celular. |
+| `scroll-completo-mobile.mp4` | 24 s | Recorrido de toda la página en el celular. |
 | `scroll-completo-desktop.mp4` | 30 s | Recorrido de toda la página en desktop: la caja, servicios, empresas, galería, Flor, reseñas, proceso, preguntas, cotizador y pie. |
 
 ---
