@@ -12,6 +12,8 @@ const reglas = (s: string) =>
   // el titular del caos queda para lectores de pantalla: sigue siendo el h1
   `${s} .hero3d-caos{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}` +
   `${s} .hero3d-sistema{opacity:1!important;transform:none!important}` +
+  // lo que en el modo animado se va al final del recorrido, aca queda
+  `${s} .hero3d-salida{opacity:1!important}` +
   `${s} .hero3d-contenido{min-height:100svh}` +
   `${s} .hero3d-svg{display:block}`;
 

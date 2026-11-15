@@ -31,7 +31,7 @@ export type Casillero = {
   orden: number;
   /** relojes y carritos: el icono del panel en el que se transforman */
   icono?: Icono;
-  /** comportamiento en loop una vez armado (barras que se llenan, KPI) */
+  /** comportamiento en loop una vez armado (barras que se llenan, tarjetas KPI) */
   vivo?: "barra" | "kpi";
 };
 
@@ -45,18 +45,18 @@ export function indiceIcono(c: Casillero) {
  * Los comparten la escena WebGL y el texto HTML, asi van sincronizados.
  */
 export const TRAMOS = {
-  ensamble: [0.04, 0.6],
-  dibujo: [0.1, 0.48],
-  encendido: [0.58, 0.7],
-  pulso: [0.6, 0.74],
-  orbita: [0.52, 0.78],
-  textoCaosSale: [0.1, 0.22],
-  textoSistemaEntra: [0.3, 0.42],
+  ensamble: [0.03, 0.56],
+  dibujo: [0.08, 0.44],
+  encendido: [0.52, 0.64],
+  pulso: [0.54, 0.68],
+  orbita: [0.46, 0.74],
+  textoCaosSale: [0.06, 0.18],
+  textoSistemaEntra: [0.24, 0.38],
   indicadorSale: [0, 0.04],
   /** al final la camara entra en la pantalla de la notebook */
-  textoSistemaSale: [0.8, 0.87],
-  zoom: [0.8, 0.985],
-  fundido: [0.93, 1],
+  textoSistemaSale: [0.8, 0.88],
+  zoom: [0.78, 0.99],
+  fundido: [0.92, 1],
 } as const satisfies Record<string, readonly [number, number]>;
 
 /** Medidas fijas del sistema. */
@@ -87,7 +87,7 @@ export const PANEL = {
   trackpad: { x: 0, y: -2.0, w: 1.4, h: 0.66 },
 } as const;
 
-/** Fila de tarjetas de numeros (KPI) arriba del panel. */
+/** Fila de tarjetas KPI arriba del panel. */
 const KPI_Y = 0.83;
 const KPI_ALTO = 0.34;
 
@@ -134,7 +134,7 @@ export function armarCasilleros(denso: boolean): Casillero[] {
     });
   });
 
-  // ── tarjetas de numeros (KPI) ───────────────────────────────────────
+  // ── tarjetas KPI: lineas cortas a la izquierda, tendencia a la derecha ─
   const nKpi = denso ? 4 : 3;
   const anchoMain = p.main.x1 - p.main.x0;
   const gapKpi = 0.08;
@@ -266,51 +266,42 @@ export function armarCasilleros(denso: boolean): Casillero[] {
   return out;
 }
 
-/** Un contador de siete segmentos que cuenta solo una vez armado el panel. */
-export type Contador = {
-  /** esquina inferior derecha del ultimo digito, en coordenadas de pantalla */
-  x: number;
-  y: number;
-  /** alto de cada digito */
+/**
+ * Una linea de tendencia (sparkline) que corre sola en cada tarjeta KPI una
+ * vez armado el panel: los datos entran por la derecha y se van por la
+ * izquierda. Ocupa la mitad derecha de la tarjeta, donde las lineas de
+ * contenido quedan cortas. Sin numeros: el panel se lee como vivo, no como
+ * un tablero de cifras.
+ */
+export type Tendencia = {
+  /** extremos en x y franja vertical, en coordenadas de pantalla */
+  x0: number;
+  x1: number;
+  y0: number;
   alto: number;
-  digitos: number;
-  /** valor inicial y cuantas unidades suma por segundo */
-  base: number;
-  ritmo: number;
+  puntos: number;
+  /** desfase propio, asi las tarjetas no se mueven calcadas */
+  fase: number;
 };
 
-/**
- * Los numeros que cuentan en el panel: uno por tarjeta KPI (a la derecha, donde
- * las lineas de contenido quedan cortas) y el total grande arriba del grafico.
- */
-export function armarContadores(denso: boolean): Contador[] {
+export function armarTendencias(denso: boolean): Tendencia[] {
   const p = PANEL;
   const nKpi = denso ? 4 : 3;
   const anchoMain = p.main.x1 - p.main.x0;
   const gapKpi = 0.08;
   const wKpi = (anchoMain - (nKpi - 1) * gapKpi) / nKpi;
-  const out: Contador[] = [];
-  const bases = [318, 74, 952, 41];
-  const ritmos = [0.9, 0.35, 1.6, 0.22];
+  const out: Tendencia[] = [];
   for (let i = 0; i < nKpi; i++) {
-    const x1 = p.main.x0 + (i + 1) * wKpi + i * gapKpi;
+    const xc = p.main.x0 + wKpi / 2 + i * (wKpi + gapKpi);
     out.push({
-      x: x1 - wKpi * 0.08,
-      y: KPI_Y - KPI_ALTO * 0.28,
-      alto: KPI_ALTO * 0.36,
-      digitos: 3,
-      base: bases[i],
-      ritmo: ritmos[i],
+      x0: xc - wKpi * 0.04,
+      x1: xc + wKpi * 0.4,
+      y0: KPI_Y - KPI_ALTO * 0.3,
+      alto: KPI_ALTO * 0.52,
+      puntos: denso ? 12 : 10,
+      fase: i * 2.3 + 0.7,
     });
   }
-  out.push({
-    x: p.grafico.x0 + (p.grafico.x1 - p.grafico.x0) * 0.56,
-    y: p.grafico.y1 - 0.24,
-    alto: 0.17,
-    digitos: 5,
-    base: 18240,
-    ritmo: 3.1,
-  });
   return out;
 }
 

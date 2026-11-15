@@ -52,7 +52,6 @@ export const content = {
     cifras: [
       { valor: "+200", label: "PÁGINAS HECHAS" },
       { valor: "+130", label: "MARCAS" },
-      { valor: "13", label: "TRABAJOS DESTACADOS" },
     ],
     cajetin: {
       titulo: "DEL CAOS AL SISTEMA",
