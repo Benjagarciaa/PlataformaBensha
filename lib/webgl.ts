@@ -1,34 +1,65 @@
 /**
- * ¿Hay WebGL con aceleración por hardware?
+ * ¿Hay WebGL2 con aceleración por hardware?
  *
  * Si el navegador solo renderiza por software (SwiftShader, llvmpipe: PCs sin
  * GPU, servidores de medición), la escena 3D costaría más de lo que aporta:
- * el hero usa el SVG estático y la cortina de entrada no hace falta (su razón
- * de ser es darle tiempo a cargar a la escena). `?webgl=forzar` en la URL
- * saltea el chequeo, solo para QA con navegadores headless.
+ * el hero usa el SVG estático y la cortina de entrada no hace falta. Con
+ * `?webgl=forzar` en la URL se saltea el chequeo, solo para QA headless.
  *
- * Se calcula una sola vez por carga: crear un contexto WebGL no es gratis.
+ * Se calcula una sola vez por carga. Crear un contexto no es gratis, así que el
+ * del chequeo no se tira: se crea con las opciones de la escena del hero y el
+ * motor lo toma (tomarContexto) en vez de crear otro.
  */
 
 let cache: boolean | null = null;
+let reserva: { canvas: HTMLCanvasElement; gl: WebGL2RenderingContext } | null = null;
+
+/** Celular o tablet: escena liviana, sin antialias y con menos densidad. */
+export function esMovil() {
+  return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+}
+
+export function webglForzado() {
+  return new URLSearchParams(window.location.search).get("webgl") === "forzar";
+}
+
+/** Las opciones del contexto de la escena del hero. */
+export function opcionesContexto(movil: boolean, forzar: boolean): WebGLContextAttributes {
+  return {
+    alpha: true,
+    antialias: !movil,
+    depth: false,
+    stencil: false,
+    premultipliedAlpha: true,
+    powerPreference: "high-performance",
+    failIfMajorPerformanceCaveat: !forzar,
+  };
+}
 
 export function hayWebGLAcelerado() {
   if (cache !== null) return cache;
   try {
-    const forzar = new URLSearchParams(window.location.search).get("webgl") === "forzar";
-    const opciones: WebGLContextAttributes = { failIfMajorPerformanceCaveat: !forzar };
+    const forzar = webglForzado();
     const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2", opciones) ?? canvas.getContext("webgl", opciones);
+    const gl = canvas.getContext("webgl2", opcionesContexto(esMovil(), forzar));
     if (!gl) {
       cache = false;
       return cache;
     }
     const info = gl.getExtension("WEBGL_debug_renderer_info");
     const renderer = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
     cache = forzar || !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
+    if (cache) reserva = { canvas, gl };
+    else gl.getExtension("WEBGL_lose_context")?.loseContext();
   } catch {
     cache = false;
   }
   return cache;
+}
+
+/** El contexto que creó el chequeo, para la escena. Se entrega una sola vez. */
+export function tomarContexto() {
+  const r = reserva;
+  reserva = null;
+  return r && !r.gl.isContextLost() ? r : null;
 }

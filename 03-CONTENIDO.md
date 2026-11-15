@@ -55,7 +55,7 @@ otro dato que no esté confirmado por escrito.
   manejás vos.** · bajada: Los pedidos llegan ordenados, el stock se actualiza solo y
   manejás todo desde el celular. Sin plantillas que te limiten ni abonos que te aten.
 - CTA: `Ordená tu negocio` · `Ver proyectos`
-- Cifras: +200 páginas hechas · +130 marcas · 15 trabajos destacados
+- Cifras: +200 páginas hechas · +130 marcas · 15 trabajos destacados (solo en el hero; en Sobre mí no va)
 
 ## LO QUE TE RESUELVO
 

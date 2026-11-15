@@ -1,22 +1,40 @@
-import * as THREE from "three";
 import {
   ALTO_PANTALLA_SOBRE_BISAGRA,
   MEDIDAS,
   NOTIFICACION,
   PANEL,
-  TIPOS,
   TRAMOS,
   armarCasilleros,
-  armarContadores,
+  armarTendencias,
   indiceIcono,
-  type Casillero,
   type Superficie,
   type Tipo,
 } from "./plano";
-import { FORMAS_ICONO, FORMA_CARRITO, ICONOS, SEGMENTOS_ICONO, type Segmento } from "./iconos";
+import { FORMAS_ICONO, ICONOS, SEGMENTOS_ICONO, type Segmento } from "./iconos";
+import { esIcono, formaLineas } from "./formas";
+import { CAM, TAN_FOV, agrupar, caosDe, calcularEncuadre, type Encuadre, type Grupo } from "./armado";
+import {
+  QI,
+  aplicar,
+  componer,
+  lerp3,
+  m4,
+  mirar,
+  multiplicar,
+  normalizar,
+  perspectiva,
+  qEuler,
+  qMul,
+  rotar,
+  sumarEsc,
+  type M4,
+  type Q,
+  type V3,
+} from "./mat";
 
 /**
- * Geometrias y shaders del hero 3D.
+ * Geometrias, shaders y estado del hero 3D. Sin three: datos en Float32Array
+ * que el motor (motor.ts) sube a WebGL2 tal cual.
  *
  * Todo el movimiento de los fragmentos vive en el vertex shader: la CPU solo
  * actualiza un puñado de uniforms por frame (progreso, tiempo, mouse, pulso).
@@ -29,413 +47,38 @@ import { FORMAS_ICONO, FORMA_CARRITO, ICONOS, SEGMENTOS_ICONO, type Segmento } f
  * Relojes y carritos llegan a la barra lateral y se transforman en iconos
  * distintos (inicio, productos, pedidos...): su geometria trae un casillero de
  * morfeo por icono y cada instancia enciende solo el suyo.
- * Una vez armado, el panel vive solo: barras que se llenan, contadores que
- * suben y una notificacion de pedido nuevo en el celular. Todo en el shader.
+ * Una vez armado, el panel vive solo: barras que se llenan, una tendencia que
+ * corre en cada tarjeta y una notificacion de pedido nuevo en el celular.
+ * Todo en el shader.
  */
 
-// ── formas base 2D, normalizadas a [-0.5, 0.5] ───────────────────────────
-// Cada segmento trae su posicion en el caos, su posicion ya ordenada (alt)
-// y un nivel de detalle: 0 estructura, 0.5 contenido (queda tenue), 1 solo
-// existe en el caos (la colita del chat, el doblez del post-it).
+// ── descriptores que entiende el motor ───────────────────────────────────
 
-type Seg = {
-  a: [number, number];
-  b: [number, number];
-  aa?: [number, number];
-  bb?: [number, number];
-  det: number;
-  /** linea de contenido: al ordenarse su largo cambia en cada casillero */
-  varia?: boolean;
+export type Atributo = { datos: Float32Array; tam: number; instancia?: boolean };
+
+export type Programa = "aparato" | "pantalla" | "vivo" | "frag" | "halo";
+
+/** De que matriz cuelga cada dibujo. */
+export type Modelo = "raiz" | Superficie | "halo";
+
+export type Dibujo = {
+  programa: Programa;
+  lineas: boolean;
+  atributos: Record<string, Atributo>;
+  vertices: number;
+  /** 0: no instanciado */
+  instancias: number;
+  modelo: Modelo;
+  /** uniforms propios del dibujo (alfa y banda de lineas y rellenos) */
+  propios?: Record<string, number>;
 };
 
-function seg(
-  a: [number, number],
-  b: [number, number],
-  det = 0,
-  aa?: [number, number],
-  bb?: [number, number]
-): Seg {
-  return { a, b, det, aa, bb };
-}
+const f32 = (n: number) => new Float32Array(n);
 
-/** Marca segmentos como lineas de contenido de largo variable. */
-function varia(segs: Seg[]): Seg[] {
-  return segs.map((x) => ({ ...x, varia: true }));
-}
-
-function poli(puntos: [number, number][], det = 0, cerrado = false, alt?: [number, number][]): Seg[] {
-  const out: Seg[] = [];
-  const n = cerrado ? puntos.length : puntos.length - 1;
-  for (let i = 0; i < n; i++) {
-    const j = (i + 1) % puntos.length;
-    out.push(seg(puntos[i], puntos[j], det, alt?.[i], alt?.[j]));
-  }
-  return out;
-}
-
-function rect(x0: number, y0: number, x1: number, y1: number, det = 0): Seg[] {
-  return poli(
-    [
-      [x0, y0],
-      [x1, y0],
-      [x1, y1],
-      [x0, y1],
-    ],
-    det,
-    true
-  );
-}
-
-function circulo(cx: number, cy: number, r: number, n: number, det = 0): Seg[] {
-  const pts: [number, number][] = [];
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2;
-    pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]);
-  }
-  return poli(pts, det, true);
-}
-
-/** Linea escrita a mano que al ordenarse queda recta. */
-function garabato(x0: number, x1: number, y: number, det = 0.5): Seg[] {
-  const pts: [number, number][] = [];
-  const alt: [number, number][] = [];
-  const n = 6;
-  for (let i = 0; i <= n; i++) {
-    const x = x0 + ((x1 - x0) * i) / n;
-    pts.push([x, y + Math.sin(i * 2.1 + y * 9) * 0.045]);
-    alt.push([x, y]);
-  }
-  return poli(pts, det, false, alt);
-}
-
-function formaLineas(tipo: Tipo): Seg[] {
-  switch (tipo) {
-    case "chat":
-      return [
-        ...rect(-0.5, -0.5, 0.5, 0.5),
-        // la colita de la burbuja: al ordenarse se retrae al borde
-        ...poli(
-          [
-            [-0.32, -0.5],
-            [-0.42, -0.85],
-            [-0.12, -0.5],
-          ],
-          1,
-          false,
-          [
-            [-0.32, -0.5],
-            [-0.27, -0.5],
-            [-0.12, -0.5],
-          ]
-        ),
-        ...varia([seg([-0.36, 0.16], [0.3, 0.16], 0.5), seg([-0.36, -0.14], [0.08, -0.14], 0.5)]),
-      ];
-    case "celda":
-      return [
-        ...rect(-0.5, -0.5, 0.5, 0.5),
-        seg([-0.17, -0.5], [-0.17, 0.5], 0.5),
-        seg([0.17, -0.5], [0.17, 0.5], 0.5),
-        seg([-0.42, 0], [-0.26, 0], 1),
-        seg([-0.09, 0], [0.06, 0], 1),
-        seg([0.25, 0], [0.42, 0], 1),
-      ];
-    case "postit":
-      return [
-        // esquina doblada que al ordenarse queda en escuadra
-        ...poli(
-          [
-            [-0.5, -0.5],
-            [0.5, -0.5],
-            [0.5, 0.26],
-            [0.26, 0.5],
-            [-0.5, 0.5],
-          ],
-          0,
-          true,
-          [
-            [-0.5, -0.5],
-            [0.5, -0.5],
-            [0.5, 0.5],
-            [0.5, 0.5],
-            [-0.5, 0.5],
-          ]
-        ),
-        ...poli(
-          [
-            [0.26, 0.5],
-            [0.26, 0.26],
-            [0.5, 0.26],
-          ],
-          1,
-          false,
-          [
-            [0.5, 0.5],
-            [0.5, 0.5],
-            [0.5, 0.5],
-          ]
-        ),
-        ...varia([...garabato(-0.36, 0.22, 0.2), ...garabato(-0.36, 0.3, -0.02), ...garabato(-0.36, 0.04, -0.24)]),
-      ];
-    case "ticket": {
-      // borde de abajo cortado en zigzag: al ordenarse queda recto
-      const zz: [number, number][] = [[0.5, 0.5], [-0.5, 0.5]];
-      const zzAlt: [number, number][] = [[0.5, 0.5], [-0.5, 0.5]];
-      const dientes = 8;
-      for (let i = 0; i <= dientes; i++) {
-        const x = -0.5 + i / dientes;
-        zz.push([x, i % 2 === 0 ? -0.5 : -0.42]);
-        zzAlt.push([x, -0.5]);
-      }
-      return [
-        ...poli(zz, 0, true, zzAlt),
-        ...varia([seg([-0.36, 0.34], [0.3, 0.34], 0.5)]),
-        seg([-0.36, 0.14], [0.1, 0.14], 1),
-        seg([0.22, 0.14], [0.36, 0.14], 1),
-        seg([-0.36, -0.02], [0.02, -0.02], 1),
-        seg([0.22, -0.02], [0.36, -0.02], 1),
-        ...varia([seg([-0.36, -0.24], [0.36, -0.24], 0.5)]),
-      ];
-    }
-    case "reloj":
-      return [
-        ...circulo(0, 0, 0.5, 20),
-        seg([0, 0], [0, 0.32], 0.5),
-        seg([0, 0], [0.22, -0.08], 0.5),
-      ];
-    case "carrito":
-      return FORMA_CARRITO.map(([a, b]) => seg([a[0], a[1]], [b[0], b[1]]));
-  }
-}
-
-/**
- * Relojes y carritos: un casillero de morfeo por icono. En cada uno, el
- * segmento i del caos viaja al segmento i del icono. Lo que sobra de un lado
- * se desvanece en su lugar (det 1) y lo que falta nace en su destino (nace 1).
- */
-function lineasIconos(tipo: "reloj" | "carrito") {
-  const caos = formaLineas(tipo);
-  const n = SEGMENTOS_ICONO;
-  const total = ICONOS.length * n;
-  const pos = new Float32Array(total * 6);
-  const alt = new Float32Array(total * 4);
-  const meta = new Float32Array(total * 8);
-  ICONOS.forEach((icono, k) => {
-    const destino: readonly Segmento[] = FORMAS_ICONO[icono];
-    for (let i = 0; i < n; i++) {
-      const j = k * n + i;
-      const c = caos[i];
-      const d = destino[i];
-      let a: readonly [number, number] = [0, 0];
-      let b: readonly [number, number] = [0, 0];
-      let aa = a;
-      let bb = b;
-      let dt = 1;
-      let nc = 1;
-      if (c && d) {
-        [a, b, aa, bb, dt, nc] = [c.a, c.b, d[0], d[1], 0, 0];
-      } else if (c) {
-        [a, b, aa, bb, dt, nc] = [c.a, c.b, c.a, c.b, 1, 0];
-      } else if (d) {
-        [a, b, aa, bb, dt, nc] = [d[0], d[1], d[0], d[1], 0, 1];
-      }
-      pos.set([a[0], a[1], 0, b[0], b[1], 0], j * 6);
-      alt.set([aa[0], aa[1], bb[0], bb[1]], j * 4);
-      meta.set([dt, 0, nc, k, dt, 0, nc, k], j * 8);
-    }
-  });
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute("aAlt", new THREE.BufferAttribute(alt, 2));
-  geo.setAttribute("aMeta", new THREE.BufferAttribute(meta, 4));
-  return geo;
-}
-
-// ── atributos instanciados ────────────────────────────────────────────────
-
-export type Instancias = {
-  tipo: Tipo;
-  casilleros: Casillero[];
-  attrs: {
-    aP0: THREE.InstancedBufferAttribute;
-    aQ0: THREE.InstancedBufferAttribute;
-    aS0: THREE.InstancedBufferAttribute;
-    aP1: THREE.InstancedBufferAttribute;
-    aQ1: THREE.InstancedBufferAttribute;
-    aS1: THREE.InstancedBufferAttribute;
-    aRnd: THREE.InstancedBufferAttribute;
-    aExtra: THREE.InstancedBufferAttribute;
-  };
-  /** azar fijo por instancia para recalcular el caos al cambiar el tamaño */
-  azar: Float32Array;
-};
-
-/** numeros al azar fijos por instancia */
-const AZAR = 10;
-
-function attr(n: number, size: number) {
-  return new THREE.InstancedBufferAttribute(new Float32Array(n * size), size);
-}
-
-export function crearInstancias(casilleros: Casillero[], semilla = 7): Instancias[] {
-  let s = semilla;
-  const rnd = () => {
-    s = (s * 16807) % 2147483647;
-    return (s - 1) / 2147483646;
-  };
-
-  return TIPOS.map((tipo) => {
-    const propios = casilleros.filter((c) => c.tipo === tipo);
-    const n = propios.length;
-    const azar = new Float32Array(n * AZAR);
-    for (let i = 0; i < azar.length; i++) azar[i] = rnd();
-    // icono, tipo de loop (1 barra, 2 KPI) y fase: las barras se llenan en ola
-    const aExtra = attr(n, 3);
-    const barras = propios.filter((c) => c.vivo === "barra").length;
-    let b = 0;
-    propios.forEach((c, i) => {
-      const tipoLoop = c.vivo === "barra" ? 1 : c.vivo === "kpi" ? 2 : 0;
-      const fase = c.vivo === "barra" ? (b++ / Math.max(1, barras)) * 0.45 : 0;
-      aExtra.setXYZ(i, indiceIcono(c), tipoLoop, fase);
-    });
-    return {
-      tipo,
-      casilleros: propios,
-      attrs: {
-        aP0: attr(n, 3),
-        aQ0: attr(n, 4),
-        aS0: attr(n, 2),
-        aP1: attr(n, 3),
-        aQ1: attr(n, 4),
-        aS1: attr(n, 2),
-        aRnd: attr(n, 4),
-        aExtra,
-      },
-      azar,
-    };
-  });
-}
-
-/** Tamaño de cada tipo en el caos (ancho, alto), antes del azar. */
-const TAM_CAOS: Record<Tipo, [number, number]> = {
-  chat: [0.62, 0.36],
-  celda: [0.78, 0.2],
-  postit: [0.42, 0.42],
-  ticket: [0.34, 0.6],
-  reloj: [0.3, 0.3],
-  carrito: [0.34, 0.3],
-};
-
-export type Encuadre = {
-  /** layout apilado (mobile y tablet): sistema abajo del texto */
-  apilado: boolean;
-  ancho: number;
-  alto: number;
-  escala: number;
-  pos: THREE.Vector3;
-  rot: THREE.Euler;
-  /** rectangulo NDC donde vive el texto (x0, y0, x1, y1): ahi el caos se atenua */
-  zonaTexto: THREE.Vector4;
-  /** centro del sistema en el mundo, para la orbita final */
-  centro: THREE.Vector3;
-};
-
-export const CAM = { fov: 35, z: 10 };
-
-export function calcularEncuadre(anchoPx: number, altoPx: number): Encuadre {
-  const aspecto = anchoPx / Math.max(1, altoPx);
-  const alto = 2 * CAM.z * Math.tan(THREE.MathUtils.degToRad(CAM.fov / 2));
-  const ancho = alto * aspecto;
-  const apilado = anchoPx < 1024;
-
-  let escala: number;
-  const pos = new THREE.Vector3();
-  const rot = new THREE.Euler();
-  const zonaTexto = new THREE.Vector4();
-
-  if (!apilado) {
-    escala = Math.min(1, (ancho * 0.42) / MEDIDAS.ancho, (alto * 0.56) / MEDIDAS.alto);
-    const cx = ancho / 2 - ancho * 0.275;
-    pos.set(cx - MEDIDAS.centroX * escala, -0.12 * escala, 0);
-    rot.set(0.3, -0.44, 0);
-    zonaTexto.set(-1, -0.7, 0.02, 0.75);
-  } else {
-    // mobile: el sistema abajo y un poco mas chico, sin pisar el texto
-    escala = Math.min((ancho * 0.74) / MEDIDAS.ancho, (alto * 0.25) / MEDIDAS.alto);
-    pos.set(-(MEDIDAS.centroX + 0.12) * escala, -alto / 2 + alto * 0.225, 0);
-    rot.set(0.34, -0.12, 0);
-    zonaTexto.set(-1, -0.05, 1, 1);
-  }
-
-  return {
-    apilado,
-    ancho,
-    alto,
-    escala,
-    pos,
-    rot,
-    zonaTexto,
-    centro: new THREE.Vector3(pos.x + MEDIDAS.centroX * escala, pos.y, 0),
-  };
-}
-
-// ── el sistema: superficies y lineas de los aparatos ──────────────────────
-
-export type Sistema = {
-  grupo: THREE.Group;
-  superficies: Record<Superficie, THREE.Object3D>;
-  material: THREE.ShaderMaterial;
-  materialPantallas: THREE.ShaderMaterial;
-  dispose: () => void;
-};
-
-type P3 = [number, number, number];
-
-/** Arma las lineas de los aparatos. aLen es el orden de dibujo (0..1). */
-function lineasAparato(segmentos: [P3, P3][], detalle: number[] = []) {
-  const n = segmentos.length;
-  const pos = new Float32Array(n * 6);
-  const len = new Float32Array(n * 2);
-  segmentos.forEach(([a, b], i) => {
-    pos.set(a, i * 6);
-    pos.set(b, i * 6 + 3);
-    const t = i / Math.max(1, n - 1);
-    len[i * 2] = t;
-    len[i * 2 + 1] = Math.min(1, t + 0.6 / n);
-  });
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute("aLen", new THREE.BufferAttribute(len, 1));
-  const det = new Float32Array(n * 2);
-  detalle.forEach((d, i) => {
-    det[i * 2] = d;
-    det[i * 2 + 1] = d;
-  });
-  geo.setAttribute("aDet", new THREE.BufferAttribute(det, 1));
-  return geo;
-}
-
-function rect3(x0: number, y0: number, x1: number, y1: number, z = 0): [P3, P3][] {
-  return [
-    [[x0, y0, z], [x1, y0, z]],
-    [[x1, y0, z], [x1, y1, z]],
-    [[x1, y1, z], [x0, y1, z]],
-    [[x0, y1, z], [x0, y0, z]],
-  ];
-}
-
-/** Caja fina: frente, dorso y las cuatro aristas que los unen. */
-function placa(x0: number, y0: number, x1: number, y1: number, espesor: number, completa: boolean): [P3, P3][] {
-  const out = rect3(x0, y0, x1, y1, 0);
-  if (!completa) return out;
-  out.push(...rect3(x0, y0, x1, y1, -espesor));
-  out.push(
-    [[x0, y0, 0], [x0, y0, -espesor]],
-    [[x1, y0, 0], [x1, y0, -espesor]],
-    [[x1, y1, 0], [x1, y1, -espesor]],
-    [[x0, y1, 0], [x0, y1, -espesor]]
-  );
-  return out;
-}
+// ── shaders ──────────────────────────────────────────────────────────────
+// GLSL estilo three (attribute / varying / gl_FragColor). El motor les pone el
+// prefijo de WebGL2 y declara modelMatrix, viewMatrix, projectionMatrix,
+// modelViewMatrix, position y uv.
 
 const VERT_APARATO = /* glsl */ `
   attribute float aLen;
@@ -502,41 +145,36 @@ const FRAG_PANTALLA = /* glsl */ `
   }
 `;
 
-// ── el panel vivo: contadores de siete segmentos y la notificacion ──────
+// ── el panel vivo: tendencias en las tarjetas y la notificacion ──────────
 // Geometria fija pegada a la pantalla y al celular. Aparece cuando el sistema
 // se enciende (uLoop) y se mueve solo con uTime: la CPU no hace nada.
 
 const VERT_VIVO = /* glsl */ `
   uniform float uTime;
   uniform float uLoop;
+  // tendencia: indice del punto, fase, base y alto de la franja
   attribute vec4 aDig;
+  // 0 tendencia, 1 notificacion, 2 marca del ultimo dato
   attribute float aKind;
   attribute float aPeso;
   varying float vA;
   varying vec3 vW;
 
-  // segmentos encendidos de cada digito (bits a..g)
-  float mascara(float d) {
-    if (d < 0.5) return 63.0;
-    if (d < 1.5) return 6.0;
-    if (d < 2.5) return 91.0;
-    if (d < 3.5) return 79.0;
-    if (d < 4.5) return 102.0;
-    if (d < 5.5) return 109.0;
-    if (d < 6.5) return 125.0;
-    if (d < 7.5) return 7.0;
-    if (d < 8.5) return 127.0;
-    return 111.0;
+  // el dato del punto i: suma de ondas que corre hacia la izquierda
+  float dato(float i, float fase) {
+    float s = i * 0.62 + uTime * 0.5 + fase;
+    return 0.5 + 0.24 * sin(s * 1.13) + 0.15 * sin(s * 2.31 + 1.7) + 0.08 * sin(s * 4.7 + 0.3);
   }
 
   void main() {
     vec3 p = position;
-    float a;
+    float a = 1.0;
     if (aKind < 0.5) {
-      // contador: el valor sube solo; cada vertice sabe su digito y segmento
-      float valor = floor(aDig.z + uTime * aDig.w);
-      float d = mod(floor((valor + 0.5) / pow(10.0, aDig.y)), 10.0);
-      a = mod(floor((mascara(d) + 0.5) / pow(2.0, aDig.x)), 2.0);
+      p.y = aDig.z + dato(aDig.x, aDig.y) * aDig.w;
+      // el dato mas viejo se apaga en la punta izquierda
+      a = smoothstep(0.0, 1.6, aDig.x);
+    } else if (aKind > 1.5) {
+      p.y += aDig.z + dato(aDig.x, aDig.y) * aDig.w;
     } else {
       // notificacion de pedido nuevo: baja, se queda y se va, cada 5 s
       float ciclo = fract(uTime / 5.0 + 0.35);
@@ -565,262 +203,6 @@ const FRAG_VIVO = /* glsl */ `
     gl_FragColor = vec4(mix(uColor, uHot, clamp(0.25 + banda * 0.6, 0.0, 1.0)), vA * (0.8 + banda * 0.3));
   }
 `;
-
-/** Segmentos a..g de un digito de siete segmentos (esquina inferior izquierda). */
-function sieteSegmentos(x0: number, y0: number, an: number, al: number): [P3, P3][] {
-  const s = al * 0.06;
-  const x1 = x0 + an;
-  const y1 = y0 + al;
-  const ym = y0 + al / 2;
-  const z = 0.014;
-  return [
-    [[x0 + s, y1, z], [x1 - s, y1, z]],
-    [[x1, y1 - s, z], [x1, ym + s, z]],
-    [[x1, ym - s, z], [x1, y0 + s, z]],
-    [[x0 + s, y0, z], [x1 - s, y0, z]],
-    [[x0, ym - s, z], [x0, y0 + s, z]],
-    [[x0, y1 - s, z], [x0, ym + s, z]],
-    [[x0 + s, ym, z], [x1 - s, ym, z]],
-  ];
-}
-
-function geoVivo(segs: [P3, P3][], dig: number[][], kind: number) {
-  const n = segs.length;
-  const pos = new Float32Array(n * 6);
-  const aDig = new Float32Array(n * 8);
-  segs.forEach(([a, b], i) => {
-    pos.set(a, i * 6);
-    pos.set(b, i * 6 + 3);
-    const d = dig[i] ?? [0, 0, 0, 0];
-    aDig.set(d, i * 8);
-    aDig.set(d, i * 8 + 4);
-  });
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute("aDig", new THREE.BufferAttribute(aDig, 4));
-  geo.setAttribute("aKind", new THREE.BufferAttribute(new Float32Array(n * 2).fill(kind), 1));
-  geo.setAttribute("aPeso", new THREE.BufferAttribute(new Float32Array(n * 2).fill(1), 1));
-  return geo;
-}
-
-function geoContadores(denso: boolean) {
-  const segs: [P3, P3][] = [];
-  const dig: number[][] = [];
-  for (const c of armarContadores(denso)) {
-    const an = c.alto * 0.5;
-    const gap = c.alto * 0.24;
-    for (let k = 0; k < c.digitos; k++) {
-      const x0 = c.x - an - k * (an + gap);
-      sieteSegmentos(x0, c.y, an, c.alto).forEach((sg, i) => {
-        segs.push(sg);
-        dig.push([i, k, c.base, c.ritmo]);
-      });
-    }
-  }
-  return geoVivo(segs, dig, 0);
-}
-
-function geoNotificacion() {
-  const { x, y, w, h } = NOTIFICACION;
-  const x0 = x - w / 2;
-  const x1 = x + w / 2;
-  const y0 = y - h / 2;
-  const y1 = y + h / 2;
-  const z = 0.02;
-  const lado = h * 0.5;
-  const ix = x0 + h * 0.25;
-  const iy = y - lado / 2;
-  const segs: [P3, P3][] = [
-    ...rect3(x0, y0, x1, y1, z),
-    ...rect3(ix, iy, ix + lado, iy + lado, z),
-    [[ix + lado * 0.3, iy + lado * 0.5, z], [ix + lado * 0.45, iy + lado * 0.3, z]],
-    [[ix + lado * 0.45, iy + lado * 0.3, z], [ix + lado * 0.75, iy + lado * 0.72, z]],
-    [[ix + lado + 0.08, y + h * 0.14, z], [x1 - 0.12, y + h * 0.14, z]],
-    [[ix + lado + 0.08, y - h * 0.16, z], [x0 + w * 0.6, y - h * 0.16, z]],
-  ];
-  return geoVivo(segs, [], 1);
-}
-
-export function crearSistema(
-  uniforms: Record<string, THREE.IUniform>,
-  liviano: boolean
-): Sistema {
-  const grupo = new THREE.Group();
-  const m = MEDIDAS;
-
-  // bisagra y superficies
-  const bisagra = new THREE.Object3D();
-  bisagra.position.set(0, m.bisagra.y, 0);
-  bisagra.rotation.x = m.bisagra.inclinacion;
-  const pantalla = new THREE.Object3D();
-  pantalla.position.set(0, ALTO_PANTALLA_SOBRE_BISAGRA, 0);
-  bisagra.add(pantalla);
-
-  const base = new THREE.Object3D();
-  base.position.set(0, m.bisagra.y, 0);
-  base.rotation.x = -Math.PI / 2;
-
-  const celular = new THREE.Object3D();
-  celular.position.set(m.celular.x, m.celular.y, m.celular.z);
-  celular.rotation.y = m.celular.rotY;
-
-  grupo.add(bisagra, base, celular);
-
-  const material = new THREE.ShaderMaterial({
-    uniforms: {
-      uColor: uniforms.uColor,
-      uHot: uniforms.uHot,
-      uDraw: uniforms.uDraw,
-      uAlpha: { value: 0.55 },
-      uOn: uniforms.uOn,
-      uPulseX: uniforms.uPulseX,
-      uPulse: uniforms.uPulse,
-    },
-    vertexShader: VERT_APARATO,
-    fragmentShader: FRAG_APARATO,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-
-  const materialPantallas = new THREE.ShaderMaterial({
-    uniforms: {
-      uColor: uniforms.uColor,
-      uOn: uniforms.uOn,
-      uDraw: uniforms.uDraw,
-      uPulseX: uniforms.uPulseX,
-      uPulse: uniforms.uPulse,
-      uZoom: uniforms.uZoom,
-    },
-    vertexShader: VERT_PANTALLA,
-    fragmentShader: FRAG_PANTALLA,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-
-  const geos: THREE.BufferGeometry[] = [];
-  const agregarLineas = (padre: THREE.Object3D, segs: [P3, P3][], det: number[] = []) => {
-    const geo = lineasAparato(segs, det);
-    geos.push(geo);
-    const lineas = new THREE.LineSegments(geo, material);
-    lineas.frustumCulled = false;
-    padre.add(lineas);
-  };
-  const agregarPantalla = (padre: THREE.Object3D, w: number, h: number) => {
-    const geo = new THREE.PlaneGeometry(w, h);
-    geos.push(geo);
-    const malla = new THREE.Mesh(geo, materialPantallas);
-    malla.position.z = -0.005;
-    malla.frustumCulled = false;
-    padre.add(malla);
-  };
-
-  // ── notebook: pantalla ──
-  const { hw, hh, bisel } = m.pantalla;
-  const p = PANEL;
-  const segPantalla: [P3, P3][] = [
-    ...placa(-hw - bisel, -hh - bisel, hw + bisel, hh + bisel, 0.06, !liviano),
-    ...rect3(-hw, -hh, hw, hh),
-  ];
-  const detPantalla = segPantalla.map(() => 0);
-  const divisiones: [P3, P3][] = [
-    [[-hw, p.barraY, 0], [hw, p.barraY, 0]],
-    [[p.lateralX, -hh, 0], [p.lateralX, p.barraY, 0]],
-    ...rect3(p.grafico.x0, p.grafico.y0, p.grafico.x1, p.grafico.y1),
-    ...rect3(p.pedidos.x0, p.pedidos.y0, p.pedidos.x1, p.pedidos.y1),
-    ...rect3(p.tabla.x0, p.tabla.y0, p.tabla.x1, p.tabla.y1),
-  ];
-  segPantalla.push(...divisiones);
-  detPantalla.push(...divisiones.map(() => 1));
-  agregarLineas(pantalla, segPantalla, detPantalla);
-  agregarPantalla(pantalla, hw * 2, hh * 2);
-
-  // ── notebook: base con teclado y trackpad ──
-  const b = m.base;
-  const segBase: [P3, P3][] = [
-    ...rect3(-b.hw, -b.prof, b.hw, 0),
-    [[-b.hw, -b.prof, 0], [-b.hw, -b.prof, -b.espesor]],
-    [[b.hw, -b.prof, 0], [b.hw, -b.prof, -b.espesor]],
-    [[-b.hw, -b.prof, -b.espesor], [b.hw, -b.prof, -b.espesor]],
-    [[-b.hw, 0, -b.espesor], [-b.hw, -b.prof, -b.espesor]],
-    [[b.hw, 0, -b.espesor], [b.hw, -b.prof, -b.espesor]],
-  ];
-  const detBase = segBase.map(() => 0);
-  const tecl: [P3, P3][] = [
-    ...rect3(p.teclado.x0 - 0.06, p.teclado.y0 - 0.06, p.teclado.x1 + 0.06, p.teclado.y1 + 0.06),
-    ...rect3(
-      p.trackpad.x - p.trackpad.w / 2 - 0.04,
-      p.trackpad.y - p.trackpad.h / 2 - 0.04,
-      p.trackpad.x + p.trackpad.w / 2 + 0.04,
-      p.trackpad.y + p.trackpad.h / 2 + 0.04
-    ),
-  ];
-  segBase.push(...tecl);
-  detBase.push(...tecl.map(() => 1));
-  agregarLineas(base, segBase, detBase);
-
-  // ── celular ──
-  const c = m.celular;
-  const segCel: [P3, P3][] = [
-    ...placa(-c.hw - c.bisel, -c.hh - c.bisel - 0.04, c.hw + c.bisel, c.hh + c.bisel + 0.04, 0.09, !liviano),
-    ...rect3(-c.hw, -c.hh, c.hw, c.hh),
-    [[-0.12, c.hh + 0.06, 0], [0.12, c.hh + 0.06, 0]],
-    [[-0.18, -c.hh - 0.07, 0], [0.18, -c.hh - 0.07, 0]],
-  ];
-  agregarLineas(celular, segCel);
-  agregarPantalla(celular, c.hw * 2, c.hh * 2);
-
-  // ── el panel vivo: contadores en la notebook, pedido nuevo en el celular ──
-  const materialVivo = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: uniforms.uTime,
-      uLoop: uniforms.uLoop,
-      uColor: uniforms.uColor,
-      uHot: uniforms.uHot,
-      uPulseX: uniforms.uPulseX,
-      uPulse: uniforms.uPulse,
-    },
-    vertexShader: VERT_VIVO,
-    fragmentShader: FRAG_VIVO,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-  const agregarVivo = (padre: THREE.Object3D, objeto: THREE.Object3D) => {
-    objeto.frustumCulled = false;
-    padre.add(objeto);
-  };
-  const geoCont = geoContadores(!liviano);
-  const geoNoti = geoNotificacion();
-  // relleno de la notificacion: tapa apenas lo que tiene detras
-  const n = NOTIFICACION;
-  const geoNotiFondo = new THREE.PlaneGeometry(n.w, n.h);
-  geoNotiFondo.translate(n.x, n.y, 0.016);
-  const cuenta = geoNotiFondo.getAttribute("position").count;
-  geoNotiFondo.setAttribute("aDig", new THREE.BufferAttribute(new Float32Array(cuenta * 4), 4));
-  geoNotiFondo.setAttribute("aKind", new THREE.BufferAttribute(new Float32Array(cuenta).fill(1), 1));
-  geoNotiFondo.setAttribute("aPeso", new THREE.BufferAttribute(new Float32Array(cuenta).fill(0.14), 1));
-  geos.push(geoCont, geoNoti, geoNotiFondo);
-  agregarVivo(pantalla, new THREE.LineSegments(geoCont, materialVivo));
-  agregarVivo(celular, new THREE.Mesh(geoNotiFondo, materialVivo));
-  agregarVivo(celular, new THREE.LineSegments(geoNoti, materialVivo));
-
-  return {
-    grupo,
-    superficies: { pantalla, base, celular },
-    material,
-    materialPantallas,
-    dispose: () => {
-      geos.forEach((g) => g.dispose());
-      material.dispose();
-      materialPantallas.dispose();
-      materialVivo.dispose();
-    },
-  };
-}
-
-// ── fragmentos ────────────────────────────────────────────────────────────
 
 const VERT_FRAG = /* glsl */ `
   uniform float uA;
@@ -892,8 +274,8 @@ const VERT_FRAG = /* glsl */ `
     vec2 forma = mix(position.xy, aAlt, e);
 
     // lineas de contenido: al ordenarse cada casillero tiene su propio largo,
-    // asi las filas y tarjetas no se ven calcadas. En los KPI quedan cortas
-    // para dejarle lugar al numero.
+    // asi las filas y tarjetas no se ven calcadas. En las tarjetas KPI quedan
+    // cortas para dejarle lugar a la tendencia.
     float largo = 0.4 + 0.6 * fract(aRnd.y * 7.31 + aRnd.w * 3.17);
     if (aVivo.x > 1.5) largo *= 0.45;
     forma.x = mix(forma.x, -0.36 + (forma.x + 0.36) * largo, aVar * e);
@@ -944,26 +326,326 @@ const FRAG_FRAG = /* glsl */ `
   }
 `;
 
-export type Fragmentos = {
-  objetos: THREE.Object3D[];
-  dispose: () => void;
+const VERT_HALO = /* glsl */ `
+  varying vec2 vUv;
+  void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+`;
+
+const FRAG_HALO = /* glsl */ `
+  uniform vec3 uColor;
+  uniform float uGlow;
+  varying vec2 vUv;
+  void main() {
+    float d = length(vUv - 0.5) * 2.0;
+    gl_FragColor = vec4(uColor, pow(clamp(1.0 - d, 0.0, 1.0), 2.2) * uGlow);
+  }
+`;
+
+export const SHADERS: Record<Programa, { vert: string; frag: string }> = {
+  aparato: { vert: VERT_APARATO, frag: FRAG_APARATO },
+  pantalla: { vert: VERT_PANTALLA, frag: FRAG_PANTALLA },
+  vivo: { vert: VERT_VIVO, frag: FRAG_VIVO },
+  frag: { vert: VERT_FRAG, frag: FRAG_FRAG },
+  halo: { vert: VERT_HALO, frag: FRAG_HALO },
 };
 
-function geoInstanciada(base: THREE.BufferGeometry, inst: Instancias) {
-  const geo = new THREE.InstancedBufferGeometry();
-  geo.index = base.index;
-  for (const nombre of ["position", "aAlt", "aMeta"]) geo.setAttribute(nombre, base.getAttribute(nombre));
-  for (const [nombre, a] of Object.entries(inst.attrs)) geo.setAttribute(nombre, a);
-  geo.instanceCount = inst.casilleros.length;
-  return geo;
+// ── geometrias base ─────────────────────────────────────────────────────
+
+type P3 = V3;
+
+/** Un plano de w x h (dos triangulos, antihorario), con uv. */
+function plano(w: number, h: number, ox = 0, oy = 0, oz = 0) {
+  const esquinas: [number, number][] = [
+    [-0.5, -0.5],
+    [0.5, -0.5],
+    [0.5, 0.5],
+    [-0.5, -0.5],
+    [0.5, 0.5],
+    [-0.5, 0.5],
+  ];
+  const pos = f32(18);
+  const uv = f32(12);
+  esquinas.forEach(([x, y], i) => {
+    pos.set([ox + x * w, oy + y * h, oz], i * 3);
+    uv.set([x + 0.5, y + 0.5], i * 2);
+  });
+  return { pos, uv, n: 6 };
+}
+
+/** Lineas de los aparatos. aLen es el orden de dibujo (0..1). */
+function lineasAparato(segmentos: [P3, P3][], detalle: number[] = []): Dibujo {
+  const n = segmentos.length;
+  const pos = f32(n * 6);
+  const len = f32(n * 2);
+  const det = f32(n * 2);
+  segmentos.forEach(([a, b], i) => {
+    pos.set(a, i * 6);
+    pos.set(b, i * 6 + 3);
+    const t = i / Math.max(1, n - 1);
+    len[i * 2] = t;
+    len[i * 2 + 1] = Math.min(1, t + 0.6 / n);
+    const d = detalle[i] ?? 0;
+    det[i * 2] = d;
+    det[i * 2 + 1] = d;
+  });
+  return {
+    programa: "aparato",
+    lineas: true,
+    atributos: { position: { datos: pos, tam: 3 }, aLen: { datos: len, tam: 1 }, aDet: { datos: det, tam: 1 } },
+    vertices: n * 2,
+    instancias: 0,
+    modelo: "pantalla",
+  };
+}
+
+function rect3(x0: number, y0: number, x1: number, y1: number, z = 0): [P3, P3][] {
+  return [
+    [[x0, y0, z], [x1, y0, z]],
+    [[x1, y0, z], [x1, y1, z]],
+    [[x1, y1, z], [x0, y1, z]],
+    [[x0, y1, z], [x0, y0, z]],
+  ];
+}
+
+/** Caja fina: frente, dorso y las cuatro aristas que los unen. */
+function placa(x0: number, y0: number, x1: number, y1: number, espesor: number, completa: boolean): [P3, P3][] {
+  const out = rect3(x0, y0, x1, y1, 0);
+  if (!completa) return out;
+  out.push(...rect3(x0, y0, x1, y1, -espesor));
+  out.push(
+    [[x0, y0, 0], [x0, y0, -espesor]],
+    [[x1, y0, 0], [x1, y0, -espesor]],
+    [[x1, y1, 0], [x1, y1, -espesor]],
+    [[x0, y1, 0], [x0, y1, -espesor]]
+  );
+  return out;
+}
+
+/** dig: los datos de cada punta del segmento (la tendencia los necesita por punta) */
+function geoVivo(segs: [P3, P3][], dig: [number[], number[]][], kind: number[], peso: number): Dibujo {
+  const n = segs.length;
+  const pos = f32(n * 6);
+  const aDig = f32(n * 8);
+  const aKind = f32(n * 2);
+  segs.forEach(([a, b], i) => {
+    pos.set(a, i * 6);
+    pos.set(b, i * 6 + 3);
+    const [da, db] = dig[i] ?? [[0, 0, 0, 0], [0, 0, 0, 0]];
+    aDig.set(da, i * 8);
+    aDig.set(db, i * 8 + 4);
+    aKind[i * 2] = aKind[i * 2 + 1] = kind[i] ?? 1;
+  });
+  return {
+    programa: "vivo",
+    lineas: true,
+    atributos: {
+      position: { datos: pos, tam: 3 },
+      aDig: { datos: aDig, tam: 4 },
+      aKind: { datos: aKind, tam: 1 },
+      aPeso: { datos: f32(n * 2).fill(peso), tam: 1 },
+    },
+    vertices: n * 2,
+    instancias: 0,
+    modelo: "pantalla",
+  };
+}
+
+/** Las tendencias de las tarjetas KPI y la marca del ultimo dato. */
+function geoTendencias(denso: boolean): Dibujo {
+  const segs: [P3, P3][] = [];
+  const dig: [number[], number[]][] = [];
+  const kind: number[] = [];
+  const z = 0.014;
+  for (const t of armarTendencias(denso)) {
+    const paso = (t.x1 - t.x0) / (t.puntos - 1);
+    const datos = (i: number) => [i, t.fase, t.y0, t.alto];
+    for (let i = 0; i < t.puntos - 1; i++) {
+      // el shader calcula la altura de cada punta: aca solo va su x
+      segs.push([
+        [t.x0 + paso * i, 0, z],
+        [t.x0 + paso * (i + 1), 0, z],
+      ]);
+      dig.push([datos(i), datos(i + 1)]);
+      kind.push(0);
+    }
+    // marca del ultimo dato: un cuadradito que sigue a la punta
+    const m = 0.022;
+    const ultimo = datos(t.puntos - 1);
+    for (const [a, b] of rect3(t.x1 - m, -m, t.x1 + m, m, z)) {
+      segs.push([a, b]);
+      dig.push([ultimo, ultimo]);
+      kind.push(2);
+    }
+  }
+  return geoVivo(segs, dig, kind, 0.95);
+}
+
+function geoNotificacion(): Dibujo {
+  const { x, y, w, h } = NOTIFICACION;
+  const x0 = x - w / 2;
+  const x1 = x + w / 2;
+  const y0 = y - h / 2;
+  const y1 = y + h / 2;
+  const z = 0.02;
+  const lado = h * 0.5;
+  const ix = x0 + h * 0.25;
+  const iy = y - lado / 2;
+  const segs: [P3, P3][] = [
+    ...rect3(x0, y0, x1, y1, z),
+    ...rect3(ix, iy, ix + lado, iy + lado, z),
+    [[ix + lado * 0.3, iy + lado * 0.5, z], [ix + lado * 0.45, iy + lado * 0.3, z]],
+    [[ix + lado * 0.45, iy + lado * 0.3, z], [ix + lado * 0.75, iy + lado * 0.72, z]],
+    [[ix + lado + 0.08, y + h * 0.14, z], [x1 - 0.12, y + h * 0.14, z]],
+    [[ix + lado + 0.08, y - h * 0.16, z], [x0 + w * 0.6, y - h * 0.16, z]],
+  ];
+  return { ...geoVivo(segs, [], [], 1), modelo: "celular" };
+}
+
+/** Relleno de la notificacion: tapa apenas lo que tiene detras. */
+function geoNotificacionFondo(): Dibujo {
+  const n = NOTIFICACION;
+  const pl = plano(n.w, n.h, n.x, n.y, 0.016);
+  return {
+    programa: "vivo",
+    lineas: false,
+    atributos: {
+      position: { datos: pl.pos, tam: 3 },
+      aDig: { datos: f32(pl.n * 4), tam: 4 },
+      aKind: { datos: f32(pl.n).fill(1), tam: 1 },
+      aPeso: { datos: f32(pl.n).fill(0.14), tam: 1 },
+    },
+    vertices: pl.n,
+    instancias: 0,
+    modelo: "celular",
+  };
+}
+
+function geoPantalla(w: number, h: number, modelo: Modelo): Dibujo {
+  const pl = plano(w, h, 0, 0, -0.005);
+  return {
+    programa: "pantalla",
+    lineas: false,
+    atributos: { position: { datos: pl.pos, tam: 3 }, uv: { datos: pl.uv, tam: 2 } },
+    vertices: pl.n,
+    instancias: 0,
+    modelo,
+  };
+}
+
+/** Las lineas de los aparatos, las pantallas y el panel vivo. */
+function dibujosSistema(denso: boolean): Dibujo[] {
+  const m = MEDIDAS;
+  const out: Dibujo[] = [];
+
+  // ── notebook: pantalla ──
+  const { hw, hh, bisel } = m.pantalla;
+  const p = PANEL;
+  const segPantalla: [P3, P3][] = [
+    ...placa(-hw - bisel, -hh - bisel, hw + bisel, hh + bisel, 0.06, denso),
+    ...rect3(-hw, -hh, hw, hh),
+  ];
+  const detPantalla = segPantalla.map(() => 0);
+  const divisiones: [P3, P3][] = [
+    [[-hw, p.barraY, 0], [hw, p.barraY, 0]],
+    [[p.lateralX, -hh, 0], [p.lateralX, p.barraY, 0]],
+    ...rect3(p.grafico.x0, p.grafico.y0, p.grafico.x1, p.grafico.y1),
+    ...rect3(p.pedidos.x0, p.pedidos.y0, p.pedidos.x1, p.pedidos.y1),
+    ...rect3(p.tabla.x0, p.tabla.y0, p.tabla.x1, p.tabla.y1),
+  ];
+  segPantalla.push(...divisiones);
+  detPantalla.push(...divisiones.map(() => 1));
+  out.push(lineasAparato(segPantalla, detPantalla));
+  out.push(geoPantalla(hw * 2, hh * 2, "pantalla"));
+
+  // ── notebook: base con teclado y trackpad ──
+  const b = m.base;
+  const segBase: [P3, P3][] = [
+    ...rect3(-b.hw, -b.prof, b.hw, 0),
+    [[-b.hw, -b.prof, 0], [-b.hw, -b.prof, -b.espesor]],
+    [[b.hw, -b.prof, 0], [b.hw, -b.prof, -b.espesor]],
+    [[-b.hw, -b.prof, -b.espesor], [b.hw, -b.prof, -b.espesor]],
+    [[-b.hw, 0, -b.espesor], [-b.hw, -b.prof, -b.espesor]],
+    [[b.hw, 0, -b.espesor], [b.hw, -b.prof, -b.espesor]],
+  ];
+  const detBase = segBase.map(() => 0);
+  const tecl: [P3, P3][] = [
+    ...rect3(p.teclado.x0 - 0.06, p.teclado.y0 - 0.06, p.teclado.x1 + 0.06, p.teclado.y1 + 0.06),
+    ...rect3(
+      p.trackpad.x - p.trackpad.w / 2 - 0.04,
+      p.trackpad.y - p.trackpad.h / 2 - 0.04,
+      p.trackpad.x + p.trackpad.w / 2 + 0.04,
+      p.trackpad.y + p.trackpad.h / 2 + 0.04
+    ),
+  ];
+  segBase.push(...tecl);
+  detBase.push(...tecl.map(() => 1));
+  out.push({ ...lineasAparato(segBase, detBase), modelo: "base" });
+
+  // ── celular ──
+  const c = m.celular;
+  const segCel: [P3, P3][] = [
+    ...placa(-c.hw - c.bisel, -c.hh - c.bisel - 0.04, c.hw + c.bisel, c.hh + c.bisel + 0.04, 0.09, denso),
+    ...rect3(-c.hw, -c.hh, c.hw, c.hh),
+    [[-0.12, c.hh + 0.06, 0], [0.12, c.hh + 0.06, 0]],
+    [[-0.18, -c.hh - 0.07, 0], [0.18, -c.hh - 0.07, 0]],
+  ];
+  out.push({ ...lineasAparato(segCel), modelo: "celular" });
+  out.push(geoPantalla(c.hw * 2, c.hh * 2, "celular"));
+
+  // ── el panel vivo: tendencias en la notebook, pedido nuevo en el celular ──
+  out.push(geoTendencias(denso));
+  out.push(geoNotificacionFondo());
+  out.push(geoNotificacion());
+  return out;
+}
+
+// ── fragmentos ────────────────────────────────────────────────────────────
+
+/**
+ * Relojes y carritos: un casillero de morfeo por icono. En cada uno, el
+ * segmento i del caos viaja al segmento i del icono. Lo que sobra de un lado
+ * se desvanece en su lugar (det 1) y lo que falta nace en su destino (nace 1).
+ */
+function lineasIconos(tipo: "reloj" | "carrito") {
+  const caos = formaLineas(tipo);
+  const n = SEGMENTOS_ICONO;
+  const total = ICONOS.length * n;
+  const pos = f32(total * 6);
+  const alt = f32(total * 4);
+  const meta = f32(total * 8);
+  ICONOS.forEach((icono, k) => {
+    const destino: readonly Segmento[] = FORMAS_ICONO[icono];
+    for (let i = 0; i < n; i++) {
+      const j = k * n + i;
+      const c = caos[i];
+      const d = destino[i];
+      let a: readonly [number, number] = [0, 0];
+      let b: readonly [number, number] = [0, 0];
+      let aa = a;
+      let bb = b;
+      let dt = 1;
+      let nc = 1;
+      if (c && d) {
+        [a, b, aa, bb, dt, nc] = [c.a, c.b, d[0], d[1], 0, 0];
+      } else if (c) {
+        [a, b, aa, bb, dt, nc] = [c.a, c.b, c.a, c.b, 1, 0];
+      } else if (d) {
+        [a, b, aa, bb, dt, nc] = [d[0], d[1], d[0], d[1], 0, 1];
+      }
+      pos.set([a[0], a[1], 0, b[0], b[1], 0], j * 6);
+      alt.set([aa[0], aa[1], bb[0], bb[1]], j * 4);
+      meta.set([dt, 0, nc, k, dt, 0, nc, k], j * 8);
+    }
+  });
+  return { pos, alt, meta, n: total * 2 };
 }
 
 function lineasBase(tipo: Tipo) {
   const segs = formaLineas(tipo);
   const n = segs.length;
-  const pos = new Float32Array(n * 6);
-  const alt = new Float32Array(n * 4);
-  const meta = new Float32Array(n * 8);
+  const pos = f32(n * 6);
+  const alt = f32(n * 4);
+  const meta = f32(n * 8);
   segs.forEach((s, i) => {
     const aa = s.aa ?? s.a;
     const bb = s.bb ?? s.b;
@@ -972,170 +654,44 @@ function lineasBase(tipo: Tipo) {
     const v = s.varia ? 1 : 0;
     meta.set([s.det, v, 0, 0, s.det, v, 0, 0], i * 8);
   });
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute("aAlt", new THREE.BufferAttribute(alt, 2));
-  geo.setAttribute("aMeta", new THREE.BufferAttribute(meta, 4));
-  return geo;
+  return { pos, alt, meta, n: n * 2 };
 }
 
 function rellenoBase() {
-  const geo = new THREE.PlaneGeometry(1, 1);
-  const pos = geo.getAttribute("position");
-  const alt = new Float32Array(pos.count * 2);
-  for (let i = 0; i < pos.count; i++) {
-    alt[i * 2] = pos.getX(i);
-    alt[i * 2 + 1] = pos.getY(i);
+  const pl = plano(1, 1);
+  const alt = f32(pl.n * 2);
+  for (let i = 0; i < pl.n; i++) {
+    alt[i * 2] = pl.pos[i * 3];
+    alt[i * 2 + 1] = pl.pos[i * 3 + 1];
   }
-  geo.setAttribute("aAlt", new THREE.BufferAttribute(alt, 2));
-  geo.setAttribute("aMeta", new THREE.BufferAttribute(new Float32Array(pos.count * 4), 4));
-  return geo;
+  return { pos: pl.pos, alt, meta: f32(pl.n * 4), n: pl.n };
 }
 
-export function crearFragmentos(
-  instancias: Instancias[],
-  uniforms: Record<string, THREE.IUniform>
-): Fragmentos {
-  const comunes = {
-    uA: uniforms.uA,
-    uTime: uniforms.uTime,
-    uRepel: uniforms.uRepel,
-    uLoop: uniforms.uLoop,
-    uMouse: uniforms.uMouse,
-    uZona: uniforms.uZona,
-    uColor: uniforms.uColor,
-    uHot: uniforms.uHot,
-    uOn: uniforms.uOn,
-    uPulseX: uniforms.uPulseX,
-    uPulse: uniforms.uPulse,
+/** Atributos por instancia: los escribe encuadrar() cada vez que cambia el tamaño. */
+type Instancias = Record<"aP0" | "aQ0" | "aS0" | "aP1" | "aQ1" | "aS1" | "aRnd" | "aExtra", Atributo>;
+
+function crearInstancias(g: Grupo): Instancias {
+  const n = g.casilleros.length;
+  const a = (tam: number): Atributo => ({ datos: f32(n * tam), tam, instancia: true });
+  const out: Instancias = {
+    aP0: a(3),
+    aQ0: a(4),
+    aS0: a(2),
+    aP1: a(3),
+    aQ1: a(4),
+    aS1: a(2),
+    aRnd: a(4),
+    aExtra: a(3),
   };
-  const matLineas = new THREE.ShaderMaterial({
-    uniforms: { ...comunes, uAlpha: { value: 0.52 }, uBanda: { value: 0.6 } },
-    vertexShader: VERT_FRAG,
-    fragmentShader: FRAG_FRAG,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
+  // icono, tipo de loop (1 barra, 2 KPI) y fase: las barras se llenan en ola
+  const barras = g.casilleros.filter((c) => c.vivo === "barra").length;
+  let b = 0;
+  g.casilleros.forEach((c, i) => {
+    const tipoLoop = c.vivo === "barra" ? 1 : c.vivo === "kpi" ? 2 : 0;
+    const fase = c.vivo === "barra" ? (b++ / Math.max(1, barras)) * 0.45 : 0;
+    out.aExtra.datos.set([indiceIcono(c), tipoLoop, fase], i * 3);
   });
-  const matRelleno = new THREE.ShaderMaterial({
-    uniforms: { ...comunes, uAlpha: { value: 0.05 }, uBanda: { value: 0.08 } },
-    vertexShader: VERT_FRAG,
-    fragmentShader: FRAG_FRAG,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-
-  const relleno = rellenoBase();
-  const geos: THREE.BufferGeometry[] = [relleno];
-  const objetos: THREE.Object3D[] = [];
-
-  for (const inst of instancias) {
-    if (inst.casilleros.length === 0) continue;
-    const baseL =
-      inst.tipo === "reloj" || inst.tipo === "carrito" ? lineasIconos(inst.tipo) : lineasBase(inst.tipo);
-    geos.push(baseL);
-    const geoL = geoInstanciada(baseL, inst);
-    geos.push(geoL);
-    const lineas = new THREE.LineSegments(geoL, matLineas);
-    lineas.frustumCulled = false;
-    objetos.push(lineas);
-
-    // los iconos van sin relleno: son solo trazo
-    if (inst.tipo !== "reloj" && inst.tipo !== "carrito") {
-      const geoR = geoInstanciada(relleno, inst);
-      geos.push(geoR);
-      const malla = new THREE.Mesh(geoR, matRelleno);
-      malla.frustumCulled = false;
-      objetos.push(malla);
-    }
-  }
-
-  return {
-    objetos,
-    dispose: () => {
-      geos.forEach((g) => g.dispose());
-      matLineas.dispose();
-      matRelleno.dispose();
-    },
-  };
-}
-
-/**
- * Escribe en los atributos el caos (segun el encuadre) y los destinos (segun
- * donde quedo el sistema). Se llama al montar y cuando cambia el tamaño.
- */
-export function ubicarFragmentos(
-  instancias: Instancias[],
-  sistema: Sistema,
-  enc: Encuadre,
-  movil: boolean
-) {
-  sistema.grupo.position.copy(enc.pos);
-  sistema.grupo.rotation.copy(enc.rot);
-  sistema.grupo.scale.setScalar(enc.escala);
-  sistema.grupo.updateMatrixWorld(true);
-
-  const v = new THREE.Vector3();
-  const q = new THREE.Quaternion();
-  const ejes = new THREE.Vector3();
-  const quats: Record<Superficie, THREE.Quaternion> = {
-    pantalla: sistema.superficies.pantalla.getWorldQuaternion(new THREE.Quaternion()),
-    base: sistema.superficies.base.getWorldQuaternion(new THREE.Quaternion()),
-    celular: sistema.superficies.celular.getWorldQuaternion(new THREE.Quaternion()),
-  };
-  const factorTam = movil ? 0.78 : 1;
-
-  for (const inst of instancias) {
-    const { aP0, aQ0, aS0, aP1, aQ1, aS1, aRnd } = inst.attrs;
-    const [tw, th] = TAM_CAOS[inst.tipo];
-
-    inst.casilleros.forEach((c, i) => {
-      const r = (k: number) => inst.azar[i * AZAR + k];
-
-      // caos: repartido en todo el cuadro, con profundidad
-      const z = -3.6 + r(2) * 5;
-      const abre = (CAM.z - z) / CAM.z;
-      let u: number;
-      let w: number;
-      if (enc.apilado) {
-        u = r(0) - 0.5;
-        w = Math.pow(r(1), 1.25) - 0.5;
-        // mobile: el texto vive arriba; casi todo el caos se corre abajo
-        if (w > -0.04 && r(8) < 0.72) w = -0.5 + r(9) * 0.46;
-      } else {
-        u = 1 - Math.pow(1 - r(0), 1.2) - 0.5;
-        w = r(1) - 0.5;
-        // desktop: el texto vive a la izquierda. La mayoria del caos lo
-        // esquiva hacia la derecha o hacia las franjas de arriba y abajo.
-        if (u < 0.03 && w > -0.36 && w < 0.38 && r(8) < 0.82) {
-          if (r(9) < 0.62) u = 0.05 + r(0) * 0.45;
-          else w = w > 0 ? 0.38 + r(1) * 0.1 : -0.36 - r(1) * 0.12;
-        }
-      }
-      aP0.setXYZ(i, u * enc.ancho * 1.02 * abre, w * enc.alto * 0.94 * abre, z);
-
-      ejes.set(r(3) - 0.5, r(4) - 0.5, r(5) - 0.5 + 1.1).normalize();
-      aQ0.setXYZW(i, ejes.x, ejes.y, ejes.z, (r(6) - 0.5) * 2.6);
-
-      const tam = (0.8 + r(7) * 0.45) * factorTam;
-      aS0.setXY(i, tw * tam, th * tam);
-
-      // destino: el casillero, llevado al mundo por su superficie
-      const sup = sistema.superficies[c.sup];
-      v.set(c.x, c.y, 0.012).applyMatrix4(sup.matrixWorld);
-      aP1.setXYZ(i, v.x, v.y, v.z);
-      q.copy(quats[c.sup]);
-      aQ1.setXYZW(i, q.x, q.y, q.z, q.w);
-      aS1.setXY(i, c.w * enc.escala, c.h * enc.escala);
-
-      // desfase: el orden del casillero manda, con un poco de azar
-      const demora = Math.min(0.45, c.orden * 0.86 + r(5) * 0.06);
-      aRnd.setXYZW(i, demora, r(4), (0.5 + r(3) * 1.1) * (movil ? 0.6 : 1), 0.6 + r(6) * 0.6);
-    });
-
-    for (const a of Object.values(inst.attrs)) a.needsUpdate = true;
-  }
+  return out;
 }
 
 // ── la escena completa ────────────────────────────────────────────────────
@@ -1144,7 +700,7 @@ function tramo(v: number, [a, b]: readonly [number, number]) {
   return Math.min(1, Math.max(0, (v - a) / (b - a)));
 }
 
-function suaveJS(t: number) {
+function suave(t: number) {
   return t * t * (3 - 2 * t);
 }
 
@@ -1162,179 +718,277 @@ export type EntradaCuadro = {
   rx: number;
   ry: number;
   repel: number;
-  camara: THREE.Camera;
 };
+
+export type Uniform = number | Float32Array;
 
 export type Escena = {
-  raiz: THREE.Group;
+  dibujos: Dibujo[];
+  uniforms: Record<string, Uniform>;
+  /** matrices de cada modelo, de la camara y de la proyeccion */
+  modelos: Record<Modelo, M4>;
+  vista: M4;
+  proyeccion: M4;
   colores: (acento: string, caliente: string) => void;
-  encuadrar: (anchoPx: number, altoPx: number) => void;
+  /** recalcula el encuadre; devuelve los atributos que hay que volver a subir */
+  encuadrar: (anchoPx: number, altoPx: number) => Atributo[];
   cuadro: (e: EntradaCuadro) => void;
-  dispose: () => void;
 };
 
+/** "#4fd4ff", "#fff" o "rgb(79, 212, 255)" a 0..1, sin conversion de color. */
+function color(css: string, out: Float32Array) {
+  const s = css.trim();
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  if (s.startsWith("#")) {
+    const h = s.length === 4 ? s.replace(/^#(.)(.)(.)$/, "#$1$1$2$2$3$3") : s;
+    const v = parseInt(h.slice(1, 7), 16);
+    r = (v >> 16) & 255;
+    g = (v >> 8) & 255;
+    b = v & 255;
+  } else {
+    const n = s.match(/[\d.]+/g)?.map(Number) ?? [];
+    [r = 0, g = 0, b = 0] = n;
+  }
+  out.set([r / 255, g / 255, b / 255]);
+}
+
 /**
- * Arma la escena entera y devuelve su control. Todo lo mutable (uniforms,
- * camara, encuadre) vive aca adentro, fuera del ciclo de render de React.
+ * Arma la escena entera (datos de CPU) y devuelve su control. Todo lo mutable
+ * (uniforms, camara, encuadre) vive aca adentro, fuera de React.
  */
 export function crearEscena(movil: boolean): Escena {
-  const uniforms: Record<string, THREE.IUniform> = {
-    uA: { value: 0 },
-    uTime: { value: 0 },
-    uRepel: { value: 0 },
-    uMouse: { value: new THREE.Vector2(99, 99) },
-    uZona: { value: new THREE.Vector4(-1, -1, -1, -1) },
-    uColor: { value: new THREE.Color() },
-    uHot: { value: new THREE.Color() },
-    uOn: { value: 0 },
-    uDraw: { value: 0 },
-    uPulseX: { value: -99 },
-    uPulse: { value: 0 },
-    uGlow: { value: 0 },
-    uLoop: { value: 0 },
-    uZoom: { value: 0 },
+  const uniforms: Record<string, Uniform> = {
+    uA: 0,
+    uTime: 0,
+    uRepel: 0,
+    uMouse: new Float32Array([99, 99]),
+    uZona: new Float32Array([-1, -1, -1, -1]),
+    uColor: new Float32Array(3),
+    uHot: new Float32Array(3),
+    uOn: 0,
+    uDraw: 0,
+    uPulseX: -99,
+    uPulse: 0,
+    uGlow: 0,
+    uLoop: 0,
+    uZoom: 0,
   };
 
-  const instancias = crearInstancias(armarCasilleros(!movil));
-  const sistema = crearSistema(uniforms, movil);
-  const fragmentos = crearFragmentos(instancias, uniforms);
+  const denso = !movil;
+  const grupos = agrupar(armarCasilleros(denso));
+  const dibujos: Dibujo[] = dibujosSistema(denso);
+  const instancias: { g: Grupo; attrs: Instancias }[] = [];
 
-  // halo celeste detras del sistema: un sprite, no postprocesado
-  const geoHalo = new THREE.PlaneGeometry(1, 1);
-  const matHalo = new THREE.ShaderMaterial({
-    uniforms: { uColor: uniforms.uColor, uGlow: uniforms.uGlow },
-    vertexShader: /* glsl */ `
-      varying vec2 vUv;
-      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
-    `,
-    fragmentShader: /* glsl */ `
-      uniform vec3 uColor;
-      uniform float uGlow;
-      varying vec2 vUv;
-      void main() {
-        float d = length(vUv - 0.5) * 2.0;
-        gl_FragColor = vec4(uColor, pow(clamp(1.0 - d, 0.0, 1.0), 2.2) * uGlow);
-      }
-    `,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
+  // fragmentos: un dibujo de lineas por tipo y otro de relleno
+  const relleno = rellenoBase();
+  for (const g of grupos) {
+    if (g.casilleros.length === 0) continue;
+    const attrs = crearInstancias(g);
+    instancias.push({ g, attrs });
+    const base = esIcono(g.tipo) ? lineasIconos(g.tipo as "reloj" | "carrito") : lineasBase(g.tipo);
+    const porVertice = (geo: typeof base) => ({
+      position: { datos: geo.pos, tam: 3 },
+      aAlt: { datos: geo.alt, tam: 2 },
+      aMeta: { datos: geo.meta, tam: 4 },
+    });
+    dibujos.push({
+      programa: "frag",
+      lineas: true,
+      atributos: { ...porVertice(base), ...attrs },
+      vertices: base.n,
+      instancias: g.casilleros.length,
+      modelo: "raiz",
+      propios: { uAlpha: 0.52, uBanda: 0.6 },
+    });
+    // los iconos van sin relleno: son solo trazo
+    if (!esIcono(g.tipo)) {
+      dibujos.push({
+        programa: "frag",
+        lineas: false,
+        atributos: { ...porVertice(relleno), ...attrs },
+        vertices: relleno.n,
+        instancias: g.casilleros.length,
+        modelo: "raiz",
+        propios: { uAlpha: 0.05, uBanda: 0.08 },
+      });
+    }
+  }
+
+  // halo celeste detras del sistema: un plano, no postprocesado
+  const halo = plano(1, 1);
+  dibujos.unshift({
+    programa: "halo",
+    lineas: false,
+    atributos: { position: { datos: halo.pos, tam: 3 }, uv: { datos: halo.uv, tam: 2 } },
+    vertices: halo.n,
+    instancias: 0,
+    modelo: "halo",
   });
-  const halo = new THREE.Mesh(geoHalo, matHalo);
-  halo.frustumCulled = false;
 
-  const raiz = new THREE.Group();
-  raiz.add(halo, sistema.grupo, ...fragmentos.objetos);
+  // jerarquia del sistema (relativa a la raiz): grupo > bisagra > pantalla,
+  // grupo > base, grupo > celular
+  const m = MEDIDAS;
+  const qBisagra = qEuler(m.bisagra.inclinacion, 0, 0);
+  const qBase = qEuler(-Math.PI / 2, 0, 0);
+  const qCelular = qEuler(0, m.celular.rotY, 0);
+  const local: Record<Superficie, M4> = {
+    pantalla: multiplicar(
+      m4(),
+      componer(m4(), [0, m.bisagra.y, 0], qBisagra),
+      componer(m4(), [0, ALTO_PANTALLA_SOBRE_BISAGRA, 0], QI)
+    ),
+    base: componer(m4(), [0, m.bisagra.y, 0], qBase),
+    celular: componer(m4(), [m.celular.x, m.celular.y, m.celular.z], qCelular),
+  };
+  const enRaiz: Record<Superficie, M4> = { pantalla: m4(), base: m4(), celular: m4() };
+  const giroEnRaiz: Record<Superficie, Q> = { pantalla: QI, base: QI, celular: QI };
+  const haloLocal = m4();
 
-  let enc = calcularEncuadre(1440, 900);
-  const pivote = new THREE.Vector3();
-  const eje = new THREE.Vector3(0, 1, 0);
-  // camara: pose de siempre y pose "adentro de la pantalla"
-  const camBase = new THREE.Vector3();
-  const camDentro = new THREE.Vector3();
-  const mira = new THREE.Vector3();
-  const centroPantalla = new THREE.Vector3();
-  const normal = new THREE.Vector3();
-  const arriba = new THREE.Vector3();
-  const giroPantalla = new THREE.Quaternion();
-  const ARRIBA = new THREE.Vector3(0, 1, 0);
-  const ORIGEN = new THREE.Vector3(0, 0, 0);
+  const modelos: Record<Modelo, M4> = { raiz: m4(), pantalla: m4(), base: m4(), celular: m4(), halo: m4() };
+  const vista = m4();
+  const proyeccion = m4();
+
+  let enc: Encuadre = calcularEncuadre(1440, 900);
+  const subir: Atributo[] = instancias.flatMap(({ attrs }) => [
+    attrs.aP0,
+    attrs.aQ0,
+    attrs.aS0,
+    attrs.aP1,
+    attrs.aQ1,
+    attrs.aS1,
+    attrs.aRnd,
+  ]);
+
+  function ubicar() {
+    const qG = qEuler(enc.rot[0], enc.rot[1], enc.rot[2]);
+    const grupo = componer(m4(), enc.pos, qG, enc.escala);
+    (Object.keys(local) as Superficie[]).forEach((sup) => multiplicar(enRaiz[sup], grupo, local[sup]));
+    giroEnRaiz.pantalla = qMul(qG, qBisagra);
+    giroEnRaiz.base = qMul(qG, qBase);
+    giroEnRaiz.celular = qMul(qG, qCelular);
+
+    for (const { g, attrs } of instancias) {
+      g.casilleros.forEach((c, i) => {
+        const caos = caosDe(g, i, enc, movil);
+        attrs.aP0.datos.set(caos.p, i * 3);
+        attrs.aQ0.datos.set([...caos.eje, caos.angulo], i * 4);
+        attrs.aS0.datos.set(caos.s, i * 2);
+        // destino: el casillero, llevado a la raiz por su superficie (los
+        // fragmentos cuelgan de la raiz, asi la orbita no se aplica dos veces)
+        attrs.aP1.datos.set(aplicar(enRaiz[c.sup], [c.x, c.y, 0.012]), i * 3);
+        attrs.aQ1.datos.set(giroEnRaiz[c.sup], i * 4);
+        attrs.aS1.datos.set([c.w * enc.escala, c.h * enc.escala], i * 2);
+        attrs.aRnd.datos.set(caos.rnd, i * 4);
+      });
+    }
+
+    componer(haloLocal, [enc.centro[0], enc.centro[1] + 0.2 * enc.escala, -1.5], QI, MEDIDA_HALO * enc.escala);
+    (uniforms.uZona as Float32Array).set(enc.zonaTexto);
+    perspectiva(proyeccion, CAM.fov, enc.ancho / enc.alto, CAM.cerca, CAM.lejos);
+  }
+
+  const ARRIBA: V3 = [0, 1, 0];
+  const ORIGEN: V3 = [0, 0, 0];
 
   return {
-    raiz,
+    dibujos,
+    uniforms,
+    modelos,
+    vista,
+    proyeccion,
 
     // Sin conversion de espacio de color: el shader escribe el valor tal
     // cual, asi el celeste del canvas es el mismo que el del CSS.
     colores(acento, caliente) {
-      if (acento) (uniforms.uColor.value as THREE.Color).setStyle(acento, THREE.LinearSRGBColorSpace);
-      if (caliente) (uniforms.uHot.value as THREE.Color).setStyle(caliente, THREE.LinearSRGBColorSpace);
+      if (acento) color(acento, uniforms.uColor as Float32Array);
+      if (caliente) color(caliente, uniforms.uHot as Float32Array);
     },
 
     encuadrar(anchoPx, altoPx) {
       enc = calcularEncuadre(anchoPx, altoPx);
-      ubicarFragmentos(instancias, sistema, enc, movil);
-      (uniforms.uZona.value as THREE.Vector4).copy(enc.zonaTexto);
-      halo.position.set(enc.centro.x, enc.centro.y + 0.2 * enc.escala, -1.5);
-      halo.scale.setScalar(MEDIDA_HALO * enc.escala);
+      ubicar();
+      return subir;
     },
 
-    cuadro({ p, t, mx, my, rx, ry, repel, camara }) {
-      uniforms.uTime.value = t;
-      uniforms.uA.value = tramo(p, TRAMOS.ensamble);
-      const dibujo = suaveJS(tramo(p, TRAMOS.dibujo));
-      uniforms.uDraw.value = dibujo;
-      const on = suaveJS(tramo(p, TRAMOS.encendido));
-      uniforms.uOn.value = on;
-      uniforms.uLoop.value = on;
-      const zoom = suaveJS(tramo(p, TRAMOS.zoom));
-      uniforms.uZoom.value = zoom;
-      uniforms.uGlow.value = (0.05 + 0.17 * dibujo + 0.2 * on) * (1 - zoom);
+    cuadro({ p, t, mx, my, rx, ry, repel }) {
+      const u = uniforms;
+      u.uTime = t;
+      u.uA = tramo(p, TRAMOS.ensamble);
+      const dibujo = suave(tramo(p, TRAMOS.dibujo));
+      u.uDraw = dibujo;
+      const on = suave(tramo(p, TRAMOS.encendido));
+      u.uOn = on;
+      u.uLoop = on;
+      const zoom = suave(tramo(p, TRAMOS.zoom));
+      u.uZoom = zoom;
+      u.uGlow = (0.05 + 0.17 * dibujo + 0.2 * on) * (1 - zoom);
 
       // Pulso: una pasada al terminar de armarse y despues una cada 5.2 s,
       // al ritmo del trazo del resto del sitio.
       const recorrido = MEDIDAS.ancho * 0.5 * enc.escala + 2.5;
-      const cx = enc.centro.x + enc.centro.y * 0.35;
+      const cx = enc.centro[0] + enc.centro[1] * 0.35;
       const pasada = tramo(p, TRAMOS.pulso);
       if (pasada > 0 && pasada < 1) {
-        uniforms.uPulseX.value = cx - recorrido + pasada * recorrido * 2;
-        uniforms.uPulse.value = Math.sin(pasada * Math.PI);
+        u.uPulseX = cx - recorrido + pasada * recorrido * 2;
+        u.uPulse = Math.sin(pasada * Math.PI);
       } else if (pasada >= 1) {
         const k = Math.min(1, ((t % PERIODO_TRAZO) / PERIODO_TRAZO) * 1.6);
-        uniforms.uPulseX.value = cx - recorrido + k * recorrido * 2;
-        uniforms.uPulse.value = 0.6 * Math.sin(k * Math.PI);
+        u.uPulseX = cx - recorrido + k * recorrido * 2;
+        u.uPulse = 0.6 * Math.sin(k * Math.PI);
       } else {
-        uniforms.uPulse.value = 0;
+        u.uPulse = 0;
       }
 
-      uniforms.uRepel.value = repel;
-      (uniforms.uMouse.value as THREE.Vector2).set((rx * enc.ancho) / 2, (ry * enc.alto) / 2);
+      u.uRepel = repel;
+      (u.uMouse as Float32Array).set([(rx * enc.ancho) / 2, (ry * enc.alto) / 2]);
 
       // Al final del tramo, una orbita leve: toda la escena gira sobre el
       // centro del sistema (asi no se corre de su lugar en pantalla) y la
       // camara hace un dolly corto. Mas el parallax del mouse.
-      const o = suaveJS(tramo(p, TRAMOS.orbita));
+      const o = suave(tramo(p, TRAMOS.orbita));
       const giro = (enc.apilado ? 0.1 : 0.2) * o;
-      raiz.rotation.y = giro;
-      pivote.copy(enc.centro).applyAxisAngle(eje, giro);
-      raiz.position.copy(enc.centro).sub(pivote);
+      const qR = qEuler(0, giro, 0);
+      const pivote = rotar(qR, enc.centro);
+      componer(
+        modelos.raiz,
+        [enc.centro[0] - pivote[0], enc.centro[1] - pivote[1], enc.centro[2] - pivote[2]],
+        qR
+      );
+      multiplicar(modelos.pantalla, modelos.raiz, enRaiz.pantalla);
+      multiplicar(modelos.base, modelos.raiz, enRaiz.base);
+      multiplicar(modelos.celular, modelos.raiz, enRaiz.celular);
+      multiplicar(modelos.halo, modelos.raiz, haloLocal);
+
       const libre = 1 - zoom;
-      camBase.set(mx * 0.35 * libre, my * 0.2 * libre, CAM.z - (enc.apilado ? 0.25 : 0.6) * o);
+      const camBase: V3 = [mx * 0.35 * libre, my * 0.2 * libre, CAM.z - (enc.apilado ? 0.25 : 0.6) * o];
 
       if (zoom <= 0) {
-        camara.up.copy(ARRIBA);
-        camara.position.copy(camBase);
-        camara.lookAt(ORIGEN);
+        mirar(vista, camBase, ORIGEN, ARRIBA);
         return;
       }
 
       // Zoom final: la camara se pone de frente a la pantalla de la notebook
       // y entra hasta que la pantalla llena el cuadro (y un poco mas).
-      const pantalla = sistema.superficies.pantalla;
-      raiz.updateMatrixWorld(true);
-      pantalla.getWorldPosition(centroPantalla);
-      pantalla.getWorldQuaternion(giroPantalla);
-      normal.set(0, 0, 1).applyQuaternion(giroPantalla);
-      arriba.set(0, 1, 0).applyQuaternion(giroPantalla);
-      const tan = Math.tan(THREE.MathUtils.degToRad(CAM.fov / 2));
+      const centroPantalla = aplicar(modelos.pantalla, ORIGEN);
+      const giroPantalla = qMul(qR, giroEnRaiz.pantalla);
+      const normal = rotar(giroPantalla, [0, 0, 1]);
+      const arriba = rotar(giroPantalla, ARRIBA);
       const aspecto = enc.ancho / enc.alto;
       const llena = Math.min(
-        (MEDIDAS.pantalla.hh * enc.escala) / tan,
-        (MEDIDAS.pantalla.hw * enc.escala) / (tan * aspecto)
+        (MEDIDAS.pantalla.hh * enc.escala) / TAN_FOV,
+        (MEDIDAS.pantalla.hw * enc.escala) / (TAN_FOV * aspecto)
       );
-      const acerca = suaveJS(Math.min(1, zoom / 0.7));
-      const entra = suaveJS(tramo(zoom, [0.6, 1]));
-      camDentro.copy(centroPantalla).addScaledVector(normal, llena * (1 - 0.55 * entra));
-      camara.position.lerpVectors(camBase, camDentro, acerca);
-      mira.lerpVectors(ORIGEN, centroPantalla, acerca);
-      camara.up.lerpVectors(ARRIBA, arriba, acerca).normalize();
-      camara.lookAt(mira);
-    },
-
-    dispose() {
-      sistema.dispose();
-      fragmentos.dispose();
-      geoHalo.dispose();
-      matHalo.dispose();
+      const acerca = suave(Math.min(1, zoom / 0.7));
+      const entra = suave(tramo(zoom, [0.6, 1]));
+      const camDentro = sumarEsc(centroPantalla, normal, llena * (1 - 0.55 * entra));
+      mirar(
+        vista,
+        lerp3(camBase, camDentro, acerca),
+        lerp3(ORIGEN, centroPantalla, acerca),
+        normalizar(lerp3(ARRIBA, arriba, acerca))
+      );
     },
   };
 }

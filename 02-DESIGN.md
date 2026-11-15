@@ -128,8 +128,9 @@ seguridad `html:not([data-escenas]) [data-anim]` fuerza opacidad 1 y sin transfo
 
 ## 7. Cromo (`components/chrome/`)
 
-- `Intro`: cortina con el nombre. Existe para darle tiempo a cargar a la escena 3D: el hero
-  baja three y arma el canvas detrás (loop en pausa) y lo enciende al levantarse. Sin WebGL
+- `Intro`: cortina con el nombre. Tapa el armado de la escena 3D y se levanta apenas la escena
+  pintó su primer cuadro (mínimo 0,9 s para leer el nombre, tope 1,5 s): al subir, el caos ya se
+  mueve. Si al hidratar el hero ya se veía hace más de 0,7 s (celular lento), no aparece. Sin WebGL
   acelerado o con reduced-motion no aparece. Anima solo transform y opacity (WAAPI).
 - `Nav`: nombre, cuatro secciones y "TOMANDO PROYECTOS". Se esconde al bajar.
 - `Riel`: desktop, línea de avance (transform) y un punto por sección. La línea avanza por tramos
@@ -150,7 +151,7 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 
 | # | Sección | id | Archivo | Escena de scroll | Loop ambiental |
 |---|---|---|---|---|---|
-| 1 | Hero 3D | `inicio` | `Hero.tsx` + `hero3d/` | Del caos al sistema (ver sección 10). Al final la cámara entra en la pantalla de la notebook y funde con lo que sigue | Barras que se llenan, contadores que suben, notificación de pedido nuevo en el celular |
+| 1 | Hero 3D | `inicio` | `Hero.tsx` + `hero3d/` | Del caos al sistema (ver sección 10). Al final la cámara entra en la pantalla de la notebook y funde con lo que sigue | Barras que se llenan, una tendencia que corre en cada tarjeta, notificación de pedido nuevo en el celular |
 | 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: primero la frase se revela por palabra y recién después entra la ilustración, que pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Pedidos nuevos que entran por arriba con su estado (las filas bajan), "Guardado", productos que caen al carrito, escaneo |
 | 3 | Trabajos | `proyectos` | `trabajos/` | Carrusel 3D: anillo de 15 trabajos fijado que avanza con el scroll y se arrastra con inercia; al tocar una tarjeta vuela a la cámara y abre la ficha a pantalla completa (FLIP sobre un `<dialog>`) con video, galería y qué se resolvió | El anillo gira solo y una banda de luz recorre las tarjetas |
 | 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué y, en desktop, un índice con las siete a la vista | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
@@ -163,20 +164,28 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 
 ## 10. 3D (WebGL: el hero y el carrusel de trabajos)
 
-**Aislamiento.** three y React Three Fiber viven solo en `components/hero3d/`:
-`Escena3D.tsx` (único archivo que importa R3F), `geometrias.ts` (geometrías, shaders y
-estado). `plano.ts` (casilleros, tramos, contadores) e `iconos.ts` (íconos del panel) son
-geometría pura que comparten la escena, el texto HTML y los SVG estáticos
-(`IlustracionSistema.tsx`, `IlustracionCaos.tsx`).
+**Aislamiento.** El hero no usa three ni React Three Fiber: es WebGL2 directo. Todo vive en
+`components/hero3d/`: `motor.ts` (el único archivo que toca WebGL: contexto, programas, buffers y
+loop), `geometrias.ts` (geometrías, shaders y estado, en Float32Array) y `mat.ts` (vectores,
+cuaterniones y matrices). `plano.ts` (casilleros, tramos, tendencias), `armado.ts` (reparto del
+caos y encuadre), `formas.ts` (formas de los fragmentos) e `iconos.ts` (íconos del panel) son
+geometría pura que comparten la escena, el texto HTML y los SVG (`IlustracionSistema.tsx`,
+`IlustracionCaos.tsx`).
 
-**Carga.** El texto del hero es HTML del servidor y es el LCP. Durante la cortina, en un
-momento ocioso, se chequea WebGL acelerado (`lib/webgl.ts`), se importa la escena y se arma
-el canvas con `frameloop="never"`: compila los shaders y pinta un cuadro. Al levantarse la
-cortina el loop arranca. Mientras tanto se ve el caos en SVG, que hace crossfade con el
-canvas: el hero nunca queda vacío.
+**Carga.** El texto del hero es HTML del servidor y es el LCP. Desde el primer pintado se ve el
+caos en SVG: es el primer cuadro de la escena (mismos datos, misma cámara) en tres capas que
+derivan con CSS, así el hero se mueve antes de hidratar. El motor (unos 9 KB gzip) se pide apenas
+se evalúa `Hero.tsx`, antes de hidratar. Al hidratar se chequea WebGL acelerado (`lib/webgl.ts`,
+cuyo contexto reusa el motor), se compilan los shaders mientras se arman y suben las geometrías y
+se pinta un cuadro oculto; el loop arranca detrás de la cortina. Si la escena llega con el hero a
+la vista, arranca su reloj en 0 y funde con el SVG en 650 ms: el cambio no se nota.
 
-**Loop.** Corre solo con la cortina levantada, el hero en pantalla y la pestaña visible.
-Todo el movimiento está en el vertex shader; por frame la CPU escribe un puñado de uniforms.
+**Loop.** Cuelga del rAF único (`lib/raf.ts`) y corre solo con la escena lista, el hero en
+pantalla y la pestaña visible. Todo el movimiento está en el vertex shader; por frame la CPU
+escribe un puñado de uniforms.
+
+**Recorrido.** El tramo fijo mide 170svh en desktop y 150svh en mobile (70 y 50svh de scroll).
+El progreso que lee la escena se suaviza, así el armado se ve entero aunque el scroll sea rápido.
 
 **Íconos del panel.** Relojes y carritos del caos se transforman al llegar en íconos
 distintos de un panel real (inicio, productos, pedidos, clientes, estadísticas, WhatsApp,
@@ -184,19 +193,19 @@ ajustes; buscar y campana arriba; carrito en la tienda del celular). La geometr�
 casillero de morfeo por ícono y cada instancia enciende solo el suyo. Las líneas de
 contenido tienen largo propio por casillero, así filas y tarjetas no se ven calcadas.
 
-**Panel vivo.** Ya armado: las barras del gráfico se llenan en ola, contadores de siete
-segmentos suben solos (KPI y total) y en el celular baja una notificación de pedido nuevo.
-Todo en el shader (`uLoop`, `uTime`).
+**Panel vivo.** Ya armado, sin números: las barras del gráfico se llenan en ola, cada tarjeta
+KPI tiene una tendencia fina que corre (los datos entran por la derecha) y en el celular baja una
+notificación de pedido nuevo. Todo en el shader (`uLoop`, `uTime`).
 
 **Legibilidad.** Velo del color de fondo detrás del texto (sin borde de caja), el caos
 esquiva la zona del texto al repartirse y se atenúa detrás de ella en el shader. En mobile
 el sistema queda abajo y más chico, sin pisar el texto.
 
 **Zoom final.** En el último tramo la cámara se pone de frente a la pantalla de la notebook
-y entra hasta llenarla; el texto, el velo y el halo se van y un fundido al color de fondo
-conecta con la sección siguiente.
+y entra hasta llenarla; el texto, el velo y el halo se van y la escena se vuelve transparente:
+queda el fondo de la página y la sección siguiente entra sin ningún corte.
 
-**Presupuesto.** Desktop 177 fragmentos, mobile 91; 19 draw calls; dpr máx 1.75/1.5;
+**Presupuesto.** Desktop 178 fragmentos, mobile 91; 19 draw calls; dpr máx 1.75/1.5;
 sin postprocesado; máximo 11 atributos por vértice en el shader de fragmentos.
 
 **Fallbacks.** Reduced-motion, ahorro de datos, sin WebGL acelerado o sin JS: sin canvas,
