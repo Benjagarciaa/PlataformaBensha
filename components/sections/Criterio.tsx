@@ -37,11 +37,12 @@ const H = 720;
 const CAPAS = content.criterio.capas;
 const N = CAPAS.length;
 
-// tramos del recorrido (la pista es corta: se aleja y se desarma rapido)
-const ALEJA: [number, number] = [0, 0.1];
-const GIRA: [number, number] = [0.02, 0.12];
-const DESARMA: [number, number] = [0.04, 0.14];
-const RECORRE: [number, number] = [0.15, 0.92];
+// tramos del recorrido (la pista es corta: se aleja y se desarma enseguida, y
+// la lista con la primera capa encendida aparece casi desde el arranque)
+const ALEJA: [number, number] = [0, 0.05];
+const GIRA: [number, number] = [0.01, 0.06];
+const DESARMA: [number, number] = [0.02, 0.07];
+const RECORRE: [number, number] = [0.07, 0.92];
 const CIERRE: [number, number] = [0.93, 0.98];
 const PASO = (RECORRE[1] - RECORRE[0]) / N;
 const SEPARACION = 68;
@@ -102,8 +103,9 @@ function Escena() {
         vh,
         cx: e.left - m.left + e.width / 2,
         cy: e.top - m.top + e.height / 2,
-        // de frente: llena la pantalla (con tope, para no rasterizar de mas)
-        s0: Math.min(2.4, Math.max(vw / W, vh / H) * 1.02),
+        // de frente: llena la pantalla (con tope: una capa 3D escalada de mas
+        // es lo mas caro de componer)
+        s0: Math.min(1.8, Math.max(vw / W, vh / H) * 1.02),
         // desarmada: entra entera en el escenario
         s1: Math.min(e.width / 680, e.height / 900, 1.05),
       };
@@ -160,7 +162,7 @@ function Escena() {
         />
       </Contenedor>
 
-      <div ref={pistaRef} className="relative pt-12 vivo:h-[330svh] vivo:pt-0 md:pt-16 lg:vivo:h-[360svh]">
+      <div ref={pistaRef} className="relative pt-12 vivo:h-[260svh] vivo:pt-0 md:pt-16 lg:vivo:h-[280svh]">
         <div ref={marcoRef} className="vivo:sticky vivo:top-0 vivo:h-svh vivo:overflow-hidden">
           <Contenedor className="vivo:h-full">
             <div className="grid gap-10 pb-28 vivo:h-full vivo:grid-rows-[minmax(0,1fr)_auto] vivo:gap-0 vivo:pb-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start lg:gap-14 lg:vivo:grid-rows-1 lg:vivo:items-center">
@@ -280,13 +282,13 @@ function Indice({ p, k }: { p: MotionValue<number>; k: number }) {
       <motion.span className="flex items-baseline gap-4" style={{ transform: corre }}>
         <span className="relative w-6 shrink-0 font-mono text-[11px] tracking-[0.08em] tabular-nums">
           <span className="text-[color:var(--text-faint)]">{String(k + 1).padStart(2, "0")}</span>
-          <motion.span className="absolute inset-0 text-[color:var(--accent)]" style={{ opacity: numero }}>
+          <motion.span aria-hidden className="absolute inset-0 text-[color:var(--accent)]" style={{ opacity: numero }}>
             {String(k + 1).padStart(2, "0")}
           </motion.span>
         </span>
         <span className="relative font-display text-[clamp(1.1rem,1.45vw,1.4rem)] font-semibold leading-[1.15] tracking-[-0.005em]">
-          <span className="text-[color:var(--text-faint)] opacity-75">{capa.nombre}</span>
-          <motion.span className="absolute inset-0 text-[color:var(--text)]" style={{ opacity: luz }}>
+          <span className="text-[color:var(--text-faint)] opacity-90">{capa.nombre}</span>
+          <motion.span aria-hidden className="absolute inset-0 text-[color:var(--text)]" style={{ opacity: luz }}>
             {capa.nombre}
           </motion.span>
         </span>

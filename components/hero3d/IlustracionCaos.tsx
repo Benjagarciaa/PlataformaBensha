@@ -119,13 +119,14 @@ const MOBILE = armar(false, true, 0.46, [-1, -0.05, 1, 1]);
 
 /** Deriva de cada capa (atras, medio, adelante): mas cerca, mas se mueve. */
 export const CSS_CAOS =
-  "@keyframes hero-deriva-0{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5px,4px,0)}}" +
-  "@keyframes hero-deriva-1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(8px,-6px,0)}}" +
-  "@keyframes hero-deriva-2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-12px,-9px,0)}}" +
+  // la deriva se nota desde el primer cuadro: el hero nunca parece quieto
+  "@keyframes hero-deriva-0{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-9px,7px,0)}}" +
+  "@keyframes hero-deriva-1{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(14px,-10px,0)}}" +
+  "@keyframes hero-deriva-2{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-20px,-14px,0)}}" +
   ".hero-capa{position:absolute;inset:0}" +
-  ".hero-capa-0{animation:hero-deriva-0 12s var(--ease-io) infinite}" +
-  ".hero-capa-1{animation:hero-deriva-1 9s var(--ease-io) -3s infinite}" +
-  ".hero-capa-2{animation:hero-deriva-2 7s var(--ease-io) -5s infinite}" +
+  ".hero-capa-0{animation:hero-deriva-0 9s var(--ease-io) infinite}" +
+  ".hero-capa-1{animation:hero-deriva-1 7s var(--ease-io) -2.5s infinite}" +
+  ".hero-capa-2{animation:hero-deriva-2 5.5s var(--ease-io) -4s infinite}" +
   ".hero-caos path{vector-effect:non-scaling-stroke;stroke-width:1px}" +
   "@media (min-resolution:1.5dppx){.hero-caos path{stroke-width:.6px}}";
 

@@ -9,7 +9,6 @@ import { Fondo } from "@/components/chrome/Fondo";
 import { Grano } from "@/components/chrome/Grano";
 import { Nav } from "@/components/chrome/Nav";
 import { Riel } from "@/components/chrome/Riel";
-import { Intro } from "@/components/chrome/Intro";
 import { Blindaje } from "@/components/chrome/Blindaje";
 import { Analitica } from "@/components/chrome/Analitica";
 
@@ -20,19 +19,19 @@ import { Analitica } from "@/components/chrome/Analitica";
    con lo que espera @theme inline en globals.css.
    ============================================================ */
 
-// Solo los pesos que se usan: cada archivo es una descarga más.
+// Solo los pesos que se usan: cada archivo es una descarga más. Clash va solo
+// en semibold (todos los titulares) y es la única precargada: es la fuente del
+// titular del hero, el LCP. Así llega con el primer pintado y el titular no se
+// redibuja con otra fuente un rato después.
 const clash = localFont({
-  src: [
-    { path: "./fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
-  ],
+  src: [{ path: "./fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" }],
   variable: "--font-clash",
   display: "swap",
-  // Sin preload: no competir por ancho de banda con el CSS que bloquea el
-  // render. Con swap, el texto se ve con la fuente de respaldo al instante.
-  preload: false,
+  preload: true,
 });
 
+// Sin preload: no competir por ancho de banda con el CSS que bloquea el
+// render. Con swap, el texto se ve con la fuente de respaldo al instante.
 const switzer = localFont({
   src: [
     { path: "./fonts/Switzer-Regular.woff2", weight: "400", style: "normal" },
@@ -147,7 +146,7 @@ export default function RootLayout({
             data-escenas en <html>). Esto cubre cualquier estilo inline que
             hubiera quedado de una animación. */}
         <noscript>
-          <style>{`[data-anim]{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[data-anim]{opacity:1!important;transform:none!important}header{background:var(--veil)!important;border-color:var(--hairline)!important}`}</style>
         </noscript>
 
         <script
@@ -159,8 +158,6 @@ export default function RootLayout({
           }}
         />
 
-
-        <Intro />
 
         <TrazoProvider>
           <Blindaje />

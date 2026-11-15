@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   animate,
   motion,
@@ -57,6 +57,8 @@ function Pasos() {
   const enVista = useInView(filaRef, { once: true, amount: 0.5 });
   // 1 en desktop (la linea sigue al scroll de la pagina), 0 en mobile (sigue al dedo)
   const desktop = useMotionValue(1);
+  // debajo de 1024 px la fila se desliza: tambien con teclado
+  const [deslizable, setDeslizable] = useState(false);
 
   const { scrollYProgress: vertical } = useScroll({ target: filaRef, offset: ["start 0.85", "end 0.6"] });
   const { scrollXProgress: horizontal } = useScroll({ container: carrilRef });
@@ -64,7 +66,10 @@ function Pasos() {
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 1024px)");
-    const aplicar = () => desktop.set(media.matches ? 1 : 0);
+    const aplicar = () => {
+      desktop.set(media.matches ? 1 : 0);
+      setDeslizable(!media.matches);
+    };
     aplicar();
     media.addEventListener("change", aplicar);
     return () => media.removeEventListener("change", aplicar);
@@ -85,7 +90,16 @@ function Pasos() {
       <div ref={filaRef}>
         <div
           ref={carrilRef}
-          className="-mx-6 snap-x snap-mandatory scroll-px-6 overflow-x-auto px-6 pb-2 [scrollbar-width:none] md:-mx-12 md:scroll-px-12 md:px-12 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+          role={deslizable ? "region" : undefined}
+          aria-label={deslizable ? proceso.carril : undefined}
+          tabIndex={deslizable ? 0 : undefined}
+          onKeyDown={(e) => {
+            if (!deslizable || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+            e.preventDefault();
+            const paso = listaRef.current?.firstElementChild?.getBoundingClientRect().width ?? 300;
+            carrilRef.current?.scrollBy({ left: (e.key === "ArrowRight" ? 1 : -1) * (paso + 16), behavior: "smooth" });
+          }}
+          className="-mx-6 snap-x snap-mandatory scroll-px-6 overflow-x-auto px-6 pb-2 outline-none [scrollbar-width:none] focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[color:var(--accent)] md:-mx-12 md:scroll-px-12 md:px-12 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
         >
           <ol ref={listaRef} className="flex w-max gap-4 md:gap-6 lg:grid lg:w-full lg:grid-cols-4 lg:gap-8">
             {proceso.pasos.map((paso, k) => (

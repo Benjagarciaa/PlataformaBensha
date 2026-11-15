@@ -7,11 +7,11 @@ import { IlustracionSistema } from "@/components/hero3d/IlustracionSistema";
 import { CSS_CAOS, IlustracionCaos } from "@/components/hero3d/IlustracionCaos";
 import { TRAMOS } from "@/components/hero3d/plano";
 import { CSS_ESTATICO, CSS_SIN_JS } from "@/components/hero3d/estatico";
-import type { Motor } from "@/components/hero3d/motor";
+import { montar, type Motor } from "@/components/hero3d/motor";
 import { content } from "@/content/data";
-import { irASeccion } from "@/lib/lenis";
-import { avisarEscenaLista, cortinaTapa } from "@/lib/intro";
-import { esMovil, hayWebGLAcelerado } from "@/lib/webgl";
+import { irAPosicion, irASeccion } from "@/lib/lenis";
+import { avisarEscenaLista, trasPintar } from "@/lib/arranque";
+import { dprEscena, esMovil, hayWebGLAcelerado } from "@/lib/webgl";
 import { mezcla, tramo, type Rango } from "@/lib/escena";
 
 /**
@@ -26,35 +26,23 @@ import { mezcla, tramo, type Rango } from "@/lib/escena";
  * Carga (02-DESIGN.md, seccion 10):
  *  - El texto es HTML del servidor y es el LCP: no depende del 3D.
  *  - Desde el primer pintado se ve el caos en SVG, que ya deriva (CSS): el
- *    hero nunca esta quieto ni vacio.
- *  - El motor 3D es WebGL2 directo (sin three): un chunk de pocos KB que se
- *    pide apenas se evalua este modulo, antes de hidratar. Al hidratar se
- *    arma detras de la cortina, pinta un cuadro oculto y arranca el loop; la
- *    cortina se levanta apenas esta lista y el caos ya se esta moviendo.
- *    Si llega con el hero a la vista, funde con el SVG (mismo dibujo).
- *  - El loop corre solo con el hero en pantalla y la pestaña visible.
+ *    hero nunca esta quieto ni vacio. No hay cortina de entrada.
+ *  - El motor 3D es WebGL2 directo (sin three): pocos KB que viajan con el
+ *    hero, sin esperar otra descarga. El chequeo de WebGL (crear un contexto)
+ *    y el armado corren despues del primer pintado, nunca dentro de la
+ *    hidratacion. Lista la escena, arranca su reloj en 0 (el mismo cuadro que
+ *    el SVG) y funde con el en 650 ms.
+ *  - El loop corre solo con la escena a la vista (hero en pantalla, pestaña
+ *    visible y antes de que termine el fundido final).
  *  - Reduced-motion, ahorro de datos, sin WebGL acelerado o sin JS: no hay
  *    canvas, se ve el sistema armado en SVG y el texto en su estado final.
  */
-
-type ModuloMotor = typeof import("@/components/hero3d/motor");
-let pedido: Promise<ModuloMotor> | null = null;
-
-/** El motor 3D: se pide una sola vez y cuanto antes. */
-function pedirMotor() {
-  pedido ??= import("@/components/hero3d/motor");
-  return pedido;
-}
 
 function sinMovimiento() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   return reduce || conn?.saveData === true || typeof window.WebGL2RenderingContext === "undefined";
 }
-
-// Apenas se evalua el modulo en el navegador (antes de hidratar) se pide el
-// motor: cuando el hero decide su modo, ya llego.
-if (typeof window !== "undefined" && !sinMovimiento()) pedirMotor().catch(() => {});
 
 type Modo = "animado" | "estatico";
 
@@ -87,11 +75,11 @@ export function Hero() {
 
   const [modo, setModo] = useState<Modo>("animado");
   const [listo, setListo] = useState(false);
-  /** "instante": la escena llego con la cortina tapando; "suave": funde */
-  const [fundido, setFundido] = useState<"instante" | "suave">("instante");
   const [caosFuera, setCaosFuera] = useState(false);
   const [enPantalla, setEnPantalla] = useState(true);
   const [pestanaVisible, setPestanaVisible] = useState(true);
+  /** el fundido final ya termino: la escena es transparente y no se pinta */
+  const [terminada, setTerminada] = useState(false);
 
   // Progreso del tramo fijo: 0 cuando el hero toca el techo, 1 cuando se va.
   const { scrollYProgress } = useScroll({
@@ -119,22 +107,38 @@ export function Hero() {
   const escenaOpacity = useTransform(scrollYProgress, mapa(TRAMOS.fundido, 1, 0));
   // todo lo que acompaña al texto se va cuando la camara entra en la pantalla
   const salidaOpacity = useTransform(scrollYProgress, mapa(TRAMOS.textoSistemaSale, 1, 0));
-  const ensamble = useTransform(scrollYProgress, (v) => `${Math.round(tramo(v, TRAMOS.ensamble) * 100)}%`);
   // si se baja antes de que llegue la escena, el caos en SVG se despeja
   const caosSvgOpacity = useTransform(scrollYProgress, mapa([0.02, 0.2], 1, 0));
+  // la invitacion a bajar solo recibe clicks mientras se ve
+  const indicadorEventos = useTransform(indicadorOpacity, (o) => (o > 0.2 ? "auto" : "none"));
 
-  // Los CTA viven en el estado "sistema": invisibles, no se enfocan (inert).
-  const entra = (TRAMOS.textoSistemaEntra[0] + TRAMOS.textoSistemaEntra[1]) / 2;
-  const sale = (TRAMOS.textoSistemaSale[0] + TRAMOS.textoSistemaSale[1]) / 2;
   useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (ctaRef.current && modo === "animado") ctaRef.current.inert = v < entra || v > sale;
+    const fin = v >= TRAMOS.fundido[1] - 0.001;
+    setTerminada((previa) => (previa === fin ? previa : fin));
   });
 
-  // Decide el modo y arma la escena YA (el motor se pidio al evaluar el modulo).
-  useEffect(() => {
-    if (ctaRef.current) ctaRef.current.inert = false;
+  /**
+   * Lleva el recorrido a un punto del tramo fijo (0..1). Los CTA viven en el
+   * estado "sistema": si se enfocan con teclado fuera de ese tramo, el hero
+   * baja hasta ahi para que se vean.
+   */
+  const irAlTramo = (t: number) => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const top = section.getBoundingClientRect().top + window.scrollY;
+    irAPosicion(top + t * Math.max(0, section.offsetHeight - window.innerHeight));
+  };
+  const medioSistema = (TRAMOS.textoSistemaEntra[1] + TRAMOS.textoSistemaSale[0]) / 2;
+  const alEnfocarCta = () => {
+    if (modo !== "animado") return;
+    const v = scrollYProgress.get();
+    if (v < TRAMOS.textoSistemaEntra[1] || v > TRAMOS.textoSistemaSale[0]) irAlTramo(medioSistema);
+  };
 
-    if (sinMovimiento() || !hayWebGLAcelerado()) {
+  // Decide el modo y arma la escena despues del primer pintado: crear el
+  // contexto WebGL y compilar no caen dentro de la hidratacion.
+  useEffect(() => {
+    if (sinMovimiento()) {
       // Modo decidido en el cliente (reduced-motion ya lo resolvio el CSS).
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setModo("estatico");
@@ -142,25 +146,30 @@ export function Hero() {
       return;
     }
 
-    const v = scrollYProgress.get();
-    if (ctaRef.current) ctaRef.current.inert = v < entra || v > sale;
-
     let vivo = true;
     let motor: Motor | null = null;
     const contenedor = escenaRef.current;
-    pedirMotor()
-      .then((m) =>
-        vivo && contenedor
-          ? m.montar({
-              contenedor,
-              progreso: scrollYProgress,
-              movil: esMovil(),
-              puntero: window.matchMedia("(pointer: fine)").matches,
-              zonaPuntero: pinRef.current,
-              alPerder: () => setModo("estatico"),
-            })
-          : null
-      )
+    const movil = esMovil();
+    trasPintar()
+      .then(() => {
+        if (!vivo || !contenedor) return null;
+        // el contexto nace con el tamaño final del canvas
+        const r = dprEscena(movil);
+        const tam = { ancho: Math.floor(contenedor.clientWidth * r), alto: Math.floor(contenedor.clientHeight * r) };
+        if (!hayWebGLAcelerado(tam)) {
+          setModo("estatico");
+          avisarEscenaLista();
+          return null;
+        }
+        return montar({
+          contenedor,
+          progreso: scrollYProgress,
+          movil,
+          puntero: window.matchMedia("(pointer: fine)").matches,
+          zonaPuntero: pinRef.current,
+          alPerder: () => setModo("estatico"),
+        });
+      })
       .then((m) => {
         if (!m) return;
         if (!vivo) {
@@ -169,11 +178,8 @@ export function Hero() {
         }
         motor = m;
         motorRef.current = m;
-        // Con la cortina tapando aparece de una. Si el hero ya se ve, el reloj
-        // arranca en 0 (el mismo cuadro que el SVG) y funde.
-        const tapa = cortinaTapa();
-        if (!tapa) m.reiniciarReloj();
-        setFundido(tapa ? "instante" : "suave");
+        // el reloj arranca en 0: el primer cuadro es el mismo que el caos en SVG
+        m.reiniciarReloj();
         setListo(true);
         performance.mark("hero:visible");
         avisarEscenaLista();
@@ -187,14 +193,15 @@ export function Hero() {
       motor?.destruir();
       motorRef.current = null;
     };
-  }, [scrollYProgress, entra, sale]);
+  }, [scrollYProgress]);
 
-  // El loop corre solo con el hero en pantalla y la pestaña visible.
+  // En pantalla: el loop de la escena y los loops CSS del hero (data-activa).
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section || modo !== "animado") return;
-    const io = new IntersectionObserver(([entrada]) => setEnPantalla(entrada.isIntersecting), {
-      rootMargin: "100px 0px",
+    if (!section) return;
+    const io = new IntersectionObserver(([entrada]) => {
+      setEnPantalla(entrada.isIntersecting);
+      section.toggleAttribute("data-activa", entrada.isIntersecting);
     });
     io.observe(section);
     const visibilidad = () => setPestanaVisible(!document.hidden);
@@ -203,11 +210,11 @@ export function Hero() {
       io.disconnect();
       document.removeEventListener("visibilitychange", visibilidad);
     };
-  }, [modo]);
+  }, []);
 
   useEffect(() => {
-    motorRef.current?.activar(modo === "animado" && listo && enPantalla && pestanaVisible);
-  }, [modo, listo, enPantalla, pestanaVisible]);
+    motorRef.current?.activar(modo === "animado" && listo && enPantalla && pestanaVisible && !terminada);
+  }, [modo, listo, enPantalla, pestanaVisible, terminada]);
 
   // Terminado el crossfade, el SVG del caos se va (y sus animaciones con el).
   useEffect(() => {
@@ -216,7 +223,7 @@ export function Hero() {
     return () => window.clearTimeout(t);
   }, [listo]);
 
-  const transicion = fundido === "suave" ? `opacity ${FUNDIDO_MS}ms var(--ease-io)` : "none";
+  const transicion = `opacity ${FUNDIDO_MS}ms var(--ease-io)`;
 
   return (
     <section
@@ -292,8 +299,9 @@ export function Hero() {
             </motion.p>
 
             <div className="grid">
+              {/* sin nada interactivo salvo la invitacion: nunca tapa los CTA */}
               <motion.div
-                className="hero3d-caos [grid-area:1/1] lg:self-center"
+                className="hero3d-caos pointer-events-none [grid-area:1/1] lg:self-center"
                 style={{ opacity: caosOpacity, y: caosY }}
               >
                 <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.11em] text-[color:var(--text-dim)]">
@@ -307,27 +315,31 @@ export function Hero() {
                 </p>
 
                 {/* Invitacion a bajar: cerca del texto, con fondo y en
-                    movimiento. Se va apenas empieza el ensamblaje. */}
-                <motion.div
-                  aria-hidden
-                  className="hero3d-solo-animado mt-8 inline-flex items-center gap-3 border border-[color:var(--accent-line)] bg-[color:var(--surface)] px-4 py-3"
-                  style={{ opacity: indicadorOpacity }}
+                    movimiento. Es un boton: lleva al negocio ordenado. Se va
+                    apenas empieza el ensamblaje. */}
+                <motion.button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => irAlTramo(medioSistema)}
+                  className="hero3d-solo-animado mt-8 inline-flex cursor-pointer items-center gap-3 border border-[color:var(--accent-line)] bg-[color:var(--surface)] px-4 py-3 transition-colors duration-300 hover:bg-[color:var(--accent-soft)]"
+                  style={{ opacity: indicadorOpacity, pointerEvents: indicadorEventos }}
                 >
-                  <svg viewBox="0 0 12 14" className="a-invita h-3.5 w-3 text-[color:var(--accent)]">
+                  <svg aria-hidden viewBox="0 0 12 14" className="a-invita loop h-3.5 w-3 text-[color:var(--accent)]">
                     <path d="M1 2l5 5 5-5M1 7l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" />
                   </svg>
                   <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--text)]">
                     {hero.indicador}
                   </span>
-                </motion.div>
+                </motion.button>
               </motion.div>
 
+              {/* encima del caos siempre (z-[1]), tenga o no transform */}
               <motion.div
-                className="hero3d-sistema [grid-area:1/1] lg:self-center"
+                className="hero3d-sistema relative z-[1] [grid-area:1/1] lg:self-center"
                 style={{ opacity: sistemaOpacity, y: sistemaY }}
               >
                 <p className="mb-5 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.11em] text-[color:var(--accent)]">
-                  <span aria-hidden className="a-latido loop-libre inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
+                  <span aria-hidden className="a-latido loop inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
                   {hero.sistema.kicker}
                 </p>
                 <h2 className="font-display text-[clamp(2.15rem,3.8vw,3.9rem)] font-semibold leading-[1.02] tracking-[-0.012em] text-[color:var(--text)]">
@@ -339,7 +351,9 @@ export function Hero() {
                   {hero.sistema.bajada}
                 </p>
 
-                <div ref={ctaRef} className="mt-7 flex flex-wrap gap-3 md:mt-10 md:gap-4">
+                {/* Siempre en el orden del teclado: al enfocarlos, el hero baja
+                    hasta el tramo en que se ven. */}
+                <div ref={ctaRef} onFocus={alEnfocarCta} className="mt-7 flex flex-wrap gap-3 md:mt-10 md:gap-4">
                   <Button asChild className="h-12 flex-1 px-3 md:h-13 md:flex-none md:px-6">
                     <a
                       href="#contacto"
@@ -385,20 +399,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Cajetin: la lectura del ensamblaje */}
+        {/* Cajetin: el rotulo del plano, sin numeros */}
         <motion.div
           aria-hidden
           className="hero3d-solo-animado pointer-events-none absolute bottom-10 right-20 hidden items-center gap-3 border border-[color:var(--hairline)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--text-faint)] lg:flex"
           style={{ opacity: salidaOpacity }}
         >
+          <span aria-hidden className="h-[5px] w-[5px] rotate-45 bg-[color:var(--accent)]" />
           <span>{hero.cajetin.titulo}</span>
-          <span className="h-3 w-px bg-[color:var(--hairline)]" />
-          <span>
-            {hero.cajetin.ensamble}{" "}
-            <motion.span className="inline-block min-w-[4ch] text-right text-[color:var(--accent)]">
-              {ensamble}
-            </motion.span>
-          </span>
         </motion.div>
 
       </div>

@@ -59,7 +59,7 @@ se raciona: menos del 12% de la superficie visible.
 
 | Voz | Fuente | Variable | Uso |
 |---|---|---|---|
-| Display | Clash Display 500/600 (local) | `--font-clash` → `font-display` | Titulares |
+| Display | Clash Display 600 (local, precargada: es la fuente del titular del hero, el LCP) | `--font-clash` → `font-display` | Titulares |
 | Prosa | Switzer 400/500 (local) | `--font-switzer` → `font-sans` (body) | Párrafos, UI, botones |
 | Etiqueta | JetBrains Mono 400 (Google) | `--font-jetbrains` → `font-mono` | Eyebrows, etiquetas, datos. Nunca párrafos |
 
@@ -80,7 +80,7 @@ mayúsculas, tracking `.11-.15em`.
 - Bordes de 1px (`--hairline-strong`) en tarjetas; el estado encendido pasa a `--accent`.
 - Secciones normales: `py-20 md:py-28` (compactas: cada escena con el scroll justo para leerse). Contenedor `max-w-[1400px]`, `px-6 md:px-12`, y en
   desktop `lg:pl-28 lg:pr-20` para dejar libre el carril del riel.
-- Z-index: fondo 0, contenido 10, riel 30, nav 40, grano 70, cortina 100.
+- Z-index: fondo 0, contenido 10, riel 30, nav 40, grano 70. (Sin cortina de entrada.)
 
 ## 5. Motion (el sistema TRAZO, rediseñado)
 
@@ -95,8 +95,11 @@ recalculaba el estilo de toda la página 60 veces por segundo (la causa principa
   scroll propios.
 - Entradas: `Reveal` y `SectionTitle` con `useInView` (IntersectionObserver), una vez.
 - Loops ambientales: animaciones CSS (`.a-*` en `globals.css`) con la clase `.loop`, que
-  queda en pausa salvo dentro de una sección con `data-activa` (IntersectionObserver de
-  `<Section>`). Con la pestaña oculta el navegador no pinta.
+  queda en pausa salvo dentro de un elemento con `data-activa` (IntersectionObserver sin
+  margen: de `<Section>`, del hero, de la Nav visible y del Footer). Las secciones altas
+  (`loops={false}`: Lo que resuelvo, Sobre mí) encienden cada ilustración por su cuenta
+  (`useLoops`, o la escena que se ve). No hay loops libres. Con la pestaña oculta el
+  navegador no pinta.
 - Contadores en JS (pedidos que suben, carrito): `setInterval` lento solo con la escena en
   pantalla y la pestaña visible (`useActiva`).
 - Easing: `--ease` `cubic-bezier(.16,1,.3,1)`; loops `--ease-io`.
@@ -110,7 +113,10 @@ enciende todas antes de medir.
 
 **Hidratación diferida.** Todo lo que está debajo del hero va envuelto en `<Diferida>`: el
 servidor manda el HTML completo, React no lo hidrata al cargar y lo monta recién cuando la
-sección se acerca. La primera carga solo paga el JS del hero y del cromo.
+sección se acerca. Mientras no está montada lleva `content-visibility:auto` (el primer
+layout procesa solo lo que se ve). La primera sección (`trasEscena`) espera además a que la
+escena del hero esté lista y a un momento ocioso. Con el primer Tab se montan todas, así
+el foco nunca cae en HTML que después se reemplaza.
 
 **Visible por defecto, reduced-motion nítido.** Sin JS, con JS que no cargó o con
 `prefers-reduced-motion`, cada escena muestra su versión estática (lista ordenada, pila 3D
@@ -128,16 +134,18 @@ seguridad `html:not([data-escenas]) [data-anim]` fuerza opacidad 1 y sin transfo
 
 ## 7. Cromo (`components/chrome/`)
 
-- `Intro`: cortina con el nombre. Tapa el armado de la escena 3D y se levanta apenas la escena
-  pintó su primer cuadro (mínimo 0,9 s para leer el nombre, tope 1,5 s): al subir, el caos ya se
-  mueve. Si al hidratar el hero ya se veía hace más de 0,7 s (celular lento), no aparece. Sin WebGL
-  acelerado o con reduced-motion no aparece. Anima solo transform y opacity (WAAPI).
-- `Nav`: nombre, cuatro secciones y "TOMANDO PROYECTOS". Se esconde al bajar.
+- Sin cortina de entrada: el primer cuadro ya es el hero del servidor con el caos en SVG
+  moviéndose, y la escena funde con él cuando llega. (La cortina tapaba un hero que ya se
+  veía y era la demora de 1 a 2 s que notaba el cliente.)
+- `Nav`: nombre, cuatro secciones y "TOMANDO PROYECTOS". Se esconde al bajar y vuelve con el
+  foco del teclado. Link "Saltar al contenido" que aparece con Tab.
 - `Riel`: desktop, línea de avance (transform) y un punto por sección. La línea avanza por tramos
   medidos (ResizeObserver): llega al punto de una sección cuando esa sección cruza el centro
-  de la pantalla, y el punto activo sale del mismo cálculo.
+  de la pantalla, y el punto activo sale del mismo cálculo. Arriba de todo, casi invisible,
+  queda fuera del orden del teclado (inert).
   Mobile: barra de 2px.
-- `Fondo`, `Grano`, `Blindaje`, `Analitica` (Clarity con la primera interacción o a los 7 s).
+- `Fondo` (la luz solo se traslada, sin escala), `Grano`, `Blindaje`, `Analitica` (Clarity en
+  un momento ocioso cuando el hero sale de pantalla o a los 12 s; nunca con la primera rueda).
 
 ## 8. Copy
 
@@ -155,11 +163,11 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 | 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: primero la frase se revela por palabra y recién después entra la ilustración, que pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Pedidos nuevos que entran por arriba con su estado (las filas bajan), "Guardado", productos que caen al carrito, escaneo |
 | 3 | Trabajos | `proyectos` | `trabajos/` | Carrusel 3D: anillo de 15 trabajos fijado que avanza con el scroll y se arrastra con inercia; al tocar una tarjeta vuela a la cámara y abre la ficha a pantalla completa (FLIP sobre un `<dialog>`) con video, galería y qué se resolvió | El anillo gira solo y una banda de luz recorre las tarjetas |
 | 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué y, en desktop, un índice con las siete a la vista | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
-| 5 | Servicios | `servicios` | `Servicios.tsx` | Cada tarjeta entra dada vuelta y gira en 3D hasta quedar de frente | Carrito que se llena, filas que cargan, aguja que pasa a rápido, escudo que escanea |
+| 5 | Servicios | `servicios` | `Servicios.tsx` | Cada tarjeta entra girada de costado (70°, transparente hasta bajar de 55°) y gira en 3D hasta quedar de frente. En mobile, fila deslizable con snap | Carrito que se llena, filas que cargan, aguja que pasa a rápido, escudo que escanea |
 | 6 | Cómo trabajamos | `proceso` | `Proceso.tsx` | La única horizontal: los pasos en fila unidos por una línea que avanza con el scroll (desktop) o con el dedo (mobile, fila deslizable con snap); cada nodo se enciende al alcanzarlo | Chat escribiendo, firma, bloques que se apilan, check |
-| 7 | Sobre mí | `sobre-mi` | `SobreMi.tsx` | Frase por palabra; la formación son credenciales que se reparten desde un mazo al entrar y sellos que se estampan (sin pista fija) | Números reales que cuentan una vez al entrar; brillo que cruza las credenciales destacadas |
+| 7 | Sobre mí | `sobre-mi` | `SobreMi.tsx` | Frase por palabra (es el h2); la formación son credenciales que se reparten desde un mazo al entrar: la institución es etiqueta mono, el título va en Clash, un solo sello por carta destacada (el 1° junto al título) y las demás distinciones como etiquetas planas. En mobile, las credenciales chicas en fila deslizable (sin pista fija) | Números reales que cuentan una vez al entrar; brillo que cruza las credenciales destacadas |
 | 8 | Testimonios | `testimonios` | `Testimonios.tsx` | No se renderiza mientras esté vacío | |
-| 9 | Contacto | `contacto` | `Contacto.tsx` | Cotizador con preselección desde Servicios | Pulso de "respondo en el día", confirmación con check al enviar |
+| 9 | Contacto | `contacto` | `Contacto.tsx` | Cotizador con preselección desde Servicios (estado de módulo, `lib/preseleccion.ts`). Errores conectados a su campo, con ícono, resumen anunciado y foco al primero. En mobile, teléfono y email arriba del formulario | Pulso de "respondo en el día", confirmación con check al enviar |
 | 10 | Footer | | `Footer.tsx` | | Punto que respira |
 
 ## 10. 3D (WebGL: el hero y el carrusel de trabajos)
@@ -172,16 +180,18 @@ caos y encuadre), `formas.ts` (formas de los fragmentos) e `iconos.ts` (íconos 
 geometría pura que comparten la escena, el texto HTML y los SVG (`IlustracionSistema.tsx`,
 `IlustracionCaos.tsx`).
 
-**Carga.** El texto del hero es HTML del servidor y es el LCP. Desde el primer pintado se ve el
-caos en SVG: es el primer cuadro de la escena (mismos datos, misma cámara) en tres capas que
-derivan con CSS, así el hero se mueve antes de hidratar. El motor (unos 9 KB gzip) se pide apenas
-se evalúa `Hero.tsx`, antes de hidratar. Al hidratar se chequea WebGL acelerado (`lib/webgl.ts`,
-cuyo contexto reusa el motor), se compilan los shaders mientras se arman y suben las geometrías y
-se pinta un cuadro oculto; el loop arranca detrás de la cortina. Si la escena llega con el hero a
-la vista, arranca su reloj en 0 y funde con el SVG en 650 ms: el cambio no se nota.
+**Carga.** El texto del hero es HTML del servidor y es el LCP (su fuente, Clash semibold, va
+precargada). Desde el primer pintado se ve el caos en SVG: es el primer cuadro de la escena
+(mismos datos, misma cámara) en tres capas que derivan con CSS, así el hero se mueve antes de
+hidratar. El motor (unos 10 KB gzip) viaja con el hero, sin otra descarga en cascada. Después
+del primer pintado (nunca dentro de la hidratación) se chequea WebGL acelerado (`lib/webgl.ts`:
+el contexto nace con el tamaño final del canvas y el motor lo reusa), se compilan los shaders
+mientras se arman y suben las geometrías y se pinta un cuadro oculto. Lista la escena, arranca
+su reloj en 0 y funde con el SVG en 650 ms: el cambio no se nota. Sin cortina de entrada.
 
 **Loop.** Cuelga del rAF único (`lib/raf.ts`) y corre solo con la escena lista, el hero en
-pantalla y la pestaña visible. Todo el movimiento está en el vertex shader; por frame la CPU
+pantalla, la pestaña visible y antes de que termine el fundido final (con la escena ya
+transparente no se pinta nada). Todo el movimiento está en el vertex shader; por frame la CPU
 escribe un puñado de uniforms.
 
 **Recorrido.** El tramo fijo mide 170svh en desktop y 150svh en mobile (70 y 50svh de scroll).
@@ -203,7 +213,9 @@ el sistema queda abajo y más chico, sin pisar el texto.
 
 **Zoom final.** En el último tramo la cámara se pone de frente a la pantalla de la notebook
 y entra hasta llenarla; el texto, el velo y el halo se van y la escena se vuelve transparente:
-queda el fondo de la página y la sección siguiente entra sin ningún corte.
+queda el fondo de la página y la sección siguiente entra sin ningún corte. Esa sección sube
+sobre el final del hero (`.tras-hero`, 24svh en mobile y 30svh en desktop: entra recién cuando el texto del hero ya se fue) para que el cuadro
+fijo vacío no deje una pantalla en blanco.
 
 **Presupuesto.** Desktop 178 fragmentos, mobile 91; 19 draw calls; dpr máx 1.75/1.5;
 sin postprocesado; máximo 11 atributos por vértice en el shader de fragmentos.
@@ -213,9 +225,12 @@ el sistema armado en SVG (con los mismos íconos) y el texto en su estado final
 (`hero3d/estatico.ts`).
 
 Segunda escena: `components/trabajos/` (carrusel). Mismas reglas que el hero: R3F aislado en
-componentes hoja, three compartido y diferido, loop solo con la sección en pantalla y la pestaña
-visible, en pausa con la ficha abierta, `?webgl=forzar` para headless, y fallback de grilla HTML
-con la misma ficha (reduced-motion, ahorro de datos, sin WebGL acelerado). Las tarjetas son
+componentes hoja, three compartido y diferido (se baja y evalúa en un momento ocioso después de
+que el hero armó su escena, no mientras se scrollea), loop solo con la sección en pantalla y la
+pestaña visible, en pausa con la ficha abierta, `?webgl=forzar` para headless, y fallback de
+grilla HTML con la misma ficha (reduced-motion, ahorro de datos, sin WebGL acelerado). Las
+tarjetas que dan la espalda no se dibujan (se leían como miniaturas vacías). La ficha es un
+chunk aparte que se pide con el primer puntero o foco sobre el carrusel. Las tarjetas son
 botones reales del DOM ubicados sobre su plano proyectado. Texturas de 512 px; galería y video
 solo al abrir la ficha. Copy y media en el export `trabajos` de `content/data.ts` y `public/trabajos/`.
 

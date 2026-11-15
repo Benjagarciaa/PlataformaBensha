@@ -3,7 +3,7 @@
  *
  * Si el navegador solo renderiza por software (SwiftShader, llvmpipe: PCs sin
  * GPU, servidores de medición), la escena 3D costaría más de lo que aporta:
- * el hero usa el SVG estático y la cortina de entrada no hace falta. Con
+ * el hero usa el SVG estático y el carrusel de trabajos, la grilla. Con
  * `?webgl=forzar` en la URL se saltea el chequeo, solo para QA headless.
  *
  * Se calcula una sola vez por carga. Crear un contexto no es gratis, así que el
@@ -36,11 +36,26 @@ export function opcionesContexto(movil: boolean, forzar: boolean): WebGLContextA
   };
 }
 
-export function hayWebGLAcelerado() {
+/** Densidad de pixeles de la escena del hero (con tope: no rasterizar de mas). */
+export function dprEscena(movil: boolean) {
+  return Math.min(Math.max(window.devicePixelRatio || 1, 1), movil ? 1.5 : 1.75);
+}
+
+/**
+ * Crear un contexto es caro (con GPU por software, cientos de ms): quien lo
+ * llama lo hace despues del primer pintado, nunca durante la hidratacion.
+ * `tam` es el tamaño final del canvas en pixeles: el contexto nace con su
+ * backbuffer definitivo y el motor no lo tiene que volver a reservar.
+ */
+export function hayWebGLAcelerado(tam?: { ancho: number; alto: number }) {
   if (cache !== null) return cache;
   try {
     const forzar = webglForzado();
     const canvas = document.createElement("canvas");
+    if (tam && tam.ancho > 0 && tam.alto > 0) {
+      canvas.width = tam.ancho;
+      canvas.height = tam.alto;
+    }
     const gl = canvas.getContext("webgl2", opcionesContexto(esMovil(), forzar));
     if (!gl) {
       cache = false;

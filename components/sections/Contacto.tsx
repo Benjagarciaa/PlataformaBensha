@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Section } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-import { Field, TextArea } from "@/components/ui/Field";
+import { ErrorCampo, Field, TextArea } from "@/components/ui/Field";
 import { content } from "@/content/data";
+import { irAPosicion } from "@/lib/lenis";
+import { usePreseleccion } from "@/lib/preseleccion";
 
 /**
  * El cotizador. Sin backend: arma un mensaje estructurado y abre wa.me.
@@ -18,8 +20,12 @@ import { content } from "@/content/data";
  *
  * Vida: un pulso suave junto a "respondo en el dia" (loop CSS, solo con la
  * seccion en pantalla) y, al enviar, una confirmacion con un check que se
- * dibuja. Servicios preselecciona la opcion con el evento
- * "preseleccionar-servicio".
+ * dibuja. Servicios preselecciona la opcion (lib/preseleccion: un estado de
+ * modulo, que se lee aunque esta seccion se monte despues del click).
+ *
+ * Errores accesibles: cada aviso va conectado a su campo, lleva icono ademas
+ * del color, hay un resumen que se anuncia (role="alert") y al enviar con
+ * errores el foco va al primero, centrado en pantalla.
  */
 
 type FormState = {
@@ -53,6 +59,14 @@ function isValidLink(value: string): boolean {
   return /^(https?:\/\/)?([\w-]+\.)+[a-z]{2,}(\/\S*)?$/i.test(value.trim());
 }
 
+/** La misma regla para el medidor y para el envio: un par de palabras, minimo. */
+function proyectoOk(value: string): boolean {
+  return value.trim().length >= 10;
+}
+
+/** El orden de los campos en pantalla: el foco va al primero con error. */
+const ORDEN: (keyof FormState)[] = ["tipo", "nombre", "email", "proyecto", "link"];
+
 function buildMessage(form: FormState): string {
   const { wa } = content.contacto;
   const lines = [
@@ -85,6 +99,7 @@ function OpcionTarjeta({
   return (
     <button
       type="button"
+      data-opcion
       onClick={onSelect}
       aria-pressed={selected}
       className="relative flex cursor-pointer flex-col items-start gap-1.5 border p-4 text-left transition-[border-color,background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5"
@@ -111,6 +126,10 @@ export function Contacto() {
   const [form, setForm] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [enviado, setEnviado] = useState(false);
+  const [intentos, setIntentos] = useState(0);
+  const formRef = useRef<HTMLDivElement>(null);
+  const idTipo = useId();
+  const idTipoError = useId();
 
   const update = (key: keyof FormState, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));
@@ -142,26 +161,44 @@ export function Contacto() {
     if (form.nombre.trim()) count += 1;
     if (isValidEmail(form.email)) count += 1;
     if (form.tipo) count += 1;
-    if (form.proyecto.trim().length > 8) count += 1;
+    if (proyectoOk(form.proyecto)) count += 1;
     return count;
   }, [form]);
 
   const listo = completos === 4;
 
-  // Preseleccion: Servicios avisa por evento que servicio se toco y se marca
-  // esa opcion. El scroll suave lo maneja Servicios (mismo patron que el Nav).
-  useEffect(() => {
-    const onPreseleccion = (event: Event) => {
-      const id = (event as CustomEvent<string>).detail;
-      const opcion = contacto.opciones.find((o) => o.id === id);
-      if (!opcion) return;
+  // Preseleccion: el servicio que se toco en Servicios queda marcado, aunque
+  // el click haya sido antes de que esta seccion existiera.
+  const preseleccion = usePreseleccion();
+  const [preseleccionPrevia, setPreseleccionPrevia] = useState<typeof preseleccion>(null);
+  if (preseleccion !== preseleccionPrevia) {
+    // ajuste de estado durante el render (patron de React para derivar de props)
+    setPreseleccionPrevia(preseleccion);
+    const opcion = preseleccion ? contacto.opciones.find((o) => o.id === preseleccion.id) : undefined;
+    if (opcion) {
       setForm((current) => ({ ...current, tipo: opcion.name }));
       setErrors((current) => ({ ...current, tipo: undefined }));
-    };
-    window.addEventListener("preseleccionar-servicio", onPreseleccion);
-    return () =>
-      window.removeEventListener("preseleccionar-servicio", onPreseleccion);
-  }, [contacto.opciones]);
+      setEnviado(false);
+    }
+  }
+
+  // Con errores: el foco va al primero, centrado en pantalla.
+  useEffect(() => {
+    if (!intentos) return;
+    const primero = ORDEN.find((k) => errors[k]);
+    if (!primero) return;
+    const raiz = formRef.current;
+    const el =
+      primero === "tipo"
+        ? raiz?.querySelector<HTMLElement>("[data-opcion]")
+        : raiz?.querySelector<HTMLElement>(`[name="${primero}"]`);
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    irAPosicion(top - window.innerHeight * 0.35);
+    // solo despues de cada envio
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [intentos]);
 
   const handleSubmit = () => {
     const next: Errors = {};
@@ -170,12 +207,15 @@ export function Contacto() {
     else if (!isValidEmail(form.email))
       next.email = contacto.errores.emailInvalido;
     if (!form.tipo) next.tipo = contacto.errores.tipo;
-    if (!form.proyecto.trim()) next.proyecto = contacto.errores.proyecto;
+    if (!proyectoOk(form.proyecto)) next.proyecto = contacto.errores.proyecto;
     if (form.link.trim() && !isValidLink(form.link))
       next.link = contacto.errores.linkInvalido;
 
     setErrors(next);
-    if (Object.keys(next).length > 0) return;
+    if (Object.keys(next).length > 0) {
+      setIntentos((n) => n + 1);
+      return;
+    }
 
     const url = `https://wa.me/${identity.whatsappNumber}?text=${encodeURIComponent(
       buildMessage(form),
@@ -190,11 +230,17 @@ export function Contacto() {
     setEnviado(false);
   };
 
+  const cantidadErrores = Object.values(errors).filter(Boolean).length;
+  const resumen =
+    cantidadErrores === 1
+      ? contacto.errores.resumenUno
+      : contacto.errores.resumenVarios.replace("{n}", String(cantidadErrores));
+
   return (
     <Section id="contacto">
       <SectionTitle eyebrow={contacto.eyebrow} title={contacto.title} intro={contacto.intro} />
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:gap-20">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:gap-20">
         <Reveal>
           <AnimatePresence mode="wait" initial={false}>
             {enviado ? (
@@ -244,6 +290,7 @@ export function Contacto() {
             ) : (
               <motion.div
                 key="form"
+                ref={formRef}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
@@ -252,13 +299,18 @@ export function Contacto() {
               >
                 {/* ── Qué necesitás: tarjetas, no dropdown ── */}
                 <div>
-                  <div className="mb-4 flex items-baseline justify-between gap-4">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-dim)]">
+                  <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+                    <p id={idTipo} className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-dim)]">
                       {contacto.campos.tipo}
                     </p>
-                    {errors.tipo ? <p className="text-[14px] text-[color:var(--accent)]">{errors.tipo}</p> : null}
+                    {errors.tipo ? <ErrorCampo id={idTipoError}>{errors.tipo}</ErrorCampo> : null}
                   </div>
-                  <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                  <div
+                    role="group"
+                    aria-labelledby={idTipo}
+                    aria-describedby={errors.tipo ? idTipoError : undefined}
+                    className="grid grid-cols-2 gap-3 md:grid-cols-3"
+                  >
                     {contacto.opciones.map((option) => (
                       <OpcionTarjeta
                         key={option.id}
@@ -273,6 +325,7 @@ export function Contacto() {
                 <div className="grid gap-6 md:grid-cols-2">
                   <Field
                     label={contacto.campos.nombre}
+                    name="nombre"
                     value={form.nombre}
                     error={errors.nombre}
                     onChange={(event) => update("nombre", event.target.value)}
@@ -281,6 +334,7 @@ export function Contacto() {
                   />
                   <Field
                     label={contacto.campos.email}
+                    name="email"
                     type="email"
                     value={form.email}
                     error={errors.email}
@@ -293,6 +347,7 @@ export function Contacto() {
 
                 <TextArea
                   label={contacto.campos.proyecto}
+                  name="proyecto"
                   value={form.proyecto}
                   error={errors.proyecto}
                   onChange={(event) => update("proyecto", event.target.value)}
@@ -301,6 +356,7 @@ export function Contacto() {
 
                 <Field
                   label={contacto.campos.link}
+                  name="link"
                   value={form.link}
                   error={errors.link}
                   onChange={(event) => update("link", event.target.value)}
@@ -342,14 +398,18 @@ export function Contacto() {
                     {contacto.ctaNota}
                   </p>
                 </div>
+                {/* el resumen que se anuncia al enviar con errores (cada aviso ya se ve en su campo) */}
+                <p role="alert" className="sr-only">
+                  {cantidadErrores > 0 ? <span key={intentos}>{resumen}</span> : null}
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
         </Reveal>
 
-        {/* ── Contacto directo y cómo trabajo ── */}
-        <Reveal delay={0.1}>
-          <div className="flex flex-col gap-10 lg:sticky lg:top-28">
+        {/* ── Contacto directo: en el celular va arriba del formulario ── */}
+        <Reveal delay={0.1} className="order-first lg:order-none">
+          <div className="flex flex-col gap-8 lg:sticky lg:top-28 lg:gap-10">
             <p className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]">
               <span aria-hidden className="relative grid h-3 w-3 place-items-center">
                 <span className="loop a-anillo absolute inset-0 border border-[color:var(--accent)] opacity-0" />
@@ -377,20 +437,6 @@ export function Contacto() {
               >
                 {identity.email}
               </a>
-            </div>
-
-            <div className="border-t border-[color:var(--hairline-strong)] pt-8">
-              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-dim)]">
-                {contacto.comoLabel}
-              </p>
-              <ul className="flex flex-col gap-4">
-                {contacto.como.map((item) => (
-                  <li key={item} className="flex gap-3 text-[17px] leading-[1.5] text-[color:var(--text-soft)]">
-                    <span aria-hidden className="mt-[12px] h-px w-4 shrink-0 bg-[color:var(--accent)]" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </Reveal>

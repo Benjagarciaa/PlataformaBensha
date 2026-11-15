@@ -87,6 +87,19 @@ body {
   outline-offset: 3px;
 }
 
+/* Al final del hero la escena se funde con el fondo y el cuadro fijo, ya
+   vacio, se va con el scroll: la seccion siguiente sube sobre ese tramo para
+   que no quede una pantalla vacia. Solo con el hero animado (con escenas
+   vivas y WebGL); en su version estatica el hero tiene contenido hasta abajo. */
+html[data-escenas] .hero3d[data-modo="animado"] + .tras-hero {
+  margin-top: -24svh;
+}
+@media (min-width: 1024px) {
+  html[data-escenas] .hero3d[data-modo="animado"] + .tras-hero {
+    margin-top: -30svh;
+  }
+}
+
 /* Red de seguridad: sin escenas vivas, lo que anima con motion queda en su
    estado final aunque haya quedado un estilo inline. */
 html:not([data-escenas]) [data-anim] {
@@ -103,8 +116,7 @@ html:not([data-escenas]) [data-anim] {
 .loop {
   animation-play-state: paused !important;
 }
-[data-activa] .loop,
-.loop-libre {
+[data-activa] .loop {
   animation-play-state: running !important;
 }
 
@@ -407,8 +419,7 @@ html:not([data-escenas]) [data-anim] {
     scroll-behavior: auto !important;
   }
   /* los loops quedan en su estado de reposo, no en un fotograma cualquiera */
-  .loop,
-  .loop-libre {
+  .loop {
     animation: none !important;
   }
 }

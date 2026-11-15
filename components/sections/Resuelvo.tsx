@@ -37,38 +37,39 @@ import { mezcla, suave, tramo, useActiva, type Rango } from "@/lib/escena";
 const N = content.resuelvo.items.length;
 
 /**
- * Coreografia de cada escena, sobre su progreso local (0..1):
- *   titular  0.00-0.20  el dolor se revela palabra por palabra
- *   entra    0.16-0.28  la ilustracion (en desorden) aparece cuando el titular ya se leyo
- *   detalle  0.20-0.50  el detalle del dolor
- *   orden    0.40-0.62  la ilustracion pasa del desorden al orden
- *   solucion 0.52-0.64  como se resuelve (recien cuando el detalle ya se fue)
+ * Coreografia de cada escena, sobre su progreso local (0..1). Siempre el
+ * texto primero y la ilustracion despues:
+ *   titular  0.00-0.14  el dolor se revela palabra por palabra
+ *   detalle  0.08-0.16  el detalle del dolor, que queda quieto
+ *   entra    0.16-0.26  la ilustracion (en desorden), con el texto ya leido
+ *   orden    0.30-0.50  la ilustracion pasa del desorden al orden
+ *   solucion 0.50-0.60  como se resuelve, debajo del detalle (que baja la voz:
+ *                       el dolor y la respuesta quedan juntos en pantalla)
  *   sale     0.92-1.00  deja lugar a la siguiente
  *
  * La primera escena no espera a quedar fija: su titular se revela mientras la
- * pista entra en pantalla (asi no hay un tramo fijo con el titular apagado) y
- * la ilustracion entra apenas se fija.
+ * pista entra en pantalla (asi no hay un tramo fijo con el titular apagado).
  */
-const TITULAR = 0.2;
-const ENTRA: Rango = [0.16, 0.28];
-const ENTRA_PRIMERA: Rango = [0.02, 0.14];
-/** Tramo en el que entra la ilustracion de la escena i. */
-const rangoEntra = (i: number): Rango => (i === 0 ? ENTRA_PRIMERA : ENTRA);
-const ORDEN: Rango = [0.4, 0.62];
+const TITULAR = 0.14;
+const DETALLE: Rango = [0.08, 0.16];
+const ENTRA: Rango = [0.16, 0.26];
+const ORDEN: Rango = [0.3, 0.5];
+const SOLUCION: Rango = [0.5, 0.6];
 
 /** Progreso local de la escena i dentro del recorrido total. */
 const local = (v: number, i: number) => tramo(v, [i / N, (i + 1) / N]);
 /** Factor de orden de la ilustracion (0 caos, 1 ordenado). */
 const orden = (v: number, i: number) => suave(tramo(local(v, i), ORDEN));
 /** Cuanto entro la ilustracion (0 todavia no, 1 entera). */
-const entra = (v: number, i: number) => suave(tramo(local(v, i), rangoEntra(i)));
+const entra = (v: number, i: number) => suave(tramo(local(v, i), ENTRA));
 
 type EscenaProps = { p: MotionValue<number>; i: number; vivo: boolean };
-type EscenaConEntrada = EscenaProps & { entrada: MotionValue<number> };
+type EscenaConEntrada = EscenaProps & { entrada: MotionValue<number>; pistaActiva: boolean };
 
 export function Resuelvo() {
+  // los loops se encienden escena por escena (las cuatro comparten el cuadro fijo)
   return (
-    <Section id="resuelvo" contenedor={false} aire={false}>
+    <Section id="resuelvo" contenedor={false} aire={false} loops={false}>
       <Escenas />
     </Section>
   );
@@ -81,6 +82,7 @@ function Escenas() {
   const { scrollYProgress: p } = useScroll({ target: pistaRef, offset: ["start start", "end end"] });
   // mientras la pista entra en pantalla, antes de fijarse (titular de la primera escena)
   const { scrollYProgress: entrada } = useScroll({ target: pistaRef, offset: ["start 0.85", "start 0.15"] });
+  const pistaActiva = useActiva(pistaRef);
 
   return (
     <>
@@ -88,12 +90,12 @@ function Escenas() {
         <SectionTitle eyebrow={resuelvo.eyebrow} title={resuelvo.titulo} intro={resuelvo.intro} lado className="mb-0 md:mb-0" />
       </Contenedor>
 
-      <div ref={pistaRef} className="relative vivo:h-[360svh] lg:vivo:h-[400svh]">
+      <div ref={pistaRef} className="relative vivo:h-[330svh] lg:vivo:h-[360svh]">
         <div className="vivo:sticky vivo:top-0 vivo:h-svh vivo:overflow-hidden">
           <Contenedor className="vivo:h-full">
             <div className="flex flex-col gap-20 pb-20 pt-14 vivo:grid vivo:h-full vivo:gap-0 vivo:py-0 md:gap-24 md:pb-28 md:pt-20">
               {resuelvo.items.map((item, i) => (
-                <Escena key={item.id} p={p} i={i} vivo={vivo} entrada={entrada} />
+                <Escena key={item.id} p={p} i={i} vivo={vivo} entrada={entrada} pistaActiva={pistaActiva} />
               ))}
             </div>
           </Contenedor>
@@ -124,7 +126,7 @@ function Marca({ p, i }: { p: MotionValue<number>; i: number }) {
   );
 }
 
-function Escena({ p, i, vivo, entrada }: EscenaConEntrada) {
+function Escena({ p, i, vivo, entrada, pistaActiva }: EscenaConEntrada) {
   const item = content.resuelvo.items[i];
   const ultima = i === N - 1;
 
@@ -142,15 +144,22 @@ function Escena({ p, i, vivo, entrada }: EscenaConEntrada) {
     const y = (i === 0 ? 0 : 1 - suave(tramo(t, [0, 0.08]))) * 40 - (ultima ? 0 : suave(tramo(t, [0.92, 1]))) * 48;
     return `translateY(${y}px)`;
   });
+  // solo la escena que se ve corre sus loops CSS
+  const [aLaVista, setALaVista] = useState(() => opacity.get() > 0.01);
+  useMotionValueEvent(opacity, "change", (o) => {
+    const si = o > 0.01;
+    setALaVista((previa) => (previa === si ? previa : si));
+  });
   const dolorOpacity = useTransform(p, (v) => 1 - 0.5 * orden(v, i));
+  // el detalle entra antes que la ilustracion y se queda; con la solucion baja la voz
   const detalleOpacity = useTransform(p, (v) => {
     const t = local(v, i);
-    return tramo(t, [0.2, 0.3]) * (1 - tramo(t, [0.42, 0.5]));
+    return tramo(t, DETALLE) * (1 - 0.55 * tramo(t, SOLUCION));
   });
-  const solOpacity = useTransform(p, (v) => tramo(local(v, i), [0.52, 0.64]));
+  const solOpacity = useTransform(p, (v) => tramo(local(v, i), SOLUCION));
   const solTransform = useTransform(
     p,
-    (v) => `translateY(${mezcla(24, 0, suave(tramo(local(v, i), [0.52, 0.66])))}px)`
+    (v) => `translateY(${mezcla(18, 0, suave(tramo(local(v, i), [SOLUCION[0], SOLUCION[1] + 0.02])))}px)`
   );
   // la ilustracion entra recien con el titular ya revelado
   const visualOpacity = useTransform(p, (v) => entra(v, i));
@@ -164,10 +173,12 @@ function Escena({ p, i, vivo, entrada }: EscenaConEntrada) {
 
   return (
     <motion.article
+      data-activa={pistaActiva && (!vivo || aLaVista) ? "" : undefined}
       className="grid gap-8 vivo:[grid-area:1/1] vivo:h-full vivo:content-center vivo:gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-16 lg:vivo:gap-16"
       style={vivo ? { opacity, transform } : undefined}
     >
-      <div className="order-2 lg:order-1">
+      {/* el texto primero, tambien en el celular: la escena llega debajo */}
+      <div className="order-1">
         <motion.h3
           className="max-w-[15ch] font-display text-[clamp(1.9rem,4.4vw,4.2rem)] font-semibold leading-[1.02] tracking-[-0.012em] text-balance text-[color:var(--text)]"
           style={vivo ? { opacity: dolorOpacity } : undefined}
@@ -175,17 +186,16 @@ function Escena({ p, i, vivo, entrada }: EscenaConEntrada) {
           <Palabras texto={item.dolor} progreso={i === 0 ? entrada : p} rango={rango} />
         </motion.h3>
 
-        <div className="mt-5 grid gap-6 vivo:gap-0 md:mt-8">
+        <div className="mt-4 grid gap-5 md:mt-7 md:gap-6">
           <motion.p
             data-anim
-            className="max-w-[38ch] text-[17px] leading-[1.55] text-pretty text-[color:var(--text-dim)] vivo:[grid-area:1/1] md:text-[19px]"
+            className="max-w-[38ch] text-[17px] leading-[1.5] text-pretty text-[color:var(--text-dim)] md:text-[19px] md:leading-[1.55]"
             style={vivo ? { opacity: detalleOpacity } : undefined}
           >
             {item.detalle}
           </motion.p>
           <motion.div
             data-anim
-            className="vivo:[grid-area:1/1]"
             style={vivo ? { opacity: solOpacity, transform: solTransform } : undefined}
           >
             <p className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[color:var(--accent)]">
@@ -201,7 +211,7 @@ function Escena({ p, i, vivo, entrada }: EscenaConEntrada) {
 
       <motion.div
         data-anim
-        className="relative order-1 h-[290px] lg:order-2 lg:h-[440px] vivo:h-[34svh] lg:vivo:h-[440px]"
+        className="relative order-2 h-[290px] lg:h-[440px] vivo:h-[30svh] lg:vivo:h-[440px]"
         style={vivo ? { opacity: visualOpacity, transform: visualTransform } : undefined}
       >
         <div className="absolute left-1/2 top-1/2 h-[400px] w-[480px] -translate-x-1/2 -translate-y-1/2 scale-[0.66] sm:scale-[0.82] lg:scale-100">
@@ -381,11 +391,11 @@ function FilaChat({ p, i, k, vivo, pedido }: EscenaProps & { k: number; pedido: 
   // las burbujas llegan de a una, despues del titular
   const llega = useTransform(p, (v) => {
     const t = local(v, i);
-    const a = rangoEntra(i)[0];
+    const a = ENTRA[0];
     return suave(tramo(t, [a + k * 0.02, a + 0.06 + k * 0.02]));
   });
   const burbuja = useTransform(p, (v) => {
-    const a = rangoEntra(i)[0];
+    const a = ENTRA[0];
     return tramo(local(v, i), [a + k * 0.02, a + 0.06 + k * 0.02]) * (1 - tramo(orden(v, i), [0.35, 0.75]));
   });
   const burbujaTransform = useTransform(llega, (l) => `translateY(${(1 - l) * 10}px) scale(${0.86 + 0.14 * l})`);

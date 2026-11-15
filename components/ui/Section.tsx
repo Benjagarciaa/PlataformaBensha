@@ -13,6 +13,11 @@ type SectionProps = {
   aire?: boolean;
   /** etiqueta accesible cuando la seccion no tiene un h2 visible al inicio */
   ariaLabel?: string;
+  /**
+   * false: la seccion no enciende sus loops entera. Para secciones altas, que
+   * encienden cada ilustracion por su cuenta (useLoops o su propia escena).
+   */
+  loops?: boolean;
   children: ReactNode;
 };
 
@@ -35,6 +40,7 @@ export function useSeccionViva() {
  *    su version estatica. Una vez encendida, no se apaga.
  *  - Sus loops ambientales corren solo mientras esta en pantalla: otro
  *    IntersectionObserver pone data-activa y el CSS (.loop) pausa el resto.
+ *    Las secciones altas (loops={false}) encienden cada ilustracion aparte.
  */
 export function Section({
   id,
@@ -42,6 +48,7 @@ export function Section({
   contenedor = true,
   aire = true,
   ariaLabel,
+  loops = true,
   children,
 }: SectionProps) {
   const ref = useRef<HTMLElement>(null);
@@ -52,11 +59,11 @@ export function Section({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const loops = new IntersectionObserver(
-      ([entrada]) => el.toggleAttribute("data-activa", entrada.isIntersecting),
-      { rootMargin: "60px 0px" }
-    );
-    loops.observe(el);
+    // los loops corren solo con la seccion a la vista (sin margen: afuera no aportan)
+    const enVista = new IntersectionObserver(([entrada]) => {
+      if (loops) el.toggleAttribute("data-activa", entrada.isIntersecting);
+    });
+    enVista.observe(el);
     const enciende = new IntersectionObserver(
       ([entrada]) => {
         if (!entrada.isIntersecting) return;
@@ -67,10 +74,10 @@ export function Section({
     );
     enciende.observe(el);
     return () => {
-      loops.disconnect();
+      enVista.disconnect();
       enciende.disconnect();
     };
-  }, []);
+  }, [loops]);
 
   const viva = vivo && (cerca || todas);
 

@@ -6,10 +6,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useScroll } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { trabajos } from "@/content/data";
-import { esperarIntro } from "@/lib/intro";
+import { cuandoEsteOcioso, esperarEscena } from "@/lib/arranque";
+import { hayWebGLAcelerado } from "@/lib/webgl";
 import { CSS_ESTATICO, CSS_FICHA, CSS_SIN_JS } from "./estatico";
 import { crearPuente, type Puente, type Rect } from "./plano";
-import { Ficha } from "./Ficha";
 
 /**
  * Trabajos: carrusel 3D de los proyectos.
@@ -22,8 +22,12 @@ import { Ficha } from "./Ficha";
  * (FLIP).
  *
  * Reglas (02-DESIGN.md, seccion 3D):
- *  - three y R3F viven en Escena.tsx y anillo.ts, un chunk aparte que se pide
- *    recien cuando la seccion esta cerca de la pantalla.
+ *  - three y R3F viven en Escena.tsx y anillo.ts, un chunk aparte. Se pide y
+ *    se evalua en un momento ocioso apenas la escena del hero esta lista (no
+ *    mientras se scrollea hacia la seccion), y el lienzo se monta con la
+ *    seccion a una pantalla y media, tambien en un momento ocioso.
+ *  - La ficha es otro chunk: se pide con el primer puntero o foco sobre el
+ *    carrusel, antes del click.
  *  - El loop corre solo con la seccion en pantalla, la pestaña visible y la
  *    ficha cerrada.
  *  - Las tarjetas son botones reales: la escena los ubica cada cuadro sobre
@@ -33,7 +37,27 @@ import { Ficha } from "./Ficha";
  *    HTML de tarjetas (sin JS, sin ficha).
  */
 
-const Escena = dynamic(() => import("./Escena"), { ssr: false });
+const pedirEscena = () => import("./Escena");
+const Escena = dynamic(pedirEscena, { ssr: false });
+const pedirFicha = () => import("./Ficha");
+const Ficha = dynamic(() => pedirFicha().then((m) => m.Ficha), { ssr: false });
+
+function sinMovimiento() {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  return reduce || conn?.saveData === true || typeof window.WebGL2RenderingContext === "undefined";
+}
+
+// three + R3F pesan: se bajan y evaluan en un rato ocioso despues de que el
+// hero armo su escena, nunca en medio del scroll hacia la seccion. El chequeo
+// de WebGL ya lo hizo el hero (queda en cache).
+if (typeof window !== "undefined") {
+  esperarEscena(8000)
+    .then(() => cuandoEsteOcioso(8000))
+    .then(() => {
+      if (!sinMovimiento() && hayWebGLAcelerado()) pedirEscena().catch(() => {});
+    });
+}
 
 const ITEMS = trabajos.items;
 const N = ITEMS.length;
@@ -42,37 +66,6 @@ const DESTACADOS = ITEMS.map((t) => Boolean(t.destacado));
 const pad = (v: number) => String(v).padStart(2, "0");
 
 type Modo = "animado" | "estatico";
-
-/**
- * WebGL con aceleracion por hardware, el mismo criterio que el hero. Por
- * software (SwiftShader, llvmpipe) la escena cuesta mas de lo que aporta y se
- * usa la grilla. `?webgl=forzar` saltea el chequeo, solo para QA headless.
- */
-function hayWebGLAcelerado() {
-  try {
-    const forzar = new URLSearchParams(window.location.search).get("webgl") === "forzar";
-    const opciones: WebGLContextAttributes = { failIfMajorPerformanceCaveat: !forzar };
-    const canvas = document.createElement("canvas");
-    const gl = canvas.getContext("webgl2", opciones);
-    if (!gl) return false;
-    const info = gl.getExtension("WEBGL_debug_renderer_info");
-    const renderer = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return forzar || !/swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer);
-  } catch {
-    return false;
-  }
-}
-
-function cuandoEsteOcioso(tope: number) {
-  return new Promise<void>((resolve) => {
-    if (typeof window.requestIdleCallback === "function") {
-      window.requestIdleCallback(() => resolve(), { timeout: tope });
-    } else {
-      setTimeout(resolve, 120);
-    }
-  });
-}
 
 const aRect = (b: DOMRect): Rect => ({ x: b.left, y: b.top, w: b.width, h: b.height });
 
@@ -120,12 +113,10 @@ export function Trabajos() {
 
   // Decide el modo y pide la escena recien cuando la seccion esta cerca.
   useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    if (reduce || conn?.saveData === true || typeof window.WebGL2RenderingContext === "undefined") {
+    if (sinMovimiento()) {
       // Modo decidido en el cliente (reduced-motion ya lo resolvio el CSS).
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setReducido(reduce);
+      setReducido(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
       setModo("estatico");
       return;
     }
@@ -138,7 +129,7 @@ export function Trabajos() {
       ([e]) => {
         if (!e.isIntersecting) return;
         io.disconnect();
-        esperarIntro()
+        esperarEscena()
           .then(() => cuandoEsteOcioso(1200))
           .then(() => {
             if (!vivo) return;
@@ -294,7 +285,8 @@ export function Trabajos() {
 
   const activa = hover >= 0 ? hover : foco >= 0 ? foco : frente;
   const tActiva = ITEMS[activa];
-  const montarEscena = modo === "animado" && cargar && (enPantalla || listo);
+  // el lienzo se monta en un rato ocioso con la seccion a una pantalla y media
+  const montarEscena = modo === "animado" && cargar;
   const contenedor = "mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:pl-28 lg:pr-20";
 
   return (
@@ -304,6 +296,10 @@ export function Trabajos() {
       data-modo={modo}
       aria-labelledby="trabajos-titulo"
       className="trabajos relative z-10"
+      // la ficha se pide antes del click: con el primer puntero, toque o foco
+      onPointerEnter={() => void pedirFicha()}
+      onTouchStart={() => void pedirFicha()}
+      onFocus={() => void pedirFicha()}
     >
       <style>{CSS_ESTATICO + CSS_FICHA}</style>
       <noscript>

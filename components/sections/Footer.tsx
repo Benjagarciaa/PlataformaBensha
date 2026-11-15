@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import { content } from "@/content/data";
 import { irASeccion } from "@/lib/lenis";
+import { useLoops } from "@/lib/escena";
 
 /**
  * Footer. Una barra de cierre: quién, dónde, qué hace y volver arriba.
@@ -9,9 +11,11 @@ import { irASeccion } from "@/lib/lenis";
  */
 export function Footer() {
   const { footer, identity } = content;
+  const ref = useRef<HTMLElement>(null);
+  useLoops(ref);
 
   return (
-    <footer className="relative z-10 border-t border-[color:var(--hairline)] bg-[color:var(--bg-deep)]">
+    <footer ref={ref} className="relative z-10 border-t border-[color:var(--hairline)] bg-[color:var(--bg-deep)]">
       <div className="mx-auto max-w-[1400px] px-6 py-12 md:px-12 md:py-16 lg:pl-28 lg:pr-20">
         <div className="flex flex-wrap items-end justify-between gap-8">
           <div>
@@ -34,7 +38,7 @@ export function Footer() {
           </span>
           <span className="flex items-center gap-2">
             {identity.location}
-            <span aria-hidden className="a-latido loop-libre inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
+            <span aria-hidden className="a-latido loop inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
           </span>
         </div>
       </div>

@@ -91,6 +91,7 @@ export function Ficha({
   const escenario = useRef<HTMLDivElement>(null);
   const desplazable = useRef<HTMLDivElement>(null);
   const cerrarBtn = useRef<HTMLButtonElement>(null);
+  const titulo = useRef<HTMLHeadingElement>(null);
   const cerrando = useRef(false);
   const indiceRef = useRef(indice);
 
@@ -277,6 +278,34 @@ export function Ficha({
   };
   const cambiar = (delta: number) => irA((indice + delta + n) % n);
 
+  // Al pasar de proyecto, el contenido viejo (y con el, quizas, el elemento
+  // enfocado) se desmonta: el foco va al titulo nuevo, nunca queda en <body>.
+  useEffect(() => {
+    if (!navego) return;
+    const activo = document.activeElement;
+    if (!activo || !dialogo.current?.contains(activo) || activo === document.body) {
+      titulo.current?.focus({ preventScroll: true });
+    }
+  }, [indice, navego]);
+
+  // Las flechas pasan de proyecto mientras la ficha esta abierta, este donde
+  // este el foco (salvo escribiendo en un campo).
+  const cambiarRef = useRef(cambiar);
+  useEffect(() => {
+    cambiarRef.current = cambiar;
+  });
+  useEffect(() => {
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const el = e.target as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      e.preventDefault();
+      cambiarRef.current(e.key === "ArrowRight" ? 1 : -1);
+    };
+    document.addEventListener("keydown", tecla);
+    return () => document.removeEventListener("keydown", tecla);
+  }, []);
+
   const indicePar = t.par ? items.findIndex((x) => x.slug === t.par) : -1;
   const par = indicePar >= 0 ? items[indicePar] : null;
 
@@ -290,15 +319,6 @@ export function Ficha({
       onCancel={(e) => {
         e.preventDefault();
         cerrar();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "ArrowRight") {
-          e.preventDefault();
-          cambiar(1);
-        } else if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          cambiar(-1);
-        }
       }}
     >
       {/* afuera de la ficha: click cierra */}
@@ -363,8 +383,10 @@ export function Ficha({
                 {t.rubro}
               </p>
               <h2
+                ref={titulo}
                 id={idTitulo}
-                className="mt-3 text-balance font-display text-[clamp(2.3rem,3.9vw,3.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
+                tabIndex={-1}
+                className="mt-3 text-balance outline-none font-display text-[clamp(2.3rem,3.9vw,3.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
               >
                 {t.marca}
               </h2>
@@ -669,7 +691,10 @@ function Medios({
     <div className="flex flex-col px-4 pb-6 pt-4 md:px-6 lg:h-full lg:min-h-0 lg:px-8 lg:pb-6 lg:pt-6">
       {/* el visor: luz celeste de fondo y el medio en su marco */}
       <div
-        className="relative h-[clamp(280px,50svh,480px)] touch-pan-y select-none [container-type:size] lg:h-auto lg:min-h-0 lg:flex-1"
+        className={`relative touch-pan-y select-none [container-type:size] lg:h-auto lg:min-h-0 lg:flex-1 ${
+          // debajo de lg la caja sigue al medio: 16:10 (con la barra) o vertical, sin bandas vacias
+          horizontal ? "h-[calc((100vw-32px)/1.6+38px)] md:h-[calc((100vw-48px)/1.6+38px)]" : "h-[clamp(320px,62svh,560px)]"
+        }`}
         onPointerDown={alBajar}
         onPointerUp={alSoltar}
         onPointerCancel={() => (toque.current = null)}

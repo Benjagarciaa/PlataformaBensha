@@ -44,9 +44,9 @@ export const content = {
         after: "y un panel que manejás vos.",
       },
       bajada:
-        "Los pedidos llegan ordenados, el stock se actualiza solo y manejás todo desde el celular. Sin plantillas que te limiten ni abonos que te aten.",
+        "Los pedidos llegan ordenados, el stock se actualiza solo y cambiás lo que quieras desde el celular, sin depender de nadie.",
       ctaPrimary: "Ordená tu negocio",
-      ctaSecondary: "Ver proyectos",
+      ctaSecondary: "Ver trabajos",
     },
     indicador: "Bajá y mirá cómo se ordena",
     cifras: [
@@ -56,16 +56,14 @@ export const content = {
     ],
     cajetin: {
       titulo: "DEL CAOS AL SISTEMA",
-      ensamble: "ENSAMBLE",
     },
   },
 
   // ── LO QUE TE RESUELVO ────────────────────────────────────────────────
   resuelvo: {
-    eyebrow: "LO QUE TE RESUELVO",
-    titulo: "Lo que te resuelvo",
-    intro:
-      "Casi nadie busca una web porque sí. La busca por lo que le saca tiempo y plata todos los días.",
+    eyebrow: "LO QUE RESUELVO",
+    titulo: "Lo que hoy te saca tiempo y ventas.",
+    intro: "Cuatro problemas que veo en casi todas las tiendas, y cómo se ordenan.",
     solucionLabel: "CÓMO SE RESUELVE",
     items: [
       {
@@ -81,8 +79,7 @@ export const content = {
         id: "dependencia",
         visual: "planilla",
         dolor: "Para cambiar un precio, dependés de otro.",
-        detalle:
-          "Una plataforma que te cobra todos los meses o alguien que tarda días en contestar.",
+        detalle: "Le escribís a quien te armó la tienda y tarda días en contestar.",
         solucion:
           "Un panel propio y simple: cambiás precios, stock y fotos vos, al momento, desde el celular. Y queda tuyo, sin abonos obligatorios.",
       },
@@ -170,7 +167,7 @@ export const content = {
     titulo: "Qué miro cuando armo o reviso una tienda",
     intro:
       "Una tienda que vende se arma en capas. Cada una tiene un trabajo, y si una falla, la venta se pierde aunque el resto esté perfecto.",
-    respaldo: "Diseño de producto y conversión, aplicado tienda por tienda.",
+    respaldo: "Diseño de producto pensado para vender, tienda por tienda.",
     capaLabel: "POR QUÉ VENDE",
     medidorLabel: "CAMINO A LA COMPRA",
     cierre: "Todo junto, eso es una tienda que vende.",
@@ -188,7 +185,7 @@ export const content = {
       },
       {
         id: "prueba",
-        nombre: "Prueba social",
+        nombre: "Opiniones reales",
         nota: "Opiniones, fotos de clientes y ventas reales, justo donde aparece la duda. Nadie quiere ser el primero en comprar.",
       },
       {
@@ -198,7 +195,7 @@ export const content = {
       },
       {
         id: "carrito",
-        nombre: "Carrito y upsell",
+        nombre: "Carrito y complementos",
         nota: "El carrito se abre al costado sin sacarte de la página y sugiere el complemento justo. Cada compra suma un poco más, sin insistir.",
       },
       {
@@ -225,9 +222,11 @@ export const content = {
   // Los `id` coinciden con las opciones del cotizador (preselección).
   servicios: {
     eyebrow: "SERVICIOS",
-    titulo: "Formas de sacarte trabajo de encima",
-    intro: "Elegí la que se parece a lo que te pasa. Se afina en la primera charla.",
+    titulo: "Elegí por dónde empezar.",
+    intro: "Según lo que te pasa hoy. Lo afinamos en la primera charla.",
     cta: "Consultar por esto",
+    // mobile: las tarjetas van en fila y se deslizan de costado
+    deslizar: "Deslizá para ver los cuatro servicios",
     items: [
       {
         id: "tienda",
@@ -235,7 +234,7 @@ export const content = {
         nombre: "Tiendas y landings que venden",
         claves: ["Shopify", "Tiendanube", "A medida", "Landings"],
         texto:
-          "Tu tienda lista para vender desde el primer día, ordenada para que la gente encuentre, entienda y compre. En Shopify, en Tiendanube o hecha a medida: lo que más le convenga a tu negocio.",
+          "Tu tienda lista para vender, ordenada para que la gente encuentre, entienda y compre. En Shopify, Tiendanube o a medida.",
       },
       {
         id: "sistema",
@@ -243,15 +242,15 @@ export const content = {
         nombre: "Sistemas y paneles a medida",
         claves: ["Catálogos con panel", "Clientes", "Cobros", "Finanzas"],
         texto:
-          "Cuando lo enlatado no alcanza, un sistema que sigue tu forma de trabajar: el catálogo que actualizás desde el celular, tus clientes y pedidos en un solo lugar, los cobros y la plata del mes a la vista.",
+          "Para lo que una plataforma no resuelve: el catálogo que actualizás desde el celular, tus clientes y tus cobros, y la plata del mes a la vista.",
       },
       {
         id: "optimizacion",
         escena: "velocidad",
         nombre: "Optimización de tu tienda",
-        claves: ["Orden", "Velocidad", "Carrito", "Upsell", "Fotos"],
+        claves: ["Orden", "Velocidad", "Carrito", "Complementos", "Fotos"],
         texto:
-          "Si ya tenés tienda, no hace falta tirarla. Se encuentra dónde se pierde la venta y se arregla: el orden de la información, lo que tarda en cargar, el carrito, las ofertas y las fotos.",
+          "Si ya tenés tienda, no hace falta tirarla. Se busca dónde se pierde la venta y se arregla eso primero.",
       },
       {
         id: "proteccion",
@@ -259,7 +258,7 @@ export const content = {
         nombre: "Protección de tu tienda",
         claves: ["Anticopia", "Accesos", "Seguridad"],
         texto:
-          "Que tu competencia no te copie la página en una tarde y que nadie entre donde no debe. Ninguna web es imposible de copiar, pero sí se puede lograr que no valga la pena.",
+          "Que tu competencia no te copie la tienda en una tarde y que nadie entre donde no debe. Ninguna web es imposible de copiar, pero se puede lograr que no valga la pena.",
       },
     ],
     escenas: {
@@ -273,7 +272,7 @@ export const content = {
   // ── CÓMO TRABAJAMOS (única sección numerada: el orden es información) ──
   proceso: {
     eyebrow: "CÓMO TRABAJAMOS",
-    titulo: "Cómo trabajamos",
+    titulo: "Sin sorpresas, de la charla a la entrega.",
     intro: "Sabés qué vas a recibir, cuánto sale y cuándo, antes de poner un peso.",
     pasos: [
       {
@@ -281,39 +280,37 @@ export const content = {
         icono: "chat",
         titulo: "Charla y diagnóstico",
         nota: "SIN COSTO",
-        detalle:
-          "Me contás cómo vendés hoy y qué te frena. Miro tu tienda o tu forma de trabajar y te digo qué haría. Esta parte no se cobra.",
+        detalle: "Me contás cómo vendés hoy y te digo qué cambiaría primero.",
       },
       {
         n: "02",
         icono: "firma",
         titulo: "Propuesta por escrito",
         nota: "ANTES DE ARRANCAR",
-        detalle:
-          "Antes de empezar tenés por escrito qué incluye, cuánto sale y en qué plazos. Sin letra chica y sin sorpresas a mitad de camino.",
+        detalle: "Qué incluye, cuánto sale y en qué plazos. Sin letra chica.",
       },
       {
         n: "03",
         icono: "bloques",
         titulo: "Avances por etapas",
-        nota: "LO VES ANDANDO",
-        detalle:
-          "Se trabaja en etapas cortas y en cada una ves algo funcionando, no una promesa. Si algo no te cierra, se corrige en el momento.",
+        nota: "POR PARTES",
+        detalle: "Ves cada parte funcionando antes de seguir. Lo que no te cierra se corrige ahí.",
       },
       {
         n: "04",
         icono: "check",
         titulo: "Entrega y capacitación",
         nota: "QUEDA EN TUS MANOS",
-        detalle:
-          "Te enseño a usarlo y queda todo andando, para que el día a día no dependa de nadie.",
+        detalle: "Te enseño a usarlo para que no dependas de nadie.",
       },
     ],
     // mobile: los pasos van en fila y se deslizan de costado
     deslizar: "Deslizá para ver los cuatro pasos",
+    // nombre de la fila deslizable para lectores de pantalla
+    carril: "Los cuatro pasos, en fila",
     cierre: {
       titulo: "Sin abonos obligatorios.",
-      texto: "Lo que te hago queda tuyo. Si un sistema necesita mantenimiento, se acuerda aparte.",
+      texto: "Lo que hacemos queda tuyo. Si un sistema necesita mantenimiento, se acuerda aparte.",
     },
   },
 
@@ -322,31 +319,36 @@ export const content = {
     eyebrow: "SOBRE MÍ",
     frase: "Hablás directo con quien diseña y programa tu tienda.",
     parrafos: [
-      "Soy Benjamín García, de Córdoba. Desde 2022 hice más de 200 páginas para más de 130 marcas, en Argentina y afuera: tiendas, landings de producto y sistemas para manejar el negocio.",
-      "Estudié programación y diseño de producto. Por eso no alcanza con que funcione: pienso cómo la usa tu cliente y qué lo lleva a comprar. Y conozco cómo se compra acá: cuotas, transferencia, Mercado Pago y envíos a todo el país.",
+      "Soy Benjamín García, de Córdoba. Diseño y programo tiendas, páginas de producto y los sistemas para manejarlas.",
+      "No me alcanza con que funcione: pienso cómo la va a usar tu cliente y qué lo lleva a comprar. Y conozco cómo se compra acá: cuotas, transferencia, Mercado Pago y envíos a todo el país.",
     ],
-    // solo los numeros reales del perfil (la cifra de trabajos vive en el carrusel)
+    // solo los numeros reales del perfil, y solo aca: el parrafo no los repite
+    // (la cifra de trabajos vive en el carrusel)
     datos: [
       { n: 200, prefijo: "+", label: "páginas hechas", detalle: "Desde 2022" },
       { n: 130, prefijo: "+", label: "marcas", detalle: "En Argentina y afuera" },
     ],
     // Formación: solo texto, nunca imágenes de certificados ni datos personales.
-    // Las dos primeras van destacadas; los `sellos` se estampan al entrar.
+    // Las dos primeras van destacadas, con un solo sello cada una (`insignia`
+    // es el sello grande junto al título, `sello` el de goma); las demás
+    // distinciones son etiquetas planas (`chips`). El resto va por fecha.
+    // `tipo` es el área, igual en todas.
     formacionEyebrow: "FORMACIÓN",
-    formacionTitulo: "Lo que respalda cada decisión.",
+    formacionTitulo: "Formado en la UTN, la UNC y Coderhouse.",
     formacionIntro:
-      "Programación, diseño de producto y seguridad. Con distinciones y certificados de PedidosYa y Delta Protect.",
+      "Programación, diseño de producto y seguridad, con certificados de PedidosYa y Delta Protect. Es lo que respalda cada decisión en tu tienda.",
+    // mobile: las credenciales chicas van en fila y se deslizan de costado
+    formacionDeslizar: "Deslizá para ver el resto",
     formacion: [
       {
         id: "fullstack",
         anio: "2024",
-        tipo: "Carrera",
+        tipo: "Programación",
         titulo: "Desarrollo Full Stack",
         institucion: "Coderhouse",
-        nota: "Salí primero de la camada y me gané una beca, que usé para el curso de JavaScript, también certificado por PedidosYa.",
-        // el sello grande de la carta
+        nota: "Carrera de 64 semanas. El premio por terminar primero fue una beca para el curso de JavaScript, certificado por PedidosYa.",
         insignia: { valor: "1°", texto: "de la camada" },
-        sellos: ["Con beca", "Top 10"],
+        chips: ["Con beca"],
         destacado: true,
       },
       {
@@ -356,26 +358,27 @@ export const content = {
         titulo: "Diseño UX/UI Avanzado",
         institucion: "Coderhouse",
         certifica: "Certificado por PedidosYa",
-        nota: "Por esto se diseña producto, no solo se programa: cómo la usa tu cliente y qué lo lleva a comprar.",
-        sellos: ["Desempeño destacado"],
+        nota: "Es cómo pienso cada tienda: qué ve primero tu cliente, dónde duda y qué lo hace comprar.",
+        sello: "Desempeño destacado",
         destacado: true,
       },
       {
         id: "utn",
         anio: "2022",
-        tipo: "Tecnicatura",
+        tipo: "Programación",
         titulo: "Tecnicatura en Programación",
         institucion: "Universidad Tecnológica Nacional",
         nota: "La base técnica de todo lo demás.",
-        sellos: ["3 años en 16 meses"],
+        chips: ["3 años en 16 meses"],
       },
       {
-        id: "unc-ia",
-        anio: "2026",
-        tipo: "Universidad",
-        titulo: "IA y automatización de flujos de trabajo",
-        institucion: "Universidad Nacional de Córdoba",
-        nota: "Para automatizar lo repetitivo y generar imágenes de producto.",
+        id: "seguridad",
+        anio: "2022",
+        tipo: "Seguridad",
+        titulo: "Seguridad Informática",
+        institucion: "Ministerio de Educación de la Nación",
+        certifica: "Curso de educ.ar",
+        nota: "Desde 2022, la seguridad es parte de cada proyecto.",
       },
       {
         id: "ciberseguridad",
@@ -387,16 +390,15 @@ export const content = {
         nota: "Lo que respalda la protección de tu tienda.",
       },
       {
-        id: "seguridad",
-        anio: "2022",
-        tipo: "Seguridad",
-        titulo: "Seguridad Informática",
-        institucion: "Ministerio de Educación",
-        certifica: "Curso de educ.ar",
-        nota: "Donde empezó el interés por la seguridad.",
+        id: "unc-ia",
+        anio: "2026",
+        tipo: "IA",
+        titulo: "IA y automatización de flujos de trabajo",
+        institucion: "Universidad Nacional de Córdoba",
+        nota: "Para automatizar lo repetitivo de tu negocio.",
       },
     ],
-    herramientasTitulo: "Con qué se hace, y qué cambia en tu día",
+    herramientasTitulo: "Con qué trabajo, y para qué te sirve",
     herramientas: [
       { nombre: "Shopify y Tiendanube", para: "Vendés con una plataforma conocida y la manejás vos." },
       { nombre: "Sistemas propios", para: "Paneles y catálogos que cargan al instante y son tuyos." },
@@ -422,7 +424,7 @@ export const content = {
 
   // ── CONTACTO ──────────────────────────────────────────────────────────
   contacto: {
-    eyebrow: "LA PRIMERA CHARLA NO SE COBRA",
+    eyebrow: "CONTACTO",
     title: "Contame qué necesita tu negocio.",
     intro:
       "Si me pasás el link de tu tienda, la respuesta viene con lo que cambiaría primero, antes de cobrarte nada.",
@@ -447,7 +449,7 @@ export const content = {
       labelEmail: "Email:",
       labelProducto: "Sobre mi negocio:",
       labelLink: "Link:",
-      cierre: "Quedo atento. Gracias.",
+      cierre: "Gracias, espero tu respuesta.",
     },
     opciones: [
       { id: "tienda", name: "Tienda o landing", hint: "SHOPIFY, TIENDANUBE O A MEDIDA" },
@@ -463,6 +465,9 @@ export const content = {
       tipo: "Elegí qué necesitás.",
       proyecto: "Contame algo de tu negocio, aunque sean dos líneas.",
       linkInvalido: "Revisá el link, algo como tutienda.com",
+      // el resumen que escucha un lector de pantalla al enviar con errores
+      resumenUno: "Hay 1 dato para revisar.",
+      resumenVarios: "Hay {n} datos para revisar.",
     },
     medidorLabel: "COMPLETÁ PARA ENVIAR",
     medidorListo: "LISTO PARA ENVIAR",
@@ -470,16 +475,10 @@ export const content = {
     ctaNota: "SE ABRE WHATSAPP CON EL MENSAJE ARMADO",
     exito: {
       titulo: "Listo, se abrió WhatsApp.",
-      texto: "Mandá el mensaje y la respuesta llega en el día. Si no se abrió, usá el número de al lado.",
+      texto: "Mandá el mensaje y la respuesta llega en el día. Si no se abrió, escribime al WhatsApp de contacto directo.",
       otra: "Escribir otro",
     },
     directoLabel: "ESCRIBIME DIRECTO",
-    comoLabel: "CÓMO TRABAJO",
-    como: [
-      "La primera charla no se cobra.",
-      "Presupuesto por escrito antes de arrancar.",
-      "Sin abonos obligatorios: lo que se hace queda tuyo.",
-    ],
   },
 
   // ── FOOTER ────────────────────────────────────────────────────────────
@@ -493,13 +492,15 @@ export const content = {
   // ── NAV ───────────────────────────────────────────────────────────────
   nav: {
     links: [
-      { label: "Proyectos", href: "#proyectos" },
+      { label: "Trabajos", href: "#proyectos" },
       { label: "Servicios", href: "#servicios" },
       { label: "Cómo trabajamos", href: "#proceso" },
       { label: "Sobre mí", href: "#sobre-mi" },
     ],
     status: "TOMANDO PROYECTOS",
     aria: "Secciones principales",
+    // link oculto que aparece con el teclado
+    saltar: "Saltar al contenido",
   },
 
   // ── RIEL DE AVANCE ────────────────────────────────────────────────────
@@ -512,7 +513,7 @@ export const content = {
   waypoints: [
     { id: "inicio", label: "INICIO" },
     { id: "resuelvo", label: "LO QUE RESUELVO" },
-    { id: "proyectos", label: "PROYECTOS" },
+    { id: "proyectos", label: "TRABAJOS" },
     { id: "criterio", label: "QUÉ MIRO" },
     { id: "servicios", label: "SERVICIOS" },
     { id: "proceso", label: "CÓMO TRABAJAMOS" },
@@ -564,11 +565,13 @@ export const content = {
 // Media en public/trabajos/<slug>/:
 //   miniatura.webp  960x600, la tarjeta de la grilla y el arranque de la ficha
 //   textura.webp    512x320, la textura del plano 3D
-//   01.webp ...     galeria de la ficha: compu 1440x900 (va en un marco de
-//                   navegador), celular 780x1688 (va en un marco de celular) o
-//                   lamina 1600x1000 ya compuesta (va sin marco)
-//   video.mp4       video estrella sin audio, 5 a 10 s (compu 16:10, de 1152 a
-//                   1280 de ancho, o celular 720x1558), con su poster.webp
+//   01.webp ...     galeria de la ficha: compu 16:10 (1440x900, o 1600x1000
+//                   recortada a la zona que cuenta la historia, que se lee a
+//                   escala 1:1; va en un marco de navegador), celular 780x1688
+//                   (va en un marco de celular) o lamina 1600x1000 ya
+//                   compuesta (va sin marco)
+//   video.mp4       video estrella sin audio, 5 a 10 s (compu 16:10, de 1280 a
+//                   1600 de ancho, o celular 720x1558), con su poster.webp
 // Nada de esto se pide hasta que la seccion esta cerca de la pantalla, y la
 // galeria y el video solo cuando se abre la ficha.
 
@@ -681,18 +684,13 @@ const items: Trabajo[] = [
     etiquetas: ["Lanzamiento", "Página de producto", "Combos"],
     destacado: { valor: "25 millones", detalle: "de pesos facturados en un solo día" },
     resumen:
-      "Era un lanzamiento y la página tenía que vender desde el primer día. La armé completa para que comprar sea fácil: elegís el tono, la cantidad y el color de cada unidad sin salir de la página, con las cuotas, el envío y la garantía a la vista antes del botón. Validó desde el primer día y el producto sigue vendiéndose hoy.",
+      "Era el lanzamiento de una marca nueva y la página tenía que vender desde el primer día. Está pensada para que nadie tenga que preguntar nada: el tono, la cantidad, el color de cada unidad y la forma de pago se eligen ahí mismo, antes del botón.",
     logros: [
       "Cinco tonos para elegir, con la muestra de cada color a la vista.",
       "Combos de una a tres unidades eligiendo el color de cada una.",
       "Cuotas sin interés, envío gratis y garantía de 30 días antes de pagar.",
     ],
-    queHice: [
-      "Página de producto completa",
-      "Selector de cinco tonos",
-      "Combos con color por unidad",
-      "Cuotas, garantía y sellos de pago seguro",
-    ],
+    queHice: ["Página de producto completa", "Oferta de lanzamiento", "Sellos de pago seguro"],
     conQue: "Página de producto programada a medida, dentro de la tienda.",
     media: media("tinte-pro", null, [
       lamina("tinte-pro", 1, "La página de producto en un celular, con los tonos, los combos y las cuotas"),
@@ -709,7 +707,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Tienda completa", "Shopify", "Vista 360°"],
     resumen:
-      "La tienda la había armado el dueño con una plantilla generada con IA y no funcionaba. La rehice desde cero con sus 12 productos: más compacta, más prolija y con una plantilla por producto. En la compu la compra queda fija a la derecha mientras mirás la prenda, y la portada es un perchero donde tocás una remera y sale.",
+      "La tienda la había armado el dueño con una plantilla generada con IA y no funcionaba. Ahora es una tienda nueva con sus 12 productos, más compacta y prolija, con un diseño propio para cada uno. En la compu, la compra queda fija a la derecha mientras mirás la prenda.",
     logros: [
       "Portada con un perchero de los 12 productos: tocás una prenda y sale.",
       "La remera estrella gira 360° con el scroll y muestra sus detalles.",
@@ -717,9 +715,8 @@ const items: Trabajo[] = [
     ],
     queHice: [
       "Tienda rehecha desde cero",
-      "Una plantilla por producto",
-      "Perchero interactivo en la portada",
-      "Vista 360° con el scroll",
+      "Un diseño propio para cada producto",
+      "Compra fija al costado en la compu",
       "Descuentos automáticos",
     ],
     conQue: "Shopify con diseño y código a medida.",
@@ -740,7 +737,7 @@ const items: Trabajo[] = [
     etiquetas: ["Sistema a medida", "Catálogo", "WhatsApp"],
     par: "descartables-panel",
     resumen:
-      "Vendían con una tienda online, pero su forma de trabajar no entraba ahí: no publican precios ni usan carrito, todo se consulta. Pasé los 473 productos y sus fotos a un catálogo propio, con un buscador que entiende aunque escribas mal y fichas con fotos y medidas. Cada ficha tiene un botón que abre WhatsApp con el producto ya escrito.",
+      "Vendían con una tienda online, pero su forma de trabajar no entraba ahí: no publican precios ni usan carrito, todo se consulta. Ahora tienen un catálogo propio con los 473 productos de la tienda anterior, ordenado en categorías y con fichas con fotos y medidas.",
     logros: [
       "Buscador con sugerencias y fotos mientras escribís, que tolera errores.",
       "Botón de WhatsApp en cada ficha con el mensaje ya armado.",
@@ -750,13 +747,13 @@ const items: Trabajo[] = [
       "Catálogo de consulta sin carrito",
       "Buscador y categorías en tres niveles",
       "Fichas con galería y ficha técnica",
-      "Migración desde Tienda Nube",
+      "Migración desde Tiendanube",
       "Alta en Google y Bing",
     ],
     conQue: "Sistema propio hecho a medida, con base de datos y fotos en la nube.",
     media: media(
       "descartables-catalogo",
-      video("descartables-catalogo", "Búsqueda con un error de tipeo: sugerencias con fotos, la ficha y el botón de WhatsApp"),
+      video("descartables-catalogo", "Búsqueda con sugerencias y fotos mientras escribís, la ficha del producto y el botón de WhatsApp"),
       [
         escritorio("descartables-catalogo", 1, "Categoría con subcategorías, filtros y orden"),
         escritorio("descartables-catalogo", 2, "Categorías con la cantidad de productos de cada una"),
@@ -773,21 +770,21 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Migración", "Shopify", "Identidad"],
     resumen:
-      "Su tienda estaba en Tienda Nube. La pasé a Shopify y la mejoré entera: portada de 11 bloques, catálogo, contacto y una página para el almohadón y otra para la crema. Armé la identidad nueva, del logo a los colores, y regeneré las imágenes con IA con los textos en voseo. Su forma de atacar el dolor y sus animaciones después sirvieron de base para otra marca.",
+      "Pasó de Tiendanube a Shopify y se mejoró entera: identidad nueva, portada de 11 bloques, catálogo y una página para el almohadón y otra para la crema, con las imágenes regeneradas con IA en voseo. La forma de contar el problema y sus animaciones después sirvieron de base para otra marca.",
     logros: [
       "Antes y después que movés con el dedo para ver cómo cambia la postura.",
       "Al agregar el almohadón se abre el carrito con la crema de regalo.",
       "Descuentos por cantidad que se aplican solos, sin cupones.",
     ],
     queHice: [
-      "Migración desde Tienda Nube",
+      "Migración desde Tiendanube",
       "Identidad: logo, colores y tipografías",
       "Portada, catálogo y contacto",
       "Páginas del almohadón y la crema",
       "Imágenes regeneradas con IA",
     ],
     conQue: "Shopify con diseño y código a medida, con animaciones que siguen el scroll.",
-    media: media("solvex", video("solvex", "Antes y después: la línea se arrastra de un lado al otro"), [
+    media: media("solvex", video("solvex", "Antes y después: la línea pasa de la postura de antes a la postura con Solvex"), [
       escritorio("solvex", 1, "Página del almohadón con la línea celeste y la compra a la vista"),
       escritorio("solvex", 2, "Carrito lateral con la crema de regalo"),
       escritorio("solvex", 3, "Portada de la tienda"),
@@ -805,7 +802,7 @@ const items: Trabajo[] = [
     par: "salguero-landing",
     nota: "Las pantallas muestran datos de prueba: ningún dato real de clientes.",
     resumen:
-      "Un catering vive de eventos, señas y saldos, y entre tanto movimiento es fácil perder de vista cuánto se gana de verdad. Le armé a la dueña un panel que usa desde la compu y el celular: carga un evento en segundos, registra la seña y el saldo, y el panel le calcula solo la ganancia real del mes, cuánto le queda del monotributo y qué precios quedaron por debajo del margen.",
+      "Un catering vive de eventos, señas y saldos, y entre tanto movimiento es fácil perder de vista cuánto se gana de verdad. Ahora la dueña carga cada evento con su seña y su saldo en segundos, desde la compu o el celular, y el panel hace las cuentas por ella.",
     logros: [
       "La ganancia real del mes, calculada sola con el margen de cada evento.",
       "Medidor del monotributo con lo facturado y lo cobrado después.",
@@ -838,7 +835,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Identidad", "Shopify", "Editorial"],
     resumen:
-      "Una marca de streetwear nueva, en blanco y negro. Armé la identidad completa, del logo con la estrella a las tipografías, y una tienda editorial con una página por producto que se recorre como una revista. El carrito ya trae el color y el talle elegidos, y el envío se cotiza en vivo al pagar.",
+      "Una marca de streetwear nueva, en blanco y negro. Tiene identidad propia y una tienda editorial, con una página por producto que se recorre como una revista. El carrito ya trae el color y el talle elegidos.",
     logros: [
       "Identidad completa: logo con la estrella, colores y tipografías.",
       "Una página por producto, con un recorrido editorial que se revela al bajar.",
@@ -849,9 +846,9 @@ const items: Trabajo[] = [
       "Tienda en Shopify",
       "Cuatro páginas de producto",
       "Carrito con color y talle",
-      "Envíos cotizados en el checkout",
+      "Envío cotizado al pagar",
     ],
-    conQue: "Shopify con diseño a medida y la cotización de envíos en el checkout.",
+    conQue: "Shopify con diseño a medida y el envío cotizado al pagar.",
     media: media("azter", video("azter", "Recorrido editorial por la página de la gorra Atenas"), [
       escritorio("azter", 1, "Página de la gorra Atenas"),
       escritorio("azter", 2, "Las cuatro piezas de la colección"),
@@ -868,19 +865,14 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Página de producto", "Ilustración con IA"],
     resumen:
-      "Lo que hace un suero para el cuero cabelludo pasa por dentro, y eso no se muestra con una foto. Armé un dibujo del cuero cabelludo por dentro con los cuatro puntos donde actúa el producto, y pestañas para recorrerlos uno por uno. La ilustración la generé con inteligencia artificial: cero sesión de fotos.",
+      "Lo que hace un suero para el cuero cabelludo pasa por dentro, y eso no se muestra con una foto. Ahora la página lo explica con un dibujo: los cuatro puntos donde actúa, para recorrer uno por uno.",
     logros: [
       "Los cuatro puntos donde actúa el producto, marcados sobre la ilustración.",
       "Pestañas para recorrerlos uno por uno, sin bajar de más.",
       "Ilustración generada con IA, sin sesión de fotos.",
     ],
-    queHice: [
-      "Bloque explicativo de la página",
-      "Ilustración con IA",
-      "Identidad visual",
-      "Barra de anuncios",
-    ],
-    conQue: "Página de producto programada a medida, con ilustración hecha con IA.",
+    queHice: ["Bloque explicativo de la página", "Identidad visual", "Barra de anuncios"],
+    conQue: "Página de producto programada a medida.",
     media: media("capileka", null, [
       lamina("capileka", 1, "La página en un celular junto a la ilustración y las pestañas"),
       lamina("capileka", 2, "Ilustración del cuero cabelludo por dentro con los puntos donde actúa"),
@@ -896,7 +888,7 @@ const items: Trabajo[] = [
     etiquetas: ["Sistema a medida", "Desde el celular"],
     par: "descartables-catalogo",
     resumen:
-      "La dueña no es técnica y carga todo desde el celular. Le armé un panel a su medida: crear un producto con sus fotos lleva un minuto, las categorías se ordenan como un árbol y el mensaje de WhatsApp del catálogo se edita con vista previa. El inicio le avisa qué productos quedaron sin foto, sin categoría o sin ficha.",
+      "La dueña no es técnica y carga todo desde el celular. Ahora crea un producto con sus fotos en un minuto y cambia los datos del negocio y el mensaje de WhatsApp del catálogo sin pedirle nada a nadie.",
     logros: [
       "Fotos desde la galería o la cámara, achicadas antes de subir.",
       "Avance de lo que falta revisar: sin foto, sin categoría o sin ficha.",
@@ -929,14 +921,14 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Migración", "Shopify", "Encuestas"],
     resumen:
-      "Pasé la tienda de Tienda Nube a Shopify y la armé completa: portada, catálogo, contacto, carrito lateral y las páginas de seis productos. Rearmé las variantes y los descuentos para que el kit sume los regalos solo, y sumé dos encuestas tipo quiz que reciben a la gente que llega de los anuncios y la llevan al producto.",
+      "Pasó de Tiendanube a Shopify con todo: portada, catálogo, contacto, carrito lateral y las páginas de seis productos. Y la gente que llega de los anuncios ya no cae en la portada: entra por una encuesta que la lleva al producto.",
     logros: [
       "Portada sin banner: los productos recortados flotan sobre una escena animada.",
       "El kit suma los regalos solo y se paga en 6 cuotas sin interés.",
       "Dos encuestas tipo quiz como puerta de entrada desde los anuncios.",
     ],
     queHice: [
-      "Migración desde Tienda Nube",
+      "Migración desde Tiendanube",
       "Portada, catálogo y contacto",
       "Páginas de seis productos",
       "Carrito lateral",
@@ -958,7 +950,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Página de producto", "Shopify", "Interactiva"],
     resumen:
-      "Un detergente premium tiene que convencerte de que lava mejor antes de que lo pruebes. Armé la portada y la página del producto desde el manual de marca, sin referencias, con juegos que se hacen con el dedo: frotás la remera y la mancha se va. Las imágenes las generé con IA, con antes y después en telas.",
+      "Un detergente premium tiene que convencerte de que lava mejor antes de que lo pruebes. La portada y la página del producto salieron del manual de marca, sin referencias, con juegos que se hacen con el dedo e imágenes generadas con IA.",
     logros: [
       "Frotás la mancha con el mouse o el dedo y la remera queda limpia.",
       "Escena fija donde la mancha pierde mientras bajás.",
@@ -988,7 +980,7 @@ const items: Trabajo[] = [
     etiquetas: ["Sitio a medida", "Animación", "Presupuestos"],
     par: "salguero-admin",
     resumen:
-      "Un catering no vende con carrito: vende cuando le piden presupuesto. Armé una sola página con un único objetivo, que te escriban por WhatsApp. Arranca con una caja de catering que se abre mientras bajás, los productos salen y se rotulan uno por uno, y al final un cotizador arma el pedido y lo manda listo.",
+      "Un catering no vende con carrito: vende cuando le piden presupuesto. Por eso es una sola página con un solo objetivo, que te escriban por WhatsApp: arranca con una caja que se abre mientras bajás y los productos salen y se rotulan uno por uno.",
     logros: [
       "Caja que se abre con el scroll y muestra el pedido armado.",
       "Cotizador que arma el mensaje de WhatsApp con el pedido.",
@@ -1016,7 +1008,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Página de producto", "Shopify", "Imágenes con IA"],
     resumen:
-      "La marca ya vendía afuera con otro nombre y llegó a la Argentina con un pote nuevo. Armé la portada y la página del producto, y rehice todas las imágenes con IA para que mostraran el pote nuevo. Sumé un juego donde frotás la foto y le sacás los pelos a la ropa, y ofertas en packs de uno, dos y tres potes.",
+      "La marca ya vendía afuera con otro nombre y llegó a la Argentina con un pote nuevo. Necesitaba una portada y una página de producto que la presentaran de cero, con su paleta nueva y el pote nuevo en cada imagen.",
     logros: [
       "Todas las imágenes rehechas con IA para el pote nuevo.",
       "Juego de frotar la foto para sacarle los pelos a la ropa.",
@@ -1044,7 +1036,7 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Página de producto", "Shopify", "Adaptación"],
     resumen:
-      "Las vitaminas para barba ya vendían afuera con otra marca del mismo dueño. Las adapté al mercado argentino: paleta dorada como el pote, imágenes y pote traducidos al voseo, y una página que toma la forma de atacar el dolor y las animaciones que ya funcionaban en Solvex.",
+      "Las vitaminas para barba ya vendían afuera con otra marca del mismo dueño. La versión argentina tiene la paleta dorada del pote, las imágenes y el pote en voseo, y una página que toma la estructura y las animaciones que ya funcionaban en Solvex.",
     logros: [
       "Diagnóstico de la barba por fases sobre un rostro ilustrado.",
       "Ilustración del folículo que muestra qué pasa por dentro.",
@@ -1072,14 +1064,14 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Marca nueva", "Shopify", "Pedidos por WhatsApp"],
     resumen:
-      "Un short de lino en cuatro colores para vender en Bolivia, sin una referencia de la que partir. Armé el logo, la portada y la página del producto con precios en bolivianos y el habla de allá. Como allá se paga por QR o contra entrega, no hay checkout: el botón abre un formulario que termina en WhatsApp con el pedido armado.",
+      "Un short de lino en cuatro colores para vender en Bolivia, sin una referencia de la que partir: logo, portada y página de producto con precios en bolivianos y el habla de allá. Como allá se paga por QR o contra entrega, no se paga en la web.",
     logros: [
       "Portada camaleón: el fondo cambia con el color del short.",
       "Formulario que manda el pedido listo por WhatsApp.",
       "Un día con el short que pasa de la mañana a la noche mientras bajás.",
     ],
     queHice: [
-      "Logo y favicon",
+      "Logo e ícono de la marca",
       "Portada y página de producto",
       "Adaptación al mercado boliviano",
       "Pedidos por WhatsApp",
@@ -1100,14 +1092,14 @@ const items: Trabajo[] = [
     tipo: "tienda",
     etiquetas: ["Migración", "Shopify", "Identidad"],
     resumen:
-      "Vendían straps y muñequeras en Tienda Nube. Pasé la tienda a Shopify con los mismos productos, combos, reseñas y precios, y la rediseñé entera: el logo rehecho limpio, una paleta nueva en rojo y negro, imágenes de producto nuevas con medidas y una portada corta que te lleva al producto según lo que entrenás.",
+      "Vendían straps y muñequeras en Tiendanube. Pasaron a Shopify con los mismos productos, combos, reseñas y precios, y con una imagen nueva: el logo rehecho limpio, una paleta en rojo y negro y una portada corta que te lleva al producto según lo que entrenás.",
     logros: [
       "Selector «¿Qué entrenás hoy?» que te recomienda straps o muñequeras.",
       "Imágenes de producto rehechas con IA, con medidas y en voseo.",
       "Las imágenes las cambia el cliente desde Shopify, sin tocar código.",
     ],
     queHice: [
-      "Migración desde Tienda Nube",
+      "Migración desde Tiendanube",
       "Logo y paleta nueva",
       "Portada a medida",
       "Pie de página y carrito lateral",
@@ -1127,14 +1119,13 @@ const items: Trabajo[] = [
 export const trabajos = {
   eyebrow: "TRABAJOS REALES",
   titulo: "Abrilos y mirá cómo funcionan.",
-  intro:
-    "Tiendas que venden y sistemas para manejarlas, cada uno con el nombre de su marca. Tocá uno y mirá cómo funciona por dentro.",
-  pie: "Acá muestro quince. Detrás hay más de doscientas páginas, pero la mayoría quedan bajo acuerdo con cada cliente.",
+  intro: "15 trabajos con nombre y apellido: 11 tiendas y 4 sistemas. Cada ficha cuenta qué cambió en ese negocio.",
+  pie: "Acá van 15. Detrás hay más de 200 páginas, la mayoría bajo acuerdo con cada cliente.",
 
   carrusel: {
     region: "Carrusel de trabajos",
     roledescription: "carrusel",
-    ayuda: "Arrastrá para girar · Tocá una para abrirla",
+    ayuda: "Arrastrá para girar · Tocá uno para abrirlo",
     ayudaMovil: "Deslizá para girar · Tocá para abrir",
     anterior: "Girar al trabajo anterior",
     siguiente: "Girar al trabajo siguiente",

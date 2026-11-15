@@ -90,13 +90,9 @@ const FRAG_TARJETA = /* glsl */ `
     float niebla = smoothstep(uNiebla.x, uNiebla.y, -vPosV.z);
     float vivo = 1.0 - uDim;
 
-    // dorso: solo el contorno, como un plano visto de atras
-    if (!frente) {
-      if (uEspejo > 0.5 || d < 0.0) discard;
-      float a = (linea(d, px) * 0.42 + 0.025) * vivo * (1.0 - niebla * 0.5);
-      gl_FragColor = vec4(uAcento, a);
-      return;
-    }
+    // dorso: no se dibuja. Las tarjetas de atras, vistas de espaldas, se
+    // leian como miniaturas vacias que no habian cargado
+    if (!frente) discard;
 
     // margen: las escuadras en L de las esquinas, el detalle firma del sitio
     if (d < 0.0) {

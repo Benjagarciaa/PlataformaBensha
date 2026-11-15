@@ -22,9 +22,14 @@ export default function Home() {
   return (
     <main className="relative min-h-screen overflow-x-clip">
       <Hero />
-      <Diferida>
-        <Resuelvo />
-      </Diferida>
+      {/* la primera de abajo espera a que el hero arme su escena, y sube sobre
+          el final del hero (tras-hero, globals.css): sin pantalla vacia entre
+          el fundido de la escena y su titulo */}
+      <div className="tras-hero relative z-10">
+        <Diferida trasEscena>
+          <Resuelvo />
+        </Diferida>
+      </div>
       <Diferida>
         <Trabajos />
       </Diferida>

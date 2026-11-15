@@ -82,7 +82,7 @@ export function TrazoProvider({ children }: { children: React.ReactNode }) {
     else delete raiz.dataset.escenas;
     // si se entra con un ancla (#contacto): se encienden todas (alturas
     // finales) y se vuelve a ir al ancla, ya bien medida
-    if (vivo && window.location.hash) irASeccion(window.location.hash);
+    if (vivo && window.location.hash) irASeccion(window.location.hash, { sostener: true });
   }, [vivo]);
 
   // Scroll suave, colgado del loop global. Con reduced-motion, scroll nativo.
@@ -102,6 +102,19 @@ export function TrazoProvider({ children }: { children: React.ReactNode }) {
       registrarLenis(null);
     };
   }, [vivo]);
+
+  // Con teclado: al primer Tab se montan todas las secciones diferidas. Asi el
+  // foco nunca entra en HTML del servidor que despues se reemplaza (el foco se
+  // perderia en <body>).
+  useEffect(() => {
+    const tab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      window.removeEventListener("keydown", tab);
+      activarTodas();
+    };
+    window.addEventListener("keydown", tab);
+    return () => window.removeEventListener("keydown", tab);
+  }, []);
 
   const valor = useMemo(() => ({ vivo }), [vivo]);
   return <TrazoContext.Provider value={valor}>{children}</TrazoContext.Provider>;

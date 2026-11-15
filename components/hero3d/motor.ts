@@ -1,5 +1,5 @@
 import { onFrame } from "@/lib/raf";
-import { opcionesContexto, tomarContexto, webglForzado } from "@/lib/webgl";
+import { dprEscena, opcionesContexto, tomarContexto, webglForzado } from "@/lib/webgl";
 import { SHADERS, crearEscena, type Atributo, type Dibujo, type Programa } from "./geometrias";
 import { multiplicar, m4 } from "./mat";
 
@@ -7,8 +7,9 @@ import { multiplicar, m4 } from "./mat";
  * Motor de la escena del hero: WebGL2 directo, sin three ni React Three Fiber.
  *
  * La escena son lineas y planos con shaders propios: no necesita una libreria
- * de 900 KB. Este modulo pesa unos pocos KB, se pide apenas se evalua el hero
- * (antes de hidratar) y arma todo detras de la cortina:
+ * de 900 KB. Este modulo pesa unos pocos KB y viaja con el hero. El hero lo
+ * llama despues del primer pintado (nunca durante la hidratacion) y arma todo
+ * con el caos en SVG ya moviendose a la vista:
  *  1. toma el contexto que ya creo el chequeo de WebGL (lib/webgl.ts),
  *  2. manda a compilar los shaders (en paralelo si el navegador puede),
  *  3. mientras tanto arma las geometrias y las sube a la GPU,
@@ -72,21 +73,9 @@ type Listo = Dibujo & { vao: WebGLVertexArrayObject };
 
 const espera = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Despues del proximo pintado (la cortina, por ejemplo): recien ahi se trabaja. */
-const trasPintar = () =>
-  new Promise<void>((r) => {
-    const baja = onFrame(() => {
-      baja();
-      setTimeout(r, 0);
-    });
-  });
-
 export async function montar(o: OpcionesMotor): Promise<Motor> {
-  // Primero que se pinte lo que React acaba de montar (la cortina): el armado
-  // ocupa el hilo principal un rato y no tiene que demorar ese cuadro.
-  await trasPintar();
   performance.mark("hero:montar");
-  const dpr = () => Math.min(Math.max(window.devicePixelRatio || 1, 1), o.movil ? 1.5 : 1.75);
+  const dpr = () => dprEscena(o.movil);
 
   // 1. contexto: el del chequeo de WebGL, o uno nuevo si no quedo
   const reserva = tomarContexto();
@@ -272,7 +261,8 @@ export async function montar(o: OpcionesMotor): Promise<Motor> {
     st.my += ((adentro ? mouse.y : 0) - st.my) * k;
     st.repel += ((adentro ? 1 : 0) - st.repel) * k;
     escena.cuadro({ p: st.p, t: reloj, mx: st.mx, my: st.my, rx: mouse.x, ry: mouse.y, repel: st.repel });
-    pintar();
+    // al final del recorrido la escena ya fundio con la pagina: no hay nada que pintar
+    if (st.p < 1) pintar();
   };
 
   const tick = (t: number) => {

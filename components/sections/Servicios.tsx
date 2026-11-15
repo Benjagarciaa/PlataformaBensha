@@ -6,19 +6,25 @@ import { Section, useSeccionViva } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { content } from "@/content/data";
 import { irASeccion } from "@/lib/lenis";
+import { preseleccionar } from "@/lib/preseleccion";
 import { suave, tramo } from "@/lib/escena";
 
 /**
- * Servicios: formas de sacarte trabajo de encima.
+ * Servicios: por donde empezar.
  *
- * Cada tarjeta entra dada vuelta y gira en 3D con el scroll hasta quedar de
- * frente (CSS 3D, solo transform). Arriba de cada una, una mini escena en loop
- * que cuenta el servicio sin palabras: el carrito que se llena, las filas de
- * un panel que cargan, la aguja que pasa a rapido, el escudo que escanea.
- * Los loops corren solo con la seccion en pantalla.
+ * Cada tarjeta entra girada de costado y gira en 3D con el scroll hasta quedar
+ * de frente (CSS 3D, transform y opacity). Arranca a 70 grados y transparente,
+ * y aparece recien pasando los 55: nunca se ve el canto como una astilla.
+ * Arriba de cada una, una mini escena en loop que cuenta el servicio sin
+ * palabras: el carrito que se llena, las filas de un panel que cargan, la
+ * aguja que pasa a rapido, el escudo que escanea. Los loops corren solo con
+ * la seccion en pantalla.
  *
- * Tocar una tarjeta preselecciona ese servicio en el cotizador y baja al
- * formulario (evento "preseleccionar-servicio" + irASeccion).
+ * En el celular las cuatro van en una fila que se desliza de costado (snap),
+ * como los pasos de Como trabajamos: la seccion mide poco mas de una pantalla.
+ *
+ * Tocar "Consultar por esto" deja elegido ese servicio en el cotizador
+ * (lib/preseleccion: Contacto lo lee al montarse) y baja al formulario.
  */
 
 type Item = (typeof content.servicios.items)[number];
@@ -29,11 +35,17 @@ export function Servicios() {
   return (
     <Section id="servicios">
       <SectionTitle eyebrow={servicios.eyebrow} title={servicios.titulo} intro={servicios.intro} lado />
-      <div className="grid gap-5 md:grid-cols-2 md:gap-6">
-        {servicios.items.map((item, i) => (
-          <Tarjeta key={item.id} item={item} i={i} />
-        ))}
+      <div className="-mx-6 snap-x snap-mandatory scroll-px-6 overflow-x-auto px-6 py-3 [scrollbar-width:none] md:mx-0 md:overflow-visible md:px-0 md:py-0 [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-max gap-4 md:grid md:w-full md:grid-cols-2 md:gap-6">
+          {servicios.items.map((item, i) => (
+            <Tarjeta key={item.id} item={item} i={i} />
+          ))}
+        </div>
       </div>
+      <p className="mt-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-faint)] md:hidden">
+        <span aria-hidden className="inline-block h-px w-6 bg-[color:var(--text-faint)]" />
+        {servicios.deslizar}
+      </p>
     </Section>
   );
 }
@@ -44,49 +56,54 @@ function Tarjeta({ item, i }: { item: Item; i: number }) {
   const vivo = useSeccionViva();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.98", "start 0.45"] });
   const sentido = i % 2 === 0 ? 1 : -1;
+  const GIRO = 70;
   const transform = useTransform(scrollYProgress, (v) => {
     const t = suave(tramo(v, [0, 1]));
-    return `rotateY(${sentido * 180 * (1 - t)}deg) scale(${0.9 + 0.1 * t})`;
+    return `rotateY(${sentido * GIRO * (1 - t)}deg) scale(${0.92 + 0.08 * t})`;
+  });
+  // transparente mientras esta muy de costado (mas de 55 grados)
+  const opacity = useTransform(scrollYProgress, (v) => {
+    const angulo = GIRO * (1 - suave(tramo(v, [0, 1])));
+    return tramo(GIRO - angulo, [GIRO - 55, GIRO - 25]);
   });
 
   const consultar = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    window.dispatchEvent(new CustomEvent("preseleccionar-servicio", { detail: item.id }));
-    irASeccion("contacto");
+    irASeccion("contacto", { alMontar: () => preseleccionar(item.id) });
   };
 
   return (
-    <div ref={ref} className="[perspective:1600px]">
+    <div ref={ref} className="w-[85vw] max-w-[360px] shrink-0 snap-start [perspective:1600px] md:w-auto md:max-w-none">
       <motion.div
-        className="relative h-full [transform-style:preserve-3d]"
-        style={vivo ? { transform } : undefined}
+        data-anim
+        className="relative h-full"
+        style={vivo ? { transform, opacity } : undefined}
       >
-        {/* frente */}
-        <article className="group relative flex h-full flex-col border border-[color:var(--hairline-strong)] bg-[color:var(--surface)] [backface-visibility:hidden]">
-          <div className="relative h-[168px] overflow-hidden border-b border-[color:var(--hairline)] bg-[radial-gradient(ellipse_70%_90%_at_50%_100%,var(--accent-glow),transparent)]">
+        <article className="group relative flex h-full flex-col border border-[color:var(--hairline-strong)] bg-[color:var(--surface)]">
+          <div className="relative h-[136px] overflow-hidden border-b border-[color:var(--hairline)] bg-[radial-gradient(ellipse_70%_90%_at_50%_100%,var(--accent-glow),transparent)] md:h-[148px]">
             <MiniEscena tipo={item.escena} />
           </div>
-          <div className="flex flex-1 flex-col p-6 md:p-8">
-            <h3 className="font-display text-[clamp(1.55rem,2.2vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-balance text-[color:var(--text)]">
+          <div className="flex flex-1 flex-col p-5 md:p-7">
+            <h3 className="font-display text-[clamp(1.45rem,2.2vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-balance text-[color:var(--text)]">
               {item.nombre}
             </h3>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="mt-3 flex flex-wrap gap-1.5 md:mt-4 md:gap-2">
               {item.claves.map((clave) => (
                 <li
                   key={clave}
-                  className="border border-[color:var(--accent-line)] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--accent)]"
+                  className="border border-[color:var(--accent-line)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--accent)] md:px-2.5 md:py-1 md:text-[11px] md:tracking-[0.14em]"
                 >
                   {clave}
                 </li>
               ))}
             </ul>
-            <p className="mt-4 max-w-[52ch] flex-1 text-[16px] leading-[1.6] text-pretty text-[color:var(--text-dim)] md:text-[17px]">
+            <p className="mt-3 max-w-[52ch] flex-1 text-[15px] leading-[1.55] text-pretty text-[color:var(--text-dim)] md:mt-4 md:text-[17px] md:leading-[1.6]">
               {item.texto}
             </p>
             <a
               href="#contacto"
               onClick={consultar}
-              className="mt-6 inline-flex w-fit items-center gap-3 border-b border-[color:var(--accent-line)] pb-1 text-[15px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)]"
+              className="mt-5 inline-flex w-fit items-center gap-3 border-b border-[color:var(--accent-line)] pb-1 text-[15px] font-medium text-[color:var(--text)] transition-colors hover:border-[color:var(--accent)] hover:text-[color:var(--accent)] md:mt-6"
             >
               {servicios.cta}
               <span aria-hidden className="transition-transform duration-300 group-hover:translate-x-1">
@@ -95,18 +112,6 @@ function Tarjeta({ item, i }: { item: Item; i: number }) {
             </a>
           </div>
         </article>
-
-        {/* dorso: lo que se ve mientras gira */}
-        {vivo ? (
-          <div
-            aria-hidden
-            className="absolute inset-0 grid place-items-center border border-[color:var(--accent-line)] bg-[color:var(--surface-2)] p-10 [backface-visibility:hidden] [transform:rotateY(180deg)]"
-          >
-            <p className="text-center font-display text-[clamp(1.55rem,2.2vw,2.1rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-[color:var(--text-faint)]">
-              {item.nombre}
-            </p>
-          </div>
-        ) : null}
       </motion.div>
     </div>
   );
@@ -122,7 +127,7 @@ function MiniEscena({ tipo }: { tipo: string }) {
   if (tipo === "carrito") {
     return (
       <div aria-hidden className="absolute inset-0">
-        <div className="absolute bottom-5 left-1/2 h-[92px] w-[150px] -translate-x-1/2">
+        <div className="absolute bottom-3 left-1/2 h-[92px] w-[150px] -translate-x-1/2 origin-bottom scale-[0.88] md:scale-100">
           {/* productos que caen */}
           {[0, 1, 2].map((k) => (
             <span
@@ -152,8 +157,8 @@ function MiniEscena({ tipo }: { tipo: string }) {
 
   if (tipo === "panel") {
     return (
-      // el panel asoma desde abajo: lo que no entra queda cortado por la tarjeta
-      <div aria-hidden className="absolute inset-x-8 -bottom-px top-5 border border-[color:var(--hairline-strong)] bg-[color:var(--bg)] p-4">
+      // el panel asoma desde abajo y se funde antes del borde: ninguna fila queda cortada al medio
+      <div aria-hidden className="absolute inset-x-8 -bottom-px top-5 border border-[color:var(--hairline-strong)] bg-[color:var(--bg)] p-4 [mask-image:linear-gradient(to_bottom,var(--bg)_55%,transparent_92%)]">
         <p className={`${ETIQUETA} mb-3 text-[color:var(--text-dim)]`}>{escenas.panel.label}</p>
         <div className="flex flex-col gap-2">
           {escenas.panel.filas.map((nombre, k) => (
@@ -199,7 +204,7 @@ function MiniEscena({ tipo }: { tipo: string }) {
   // escudo que escanea
   return (
     <div aria-hidden className="absolute inset-0">
-      <div className="absolute left-1/2 top-[44%] h-[136px] w-[112px] -translate-x-1/2 -translate-y-1/2 scale-[0.74] overflow-hidden md:scale-[0.82]">
+      <div className="absolute left-1/2 top-[42%] h-[136px] w-[112px] -translate-x-1/2 -translate-y-1/2 scale-[0.68] overflow-hidden md:scale-[0.76]">
         <svg viewBox="0 0 112 136" className="absolute inset-0 h-full w-full">
           <path
             d="M56 4l48 18v40c0 32-20 56-48 70C28 118 8 94 8 62V22z"

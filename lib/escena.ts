@@ -35,6 +35,21 @@ export function mapa(rango: Rango, desde: number, hasta: number) {
 }
 
 /**
+ * Pone data-activa en el elemento mientras esta en pantalla: sus loops CSS
+ * (.loop) corren solo ahi. Para ilustraciones dentro de secciones altas, donde
+ * encender la seccion entera dejaria loops corriendo fuera de la vista.
+ */
+export function useLoops(ref: RefObject<Element | null>) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => el.toggleAttribute("data-activa", e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+}
+
+/**
  * true mientras el elemento esta en pantalla y la pestaña visible. Para los
  * loops que corren en JS (contadores): fuera de pantalla no gastan nada.
  */

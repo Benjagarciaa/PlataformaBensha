@@ -37,6 +37,9 @@ export function Nav() {
 
   return (
     <header
+      // con el header a la vista corre su punto (loop CSS); con teclado, nunca se esconde
+      data-activa={oculto ? undefined : ""}
+      onFocus={() => setOculto(false)}
       className="fixed inset-x-0 top-0 z-40 border-b transition-[transform,background-color,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
       style={{
         transform: oculto ? "translateY(-100%)" : "translateY(0)",
@@ -44,6 +47,12 @@ export function Nav() {
         borderColor: solido ? "var(--hairline)" : "transparent",
       }}
     >
+      <a
+        href="#inicio"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-full focus:mt-2 focus:border focus:border-[color:var(--accent)] focus:bg-[color:var(--bg)] focus:px-3 focus:py-2 focus:font-mono focus:text-[11px] focus:uppercase focus:tracking-[0.12em] focus:text-[color:var(--accent)]"
+      >
+        {content.nav.saltar}
+      </a>
       <div className="mx-auto flex max-w-[1400px] items-center gap-6 px-6 py-4 md:px-12 lg:pl-28 lg:pr-20">
         <a
           href="#inicio"
@@ -71,7 +80,7 @@ export function Nav() {
           onClick={(e) => ir(e, "#contacto")}
           className="ml-auto flex items-center gap-2.5 border border-[color:var(--accent-line)] px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--accent)] transition-colors hover:bg-[color:var(--accent-soft)] md:ml-0"
         >
-          <span aria-hidden className="a-latido loop-libre inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
+          <span aria-hidden className="a-latido loop inline-block h-[6px] w-[6px] bg-[color:var(--accent)]" />
           {content.nav.status}
         </a>
       </div>

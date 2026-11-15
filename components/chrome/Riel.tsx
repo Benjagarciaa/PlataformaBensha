@@ -29,6 +29,13 @@ export function Riel() {
   const alto = useRef(900);
   const version = useMotionValue(0);
   const [activa, setActiva] = useState(0);
+  // casi invisible (arriba de todo): fuera del orden del teclado, asi el foco
+  // nunca cae en un boton que no se ve
+  const [aLaVista, setALaVista] = useState(false);
+  useMotionValueEvent(opacidad, "change", (o) => {
+    const si = o >= 0.5;
+    setALaVista((previa) => (previa === si ? previa : si));
+  });
 
   useEffect(() => {
     const medir = () => {
@@ -94,6 +101,7 @@ export function Riel() {
       {/* desktop: la linea y un punto por seccion */}
       <motion.nav
         aria-label={content.riel.aria}
+        inert={!aLaVista}
         className="pointer-events-none fixed left-0 top-0 z-30 hidden h-dvh w-[88px] lg:block"
         style={{ opacity: opacidad }}
       >
