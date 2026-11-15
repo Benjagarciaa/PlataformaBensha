@@ -78,7 +78,7 @@ mayúsculas, tracking `.11-.15em`.
 - Radio 0 en todo (los únicos círculos son avatares y ruedas dentro de ilustraciones).
 - Marcas de esquina: solo las cuatro del marco del hero. Nada de cotas.
 - Bordes de 1px (`--hairline-strong`) en tarjetas; el estado encendido pasa a `--accent`.
-- Secciones normales: `py-28 md:py-44`. Contenedor `max-w-[1400px]`, `px-6 md:px-12`, y en
+- Secciones normales: `py-20 md:py-28` (compactas: cada escena con el scroll justo para leerse). Contenedor `max-w-[1400px]`, `px-6 md:px-12`, y en
   desktop `lg:pl-28 lg:pr-20` para dejar libre el carril del riel.
 - Z-index: fondo 0, contenido 10, riel 30, nav 40, grano 70, cortina 100.
 
@@ -132,7 +132,9 @@ seguridad `html:not([data-escenas]) [data-anim]` fuerza opacidad 1 y sin transfo
   baja three y arma el canvas detrás (loop en pausa) y lo enciende al levantarse. Sin WebGL
   acelerado o con reduced-motion no aparece. Anima solo transform y opacity (WAAPI).
 - `Nav`: nombre, cuatro secciones y "TOMANDO PROYECTOS". Se esconde al bajar.
-- `Riel`: desktop, línea de avance (transform) y un punto por sección (IntersectionObserver).
+- `Riel`: desktop, línea de avance (transform) y un punto por sección. La línea avanza por tramos
+  medidos (ResizeObserver): llega al punto de una sección cuando esa sección cruza el centro
+  de la pantalla, y el punto activo sale del mismo cálculo.
   Mobile: barra de 2px.
 - `Fondo`, `Grano`, `Blindaje`, `Analitica` (Clarity con la primera interacción o a los 7 s).
 
@@ -149,12 +151,12 @@ visible.** Punto medio `·` máximo uno por línea. Números reales solamente (+
 | # | Sección | id | Archivo | Escena de scroll | Loop ambiental |
 |---|---|---|---|---|---|
 | 1 | Hero 3D | `inicio` | `Hero.tsx` + `hero3d/` | Del caos al sistema (ver sección 10). Al final la cámara entra en la pantalla de la notebook y funde con lo que sigue | Barras que se llenan, contadores que suben, notificación de pedido nuevo en el celular |
-| 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: la frase se revela por palabra, la ilustración pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Chats que siguen llegando, contador de pedidos, "Guardado", productos que caen al carrito, escaneo |
+| 2 | Lo que te resuelvo | `resuelvo` | `Resuelvo.tsx` | Fija, un dolor por pantalla: primero la frase se revela por palabra y recién después entra la ilustración, que pasa del caos al orden (chats → panel de pedidos; celdas de planilla → tu panel; tienda vacía → carrito que se llena; revisión que tilda y llena el medidor) y aparece cómo se resuelve | Pedidos nuevos que entran por arriba con su estado (las filas bajan), "Guardado", productos que caen al carrito, escaneo |
 | 3 | Trabajos | `proyectos` | `trabajos/` | Carrusel 3D: anillo de 15 trabajos fijado que avanza con el scroll y se arrastra con inercia; al tocar una tarjeta vuela a la cámara y abre la ficha a pantalla completa (FLIP sobre un `<dialog>`) con video, galería y qué se resolvió | El anillo gira solo y una banda de luz recorre las tarjetas |
-| 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
+| 4 | Qué miro en una tienda | `criterio` | `Criterio.tsx` | Fija, CSS 3D: la página de producto arranca de frente a pantalla completa, se aleja, gira y se desarma en 7 capas; se recorren de a una con su por qué y, en desktop, un índice con las siete a la vista | La pila se mece; barra de carga en la capa de velocidad. Medidor "camino a la compra" atado al scroll |
 | 5 | Servicios | `servicios` | `Servicios.tsx` | Cada tarjeta entra dada vuelta y gira en 3D hasta quedar de frente | Carrito que se llena, filas que cargan, aguja que pasa a rápido, escudo que escanea |
-| 6 | Cómo trabajamos | `proceso` | `Proceso.tsx` | Una línea se dibuja y conecta los pasos; cada nodo se enciende al alcanzarlo | Chat escribiendo, firma, bloques que se apilan, check |
-| 7 | Sobre mí | `sobre-mi` | `SobreMi.tsx` | Frase por palabra; la formación llega como un mazo que se reparte | Números reales que cuentan una vez al entrar |
+| 6 | Cómo trabajamos | `proceso` | `Proceso.tsx` | La única horizontal: los pasos en fila unidos por una línea que avanza con el scroll (desktop) o con el dedo (mobile, fila deslizable con snap); cada nodo se enciende al alcanzarlo | Chat escribiendo, firma, bloques que se apilan, check |
+| 7 | Sobre mí | `sobre-mi` | `SobreMi.tsx` | Frase por palabra; la formación son credenciales que se reparten desde un mazo al entrar y sellos que se estampan (sin pista fija) | Números reales que cuentan una vez al entrar; brillo que cruza las credenciales destacadas |
 | 8 | Testimonios | `testimonios` | `Testimonios.tsx` | No se renderiza mientras esté vacío | |
 | 9 | Contacto | `contacto` | `Contacto.tsx` | Cotizador con preselección desde Servicios | Pulso de "respondo en el día", confirmación con check al enviar |
 | 10 | Footer | | `Footer.tsx` | | Punto que respira |

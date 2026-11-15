@@ -52,7 +52,7 @@ export const content = {
     cifras: [
       { valor: "+200", label: "PÁGINAS HECHAS" },
       { valor: "+130", label: "MARCAS" },
-      { valor: "13", label: "TRABAJOS DESTACADOS" },
+      { valor: "15", label: "TRABAJOS DESTACADOS" },
     ],
     cajetin: {
       titulo: "DEL CAOS AL SISTEMA",
@@ -114,8 +114,12 @@ export const content = {
         "Ya transferí",
       ],
       panelTitulo: "Pedidos de hoy",
+      contadorBase: 24,
       contadorLabel: "pedidos",
-      nuevo: "Pedido nuevo",
+      columnas: ["Cliente", "Pedido", "Estado"],
+      // el estado con el que entra cada pedido nuevo, antes de pasar a su estado real
+      nuevo: "Nuevo",
+      // el primer estado es el que se resalta en celeste
       filas: [
         { cliente: "Lucía R.", detalle: "Remera M x2", estado: "Pagado" },
         { cliente: "Martín G.", detalle: "Buzo L", estado: "A enviar" },
@@ -123,6 +127,13 @@ export const content = {
         { cliente: "Nico S.", detalle: "Remera S", estado: "Enviado" },
         { cliente: "Caro D.", detalle: "Combo x3", estado: "Pagado" },
         { cliente: "Agus P.", detalle: "Buzo M", estado: "A enviar" },
+      ],
+      // los pedidos que van entrando con el panel ya ordenado
+      entrantes: [
+        { cliente: "Sofi L.", detalle: "Remera L", estado: "Pagado" },
+        { cliente: "Juan P.", detalle: "Gorra beige", estado: "Pagado" },
+        { cliente: "Meli A.", detalle: "Buzo S x2", estado: "Pagado" },
+        { cliente: "Tomás R.", detalle: "Combo x2", estado: "Pagado" },
       ],
     },
     planilla: {
@@ -193,7 +204,7 @@ export const content = {
       {
         id: "confianza",
         nombre: "Confianza",
-        nota: "Envíos, cuotas, cambios y pago seguro, a la vista y cerca del botón. Contesta el último «¿y si...?» antes de pagar.",
+        nota: "Envíos, cuotas, cambios y pago seguro, a la vista y cerca del botón. Contesta el último «¿y si...?» antes de pagar.",
       },
       {
         id: "velocidad",
@@ -298,6 +309,8 @@ export const content = {
           "Te enseño a usarlo y queda todo andando, para que el día a día no dependa de nadie.",
       },
     ],
+    // mobile: los pasos van en fila y se deslizan de costado
+    deslizar: "Deslizá para ver los cuatro pasos",
     cierre: {
       titulo: "Sin abonos obligatorios.",
       texto: "Lo que te hago queda tuyo. Si un sistema necesita mantenimiento, se acuerda aparte.",
@@ -312,57 +325,74 @@ export const content = {
       "Soy Benjamín García, de Córdoba. Desde 2022 hice más de 200 páginas para más de 130 marcas, en Argentina y afuera: tiendas, landings de producto y sistemas para manejar el negocio.",
       "Estudié programación y diseño de producto. Por eso no alcanza con que funcione: pienso cómo la usa tu cliente y qué lo lleva a comprar. Y conozco cómo se compra acá: cuotas, transferencia, Mercado Pago y envíos a todo el país.",
     ],
+    // solo los numeros reales del perfil (la cifra de trabajos vive en el carrusel)
     datos: [
-      { n: 200, prefijo: "+", label: "páginas hechas" },
-      { n: 130, prefijo: "+", label: "marcas" },
-      { n: 13, prefijo: "", label: "trabajos destacados" },
+      { n: 200, prefijo: "+", label: "páginas hechas", detalle: "Desde 2022" },
+      { n: 130, prefijo: "+", label: "marcas", detalle: "En Argentina y afuera" },
     ],
-    formacionTitulo: "Formación",
-    formacionIntro: "Lo que respalda cada decisión.",
+    // Formación: solo texto, nunca imágenes de certificados ni datos personales.
+    // Las dos primeras van destacadas; los `sellos` se estampan al entrar.
+    formacionEyebrow: "FORMACIÓN",
+    formacionTitulo: "Lo que respalda cada decisión.",
+    formacionIntro:
+      "Programación, diseño de producto y seguridad. Con distinciones y certificados de PedidosYa y Delta Protect.",
     formacion: [
+      {
+        id: "fullstack",
+        anio: "2024",
+        tipo: "Carrera",
+        titulo: "Desarrollo Full Stack",
+        institucion: "Coderhouse",
+        nota: "Salí primero de la camada y me gané una beca, que usé para el curso de JavaScript, también certificado por PedidosYa.",
+        // el sello grande de la carta
+        insignia: { valor: "1°", texto: "de la camada" },
+        sellos: ["Con beca", "Top 10"],
+        destacado: true,
+      },
+      {
+        id: "uxui",
+        anio: "2024",
+        tipo: "Diseño de producto",
+        titulo: "Diseño UX/UI Avanzado",
+        institucion: "Coderhouse",
+        certifica: "Certificado por PedidosYa",
+        nota: "Por esto se diseña producto, no solo se programa: cómo la usa tu cliente y qué lo lleva a comprar.",
+        sellos: ["Desempeño destacado"],
+        destacado: true,
+      },
+      {
+        id: "utn",
+        anio: "2022",
+        tipo: "Tecnicatura",
+        titulo: "Tecnicatura en Programación",
+        institucion: "Universidad Tecnológica Nacional",
+        nota: "La base técnica de todo lo demás.",
+        sellos: ["3 años en 16 meses"],
+      },
       {
         id: "unc-ia",
         anio: "2026",
+        tipo: "Universidad",
         titulo: "IA y automatización de flujos de trabajo",
         institucion: "Universidad Nacional de Córdoba",
         nota: "Para automatizar lo repetitivo y generar imágenes de producto.",
       },
       {
-        id: "uxui",
-        anio: "2024",
-        titulo: "Diseño UX/UI Avanzado",
-        institucion: "Coderhouse, certificado por PedidosYa",
-        nota: "Por esto se diseña producto, no solo se programa.",
-        destacado: true,
-        sello: "DISEÑO DE PRODUCTO",
-      },
-      {
-        id: "fullstack",
-        anio: "2024",
-        titulo: "Carrera de Desarrollo Full Stack",
-        institucion: "Coderhouse",
-        nota: "Primero de la camada. La beca se usó para el curso de JavaScript.",
-        sello: "1° DE LA CAMADA",
-      },
-      {
         id: "ciberseguridad",
         anio: "2024",
+        tipo: "Seguridad",
         titulo: "Ciberseguridad",
-        institucion: "Coderhouse, certificado por Delta Protect",
+        institucion: "Coderhouse",
+        certifica: "Certificado por Delta Protect",
         nota: "Lo que respalda la protección de tu tienda.",
-      },
-      {
-        id: "utn",
-        anio: "2022",
-        titulo: "Tecnicatura en Programación",
-        institucion: "Universidad Tecnológica Nacional",
-        nota: "La base técnica de todo lo demás.",
       },
       {
         id: "seguridad",
         anio: "2022",
+        tipo: "Seguridad",
         titulo: "Seguridad Informática",
-        institucion: "educ.ar, Ministerio de Educación",
+        institucion: "Ministerio de Educación",
+        certifica: "Curso de educ.ar",
         nota: "Donde empezó el interés por la seguridad.",
       },
     ],

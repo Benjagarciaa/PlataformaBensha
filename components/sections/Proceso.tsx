@@ -1,7 +1,15 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { useEffect, useRef } from "react";
+import {
+  animate,
+  motion,
+  useInView,
+  useMotionValue,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import { Section, useSeccionViva } from "@/components/ui/Section";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { Reveal } from "@/components/ui/Reveal";
@@ -9,16 +17,28 @@ import { content } from "@/content/data";
 import { tramo } from "@/lib/escena";
 
 /**
- * Como trabajamos. La unica seccion numerada del sitio: el orden es
- * informacion.
+ * Como trabajamos. La unica seccion numerada del sitio (el orden es
+ * informacion) y la unica que se lee de costado: rompe el ritmo vertical del
+ * resto de la pagina.
  *
- * Una linea celeste se dibuja con el scroll (scaleY) y conecta los pasos; cada
- * nodo se enciende cuando la linea lo alcanza. Cada paso tiene su icono en
- * loop: el chat que escribe, la propuesta que se firma, los bloques que se
- * apilan, el check de entrega. Cierra con lo que baja el miedo: sin abonos.
+ * Los cuatro pasos van en fila, unidos por una linea. En desktop la fila
+ * entera entra en pantalla y la linea avanza con el scroll de la pagina: cada
+ * tramo se llena (scaleX) y el nodo siguiente se enciende al alcanzarlo, sin
+ * pista fija ni scroll de mas. En mobile la fila se desliza con el dedo
+ * (scroll horizontal nativo con snap) y la linea sigue a ese deslizamiento;
+ * al entrar en pantalla la fila amaga un poco hacia el costado para avisar
+ * que se puede deslizar.
+ *
+ * Cada paso tiene su icono en loop: el chat que escribe, la propuesta que se
+ * firma, los bloques que se apilan, el check de entrega. Cierra con lo que
+ * baja el miedo: sin abonos.
  */
 
 type Paso = (typeof content.proceso.pasos)[number];
+
+const N = content.proceso.pasos.length;
+/** Donde cae el paso k sobre el avance de la linea (0..1). */
+const punto = (k: number) => k / (N - 1);
 
 export function Proceso() {
   return (
@@ -31,66 +51,111 @@ export function Proceso() {
 function Pasos() {
   const { proceso } = content;
   const vivo = useSeccionViva();
+  const filaRef = useRef<HTMLDivElement>(null);
+  const carrilRef = useRef<HTMLDivElement>(null);
   const listaRef = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: listaRef, offset: ["start 0.7", "end 0.55"] });
-  const linea = useTransform(scrollYProgress, (v) => `scaleY(${v})`);
+  const enVista = useInView(filaRef, { once: true, amount: 0.5 });
+  // 1 en desktop (la linea sigue al scroll de la pagina), 0 en mobile (sigue al dedo)
+  const desktop = useMotionValue(1);
+
+  const { scrollYProgress: vertical } = useScroll({ target: filaRef, offset: ["start 0.85", "end 0.6"] });
+  const { scrollXProgress: horizontal } = useScroll({ container: carrilRef });
+  const avance = useTransform([vertical, horizontal, desktop], ([v, h, d]: number[]) => (d ? v : h));
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const aplicar = () => desktop.set(media.matches ? 1 : 0);
+    aplicar();
+    media.addEventListener("change", aplicar);
+    return () => media.removeEventListener("change", aplicar);
+  }, [desktop]);
+
+  // mobile: un amague hacia el costado, una sola vez, para avisar que se desliza
+  useEffect(() => {
+    const lista = listaRef.current;
+    if (!vivo || !enVista || !lista || window.matchMedia("(min-width: 1024px)").matches) return;
+    const control = animate(lista, { x: [0, -36, 0] }, { duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] });
+    return () => control.stop();
+  }, [vivo, enVista]);
 
   return (
     <>
-      <SectionTitle eyebrow={proceso.eyebrow} title={proceso.titulo} intro={proceso.intro} />
+      <SectionTitle eyebrow={proceso.eyebrow} title={proceso.titulo} intro={proceso.intro} lado />
 
-      <ol ref={listaRef} className="relative ml-1 flex max-w-5xl flex-col gap-20 md:ml-4 md:gap-28">
-        {/* la linea que conecta los pasos */}
-        <span aria-hidden className="absolute bottom-10 left-[31px] top-8 w-px bg-[color:var(--hairline-strong)] md:left-[39px]" />
-        <motion.span
-          aria-hidden
-          className="absolute bottom-10 left-[31px] top-8 w-px origin-top bg-[color:var(--accent)] md:left-[39px]"
-          style={vivo ? { transform: linea } : undefined}
-        />
-        {proceso.pasos.map((paso, i) => (
-          <PasoFila key={paso.n} paso={paso} i={i} p={scrollYProgress} vivo={vivo} />
-        ))}
-      </ol>
+      <div ref={filaRef}>
+        <div
+          ref={carrilRef}
+          className="-mx-6 snap-x snap-mandatory scroll-px-6 overflow-x-auto px-6 pb-2 [scrollbar-width:none] md:-mx-12 md:scroll-px-12 md:px-12 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+        >
+          <ol ref={listaRef} className="flex w-max gap-4 md:gap-6 lg:grid lg:w-full lg:grid-cols-4 lg:gap-8">
+            {proceso.pasos.map((paso, k) => (
+              <PasoCelda key={paso.n} paso={paso} k={k} p={avance} vivo={vivo} />
+            ))}
+          </ol>
+        </div>
+        <p className="mt-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-faint)] lg:hidden">
+          <span aria-hidden className="inline-block h-px w-6 bg-[color:var(--text-faint)]" />
+          {proceso.deslizar}
+        </p>
+      </div>
 
-      <Reveal className="mt-24 max-w-4xl border-t border-[color:var(--accent-line)] pt-10 md:mt-32 md:pt-14">
-        <p className="font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1] tracking-[-0.015em] text-[color:var(--accent)]">
-          {proceso.cierre.titulo}
-        </p>
-        <p className="mt-6 max-w-[44ch] text-[clamp(1.15rem,1.7vw,1.5rem)] leading-[1.5] text-[color:var(--text-soft)]">
-          {proceso.cierre.texto}
-        </p>
+      <Reveal className="mt-14 border-t border-[color:var(--accent-line)] pt-8 md:mt-20 md:pt-10">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
+          <p className="font-display text-[clamp(2rem,4.4vw,3.75rem)] font-semibold leading-[1] tracking-[-0.015em] text-balance text-[color:var(--accent)]">
+            {proceso.cierre.titulo}
+          </p>
+          <p className="max-w-[44ch] text-[clamp(1.1rem,1.5vw,1.35rem)] leading-[1.5] text-pretty text-[color:var(--text-soft)] lg:pb-[0.3em]">
+            {proceso.cierre.texto}
+          </p>
+        </div>
       </Reveal>
     </>
   );
 }
 
-function PasoFila({ paso, i, p, vivo }: { paso: Paso; i: number; p: MotionValue<number>; vivo: boolean }) {
-  const n = content.proceso.pasos.length;
-  const punto = i / (n - 1);
-  const encendido = useTransform(p, (v) => tramo(v, [punto - 0.04, punto + 0.02]));
-  const texto = useTransform(p, (v) => 0.3 + 0.7 * tramo(v, [punto - 0.12, punto]));
+function PasoCelda({ paso, k, p, vivo }: { paso: Paso; k: number; p: MotionValue<number>; vivo: boolean }) {
+  const encendido = useTransform(p, (v) => tramo(v, [punto(k) - 0.05, punto(k) + 0.01]));
+  const texto = useTransform(p, (v) => 0.38 + 0.62 * tramo(v, [punto(k) - 0.16, punto(k)]));
+  const tramoLinea = useTransform(p, (v) =>
+    k < N - 1 ? `scaleX(${tramo(v, [punto(k), punto(k + 1)])})` : "scaleX(0)"
+  );
 
   return (
-    <li className="relative grid grid-cols-[64px_minmax(0,1fr)] gap-6 md:grid-cols-[80px_minmax(0,1fr)] md:gap-12">
-      <div className="relative z-10 grid h-16 w-16 place-items-center border border-[color:var(--hairline-strong)] bg-[color:var(--bg)] md:h-20 md:w-20">
-        <motion.span
-          aria-hidden
-          className="absolute -inset-px border border-[color:var(--accent)] bg-[color:var(--accent-soft)]"
-          style={{ opacity: vivo ? encendido : 1 }}
-        />
-        <Icono tipo={paso.icono} />
+    <li className="relative w-[min(78vw,330px)] shrink-0 snap-start lg:w-auto">
+      {/* el nodo y el tramo de linea hasta el paso siguiente */}
+      <div className="relative">
+        {k < N - 1 ? (
+          <span
+            aria-hidden
+            className="absolute -right-4 left-16 top-1/2 h-px bg-[color:var(--hairline-strong)] md:-right-6 md:left-[72px] lg:-right-8"
+          >
+            <motion.span
+              className="block h-full w-full origin-left bg-[color:var(--accent)]"
+              style={vivo ? { transform: tramoLinea } : undefined}
+            />
+          </span>
+        ) : null}
+        <div className="relative z-10 grid h-16 w-16 place-items-center border border-[color:var(--hairline-strong)] bg-[color:var(--bg)] md:h-[72px] md:w-[72px]">
+          <motion.span
+            aria-hidden
+            className="absolute -inset-px border border-[color:var(--accent)] bg-[color:var(--accent-soft)]"
+            style={{ opacity: vivo ? encendido : 1 }}
+          />
+          <Icono tipo={paso.icono} />
+        </div>
       </div>
-      <motion.div data-anim className="pt-1" style={vivo ? { opacity: texto } : undefined}>
-        <p className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em]">
+
+      <motion.div data-anim className="mt-6 md:mt-7" style={vivo ? { opacity: texto } : undefined}>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em]">
           <span className="text-[color:var(--accent)]">{paso.n}</span>
           <span className="border border-[color:var(--hairline-strong)] px-2 py-0.5 text-[color:var(--text-dim)]">
             {paso.nota}
           </span>
         </p>
-        <h3 className="mt-4 font-display text-[clamp(1.7rem,3.4vw,3rem)] font-semibold leading-[1.04] tracking-[-0.01em] text-[color:var(--text)]">
+        <h3 className="mt-4 max-w-[14ch] font-display text-[clamp(1.5rem,2.1vw,1.95rem)] font-semibold leading-[1.06] tracking-[-0.01em] text-balance text-[color:var(--text)]">
           {paso.titulo}
         </h3>
-        <p className="mt-4 max-w-[52ch] text-[17px] leading-[1.6] text-[color:var(--text-dim)] md:text-[19px]">
+        <p className="mt-3 max-w-[36ch] text-[16px] leading-[1.6] text-pretty text-[color:var(--text-dim)] md:text-[17px]">
           {paso.detalle}
         </p>
       </motion.div>

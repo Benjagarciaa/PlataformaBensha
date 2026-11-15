@@ -21,8 +21,11 @@ import { meseta, mezcla, suave, tramo } from "@/lib/escena";
  * de producto arranca DE FRENTE, a pantalla completa, y con el scroll se aleja
  * estilo Apple mientras gira y se desarma en siete capas. Despues se recorren
  * de a una: la capa activa se levanta y se enciende, las demas bajan la voz, y
- * al costado aparece por que vende. Un medidor ("camino a la compra") se llena
- * a medida que se suman capas. Ya desarmada, la pila se mece sola en loop.
+ * al costado aparece por que vende. En desktop se ve ademas el indice de las
+ * siete capas (la activa encendida, las ya vistas a media voz): la estructura
+ * entera se lee de un vistazo y el recorrido puede ser corto. Un medidor
+ * ("camino a la compra") se llena a medida que se suman capas. Ya desarmada,
+ * la pila se mece sola en loop.
  *
  * Solo transform y opacity. Sin escenas vivas (servidor, sin JS,
  * reduced-motion): la pila queda desarmada y quieta, con todas las notas en
@@ -34,12 +37,12 @@ const H = 720;
 const CAPAS = content.criterio.capas;
 const N = CAPAS.length;
 
-// tramos del recorrido
-const ALEJA: [number, number] = [0, 0.17];
-const GIRA: [number, number] = [0.03, 0.19];
-const DESARMA: [number, number] = [0.06, 0.21];
-const RECORRE: [number, number] = [0.22, 0.93];
-const CIERRE: [number, number] = [0.94, 0.985];
+// tramos del recorrido (la pista es corta: se aleja y se desarma rapido)
+const ALEJA: [number, number] = [0, 0.1];
+const GIRA: [number, number] = [0.02, 0.12];
+const DESARMA: [number, number] = [0.04, 0.14];
+const RECORRE: [number, number] = [0.15, 0.92];
+const CIERRE: [number, number] = [0.93, 0.98];
 const PASO = (RECORRE[1] - RECORRE[0]) / N;
 const SEPARACION = 68;
 
@@ -47,6 +50,12 @@ const SEPARACION = 68;
 function activa(v: number, k: number) {
   const s = RECORRE[0] + k * PASO;
   return meseta(v, s, s + 0.02, s + PASO - 0.015, s + PASO + 0.005);
+}
+
+/** 1 cuando la capa k ya se recorrio (queda a media voz en el indice). */
+function vista(v: number, k: number) {
+  const s = RECORRE[0] + (k + 1) * PASO;
+  return tramo(v, [s - 0.015, s + 0.005]);
 }
 
 /** Cuanto bajan la voz las capas no activas (solo durante el recorrido). */
@@ -96,7 +105,7 @@ function Escena() {
         // de frente: llena la pantalla (con tope, para no rasterizar de mas)
         s0: Math.min(2.4, Math.max(vw / W, vh / H) * 1.02),
         // desarmada: entra entera en el escenario
-        s1: Math.min(e.width / 560, e.height / 900, 1.05),
+        s1: Math.min(e.width / 680, e.height / 900, 1.05),
       };
       version.set(version.get() + 1);
     };
@@ -134,14 +143,24 @@ function Escena() {
 
   return (
     <>
-      <Contenedor className="pb-10 pt-28 md:pb-16 md:pt-40">
-        <SectionTitle eyebrow={criterio.eyebrow} title={criterio.titulo} intro={criterio.intro} />
-        <p className="-mt-6 max-w-[48ch] font-mono text-[11px] uppercase leading-relaxed tracking-[0.12em] text-[color:var(--text-dim)] md:-mt-10">
-          {criterio.respaldo}
-        </p>
+      <Contenedor className="pt-20 md:pt-28">
+        <SectionTitle
+          eyebrow={criterio.eyebrow}
+          title={criterio.titulo}
+          lado
+          className="mb-0 md:mb-0"
+          intro={
+            <>
+              {criterio.intro}
+              <span className="mt-4 block font-mono text-[11px] uppercase leading-relaxed tracking-[0.12em] text-[color:var(--text-dim)]">
+                {criterio.respaldo}
+              </span>
+            </>
+          }
+        />
       </Contenedor>
 
-      <div ref={pistaRef} className="relative vivo:h-[640svh] lg:vivo:h-[760svh]">
+      <div ref={pistaRef} className="relative pt-12 vivo:h-[330svh] vivo:pt-0 md:pt-16 lg:vivo:h-[360svh]">
         <div ref={marcoRef} className="vivo:sticky vivo:top-0 vivo:h-svh vivo:overflow-hidden">
           <Contenedor className="vivo:h-full">
             <div className="grid gap-10 pb-28 vivo:h-full vivo:grid-rows-[minmax(0,1fr)_auto] vivo:gap-0 vivo:pb-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start lg:gap-14 lg:vivo:grid-rows-1 lg:vivo:items-center">
@@ -183,18 +202,27 @@ function Escena() {
                   className="relative pb-16 lg:pb-0"
                   style={{ opacity: panel }}
                 >
-                  <div className="grid">
+                  <p className="mb-4 hidden font-mono text-[11px] uppercase tracking-[0.15em] text-[color:var(--accent)] lg:block">
+                    {criterio.capaLabel}
+                  </p>
+                  {/* el indice: las siete capas a la vista, la activa encendida */}
+                  <ol className="mb-8 hidden border-b border-[color:var(--hairline)] lg:block">
+                    {CAPAS.map((capa, k) => (
+                      <Indice key={capa.id} p={p} k={k} />
+                    ))}
+                  </ol>
+                  <div className="grid min-h-[9.5rem] lg:min-h-[7.5rem]">
                     {CAPAS.map((capa, k) => (
                       <Nota key={capa.id} p={p} k={k} />
                     ))}
                     <motion.p
-                      className="font-display text-[clamp(1.7rem,3vw,2.8rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-[color:var(--text)] [grid-area:1/1] self-end"
+                      className="self-end font-display text-[clamp(1.6rem,2.6vw,2.4rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-balance text-[color:var(--text)] [grid-area:1/1] lg:self-start"
                       style={{ opacity: cierre, transform: cierreY }}
                     >
                       {criterio.cierre}
                     </motion.p>
                   </div>
-                  <div className="mt-6 lg:mt-10">
+                  <div className="mt-6 lg:mt-8">
                     <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--text-dim)]">
                       {criterio.medidorLabel}
                     </p>
@@ -231,19 +259,56 @@ function Escena() {
   );
 }
 
+/** Una capa en el indice de desktop: numero y nombre, encendida si es la activa. */
+function Indice({ p, k }: { p: MotionValue<number>; k: number }) {
+  const capa = CAPAS[k];
+  const luz = useTransform(p, (v) => {
+    const a = activa(v, k);
+    return Math.max(a, 0.55 * vista(v, k) * (1 - a), tramo(v, CIERRE));
+  });
+  const marca = useTransform(p, (v) => `scaleY(${activa(v, k)})`);
+  const corre = useTransform(p, (v) => `translateX(${activa(v, k) * 10}px)`);
+  const numero = useTransform(p, (v) => activa(v, k));
+
+  return (
+    <li className="relative border-t border-[color:var(--hairline)] py-[0.55rem]">
+      <motion.span
+        aria-hidden
+        className="absolute bottom-0 left-0 top-0 w-[2px] origin-center bg-[color:var(--accent)]"
+        style={{ transform: marca }}
+      />
+      <motion.span className="flex items-baseline gap-4" style={{ transform: corre }}>
+        <span className="relative w-6 shrink-0 font-mono text-[11px] tracking-[0.08em] tabular-nums">
+          <span className="text-[color:var(--text-faint)]">{String(k + 1).padStart(2, "0")}</span>
+          <motion.span className="absolute inset-0 text-[color:var(--accent)]" style={{ opacity: numero }}>
+            {String(k + 1).padStart(2, "0")}
+          </motion.span>
+        </span>
+        <span className="relative font-display text-[clamp(1.1rem,1.45vw,1.4rem)] font-semibold leading-[1.15] tracking-[-0.005em]">
+          <span className="text-[color:var(--text-faint)] opacity-75">{capa.nombre}</span>
+          <motion.span className="absolute inset-0 text-[color:var(--text)]" style={{ opacity: luz }}>
+            {capa.nombre}
+          </motion.span>
+        </span>
+      </motion.span>
+    </li>
+  );
+}
+
 function Nota({ p, k }: { p: MotionValue<number>; k: number }) {
   const capa = CAPAS[k];
   const opacity = useTransform(p, (v) => activa(v, k));
-  const transform = useTransform(p, (v) => `translateY(${(1 - activa(v, k)) * 22}px)`);
+  const transform = useTransform(p, (v) => `translateY(${(1 - activa(v, k)) * 18}px)`);
   return (
-    <motion.div className="[grid-area:1/1]" style={{ opacity, transform }}>
-      <h3 className="font-display text-[clamp(1.6rem,3.2vw,3rem)] font-semibold leading-[1.04] tracking-[-0.01em] text-[color:var(--text)]">
+    <motion.div className="self-end [grid-area:1/1] lg:self-start" style={{ opacity, transform }}>
+      {/* en mobile no hay indice: el nombre va arriba de la nota */}
+      <p className="mb-1 font-mono text-[11px] uppercase tracking-[0.15em] text-[color:var(--accent)] lg:hidden">
+        {String(k + 1).padStart(2, "0")} / {String(N).padStart(2, "0")} · {content.criterio.capaLabel}
+      </p>
+      <h3 className="mb-3 font-display text-[clamp(1.6rem,6vw,2.2rem)] font-semibold leading-[1.05] tracking-[-0.01em] text-balance text-[color:var(--text)] lg:hidden">
         {capa.nombre}
       </h3>
-      <p className="mb-2 mt-5 font-mono text-[11px] uppercase tracking-[0.15em] text-[color:var(--accent)]">
-        {content.criterio.capaLabel}
-      </p>
-      <p className="max-w-[40ch] text-[16px] leading-[1.55] text-[color:var(--text-soft)] md:text-[19px]">
+      <p className="max-w-[42ch] text-[16px] leading-[1.55] text-pretty text-[color:var(--text-soft)] md:text-[18px]">
         {capa.nota}
       </p>
     </motion.div>

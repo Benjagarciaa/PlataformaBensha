@@ -81,7 +81,7 @@ export function Section({
         id={id}
         aria-label={ariaLabel}
         data-viva={viva ? "" : undefined}
-        className={cn("relative z-10 w-full", aire && "py-28 md:py-44", className)}
+        className={cn("relative z-10 w-full", aire && "py-20 md:py-28", className)}
       >
         {contenedor ? <Contenedor>{children}</Contenedor> : children}
       </section>

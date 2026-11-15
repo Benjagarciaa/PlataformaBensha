@@ -1,48 +1,82 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import { content } from "@/content/data";
 import { irASeccion } from "@/lib/lenis";
 
 /**
- * Riel de avance. Desktop: una linea fina al margen izquierdo que se llena con
- * el scroll real, con un punto por seccion (navegacion). Mobile: solo una
- * barra de 2px de progreso.
+ * Riel de avance. Desktop: una linea fina al margen izquierdo con un punto por
+ * seccion (navegacion). Mobile: solo una barra de 2px de progreso.
  *
- * Sin polling: el llenado es un transform atado a useScroll y la seccion
- * activa la dice un IntersectionObserver.
+ * Los puntos estan repartidos parejos, pero las secciones no miden lo mismo
+ * (hay escenas fijas largas y secciones cortas). Por eso la linea no sigue el
+ * progreso total de la pagina: avanza por tramos. Entre el punto i y el i+1
+ * recorre la seccion i, medida de verdad, y llega al punto siguiente justo
+ * cuando esa seccion cruza el centro de la pantalla. La seccion activa sale
+ * del mismo calculo: el punto encendido es siempre el que la linea ya
+ * alcanzo, y coincide con lo que se ve.
+ *
+ * Sin polling ni listeners de scroll: el scroll llega por useScroll de motion
+ * y las posiciones se miden solo cuando cambia el alto de la pagina
+ * (ResizeObserver), al montarse una seccion diferida o al cambiar el tamaño.
  */
 export function Riel() {
   const { scrollYProgress, scrollY } = useScroll();
-  const llenado = useTransform(scrollYProgress, (v) => `scaleY(${v})`);
   const llenadoMovil = useTransform(scrollYProgress, (v) => `scaleY(${v})`);
   const opacidad = useTransform(scrollY, (y) => Math.min(1, Math.max(0, (y - 300) / 400)));
-  const [activa, setActiva] = useState<string>(content.waypoints[0].id);
+  const tops = useRef<number[]>([]);
+  const alto = useRef(900);
+  const version = useMotionValue(0);
+  const [activa, setActiva] = useState(0);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
-      (entradas) => {
-        for (const e of entradas) if (e.isIntersecting) setActiva(e.target.id);
-      },
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    // las secciones diferidas se montan despues (ver <Diferida>): al montarse
-    // reemplazan su HTML, asi que se vuelven a buscar
-    const observar = () => {
-      io.disconnect();
-      content.waypoints.forEach((w) => {
+    const medir = () => {
+      const y = window.scrollY;
+      let previo = 0;
+      tops.current = content.waypoints.map((w) => {
         const el = document.getElementById(w.id);
-        if (el) io.observe(el);
+        // si una seccion no esta (todavia), hereda la posicion de la anterior
+        previo = el ? el.getBoundingClientRect().top + y : previo;
+        return previo;
       });
+      alto.current = window.innerHeight;
+      version.set(version.get() + 1);
     };
-    observar();
-    window.addEventListener("escenas:montada", observar);
+    medir();
+    // el alto de la pagina cambia cuando una escena se enciende o se monta
+    const ro = new ResizeObserver(medir);
+    ro.observe(document.body);
+    window.addEventListener("resize", medir);
+    window.addEventListener("escenas:montada", medir);
     return () => {
-      io.disconnect();
-      window.removeEventListener("escenas:montada", observar);
+      ro.disconnect();
+      window.removeEventListener("resize", medir);
+      window.removeEventListener("escenas:montada", medir);
     };
-  }, []);
+  }, [version]);
+
+  // avance por tramos: 0 en el primer punto, 1 en el ultimo
+  const avance = useTransform([scrollY, version], ([y]: number[]) => {
+    const t = tops.current;
+    const n = t.length;
+    if (n < 2) return 0;
+    const centro = y + alto.current * 0.5;
+    if (centro <= t[0]) return 0;
+    for (let i = n - 1; i >= 0; i--) {
+      if (centro < t[i]) continue;
+      if (i === n - 1) return 1;
+      const largo = Math.max(1, t[i + 1] - t[i]);
+      return (i + Math.min(1, (centro - t[i]) / largo)) / (n - 1);
+    }
+    return 0;
+  });
+  const llenado = useTransform(avance, (v) => `scaleY(${v})`);
+
+  useMotionValueEvent(avance, "change", (v) => {
+    const i = Math.min(content.waypoints.length - 1, Math.floor(v * (content.waypoints.length - 1) + 1e-4));
+    setActiva((previa) => (previa === i ? previa : i));
+  });
 
   return (
     <>
@@ -73,7 +107,7 @@ export function Riel() {
         <ul className="pointer-events-auto absolute bottom-[18vh] left-[44px] top-[18vh] w-px">
           {content.waypoints.map((punto, i) => {
             const top = (i / (content.waypoints.length - 1)) * 100;
-            const esActiva = punto.id === activa;
+            const esActiva = i === activa;
             return (
               <li key={punto.id} className="absolute left-0" style={{ top: `${top}%` }}>
                 <button

@@ -377,6 +377,26 @@ html:not([data-escenas]) [data-anim] {
   animation: traza 3.4s var(--ease) infinite;
 }
 
+/* brillo que cruza una credencial destacada de vez en cuando */
+@keyframes brillo {
+  0%,
+  55% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  62%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+.a-brillo {
+  animation: brillo 7.5s var(--ease-io) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

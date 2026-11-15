@@ -130,14 +130,20 @@ Estudió programación y diseño de producto; conoce cómo se compra acá.
 
 Formación (solo texto, sin imágenes de certificados, sin DNI):
 
-| Año | Título | Institución | Nota |
+Titular del bloque: **Lo que respalda cada decisión.** · bajada: Programación, diseño de
+producto y seguridad. Con distinciones y certificados de PedidosYa y Delta Protect.
+
+| Año | Título | Institución | Sellos y nota |
 |---|---|---|---|
+| 2024 | **Desarrollo Full Stack** (destacado, carrera) | Coderhouse | Sello grande `1° de la camada` · `Con beca` · `Top 10`. La beca fue el curso de JavaScript, también certificado por PedidosYa |
+| 2024 | **Diseño UX/UI Avanzado** (destacado) | Coderhouse, certificado por PedidosYa | `Desempeño destacado`. Respalda que diseña producto, no solo programa |
+| 2022 | Tecnicatura en Programación | Universidad Tecnológica Nacional | `3 años en 16 meses` |
 | 2026 | IA y automatización de flujos de trabajo | Universidad Nacional de Córdoba | |
-| 2024 | **Diseño UX/UI Avanzado** (destacado) | Coderhouse, certificado por PedidosYa | Respalda que diseña producto, no solo programa |
-| 2024 | Carrera de Desarrollo Full Stack | Coderhouse | 1° de la camada, con beca (usada para JavaScript) |
 | 2024 | Ciberseguridad | Coderhouse, certificado por Delta Protect | |
-| 2022 | Tecnicatura en Programación | Universidad Tecnológica Nacional | |
-| 2022 | Seguridad Informática | educ.ar, Ministerio de Educación | |
+| 2022 | Seguridad Informática | Ministerio de Educación (curso de educ.ar) | |
+
+Números de Sobre mí: solo `+200 páginas hechas` (desde 2022) y `+130 marcas` (en Argentina
+y afuera). La cifra de trabajos destacados no va en esta sección.
 
 No va Grasshopper. Herramientas y recorrido van absorbidos en esta sección (Shopify y
 Tiendanube, sistemas propios, IA generativa, Mercado Pago, mapas de calor; freelance
