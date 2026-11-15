@@ -14,10 +14,12 @@ import { Ficha } from "./Ficha";
 /**
  * Trabajos: carrusel 3D de los proyectos.
  *
- * Las miniaturas son planos levemente curvos en un anillo que gira solo,
- * se arrastra con inercia y avanza con el scroll de la seccion (un tramo
- * fijo con sticky). Al hacer click la tarjeta vuela hacia la camara y, en el
- * mismo movimiento, la ficha HTML toma su lugar y se expande (FLIP).
+ * Las miniaturas son planos levemente curvos en un anillo que gira solo y se
+ * arrastra con inercia (mouse, dedo, flechas y teclado). La seccion NO fija la
+ * pagina: se atraviesa con el scroll de siempre y el anillo apenas acompaña
+ * con un giro leve mientras pasa. Al hacer click la tarjeta vuela hacia la
+ * camara y, en el mismo movimiento, la ficha HTML toma su lugar y se expande
+ * (FLIP).
  *
  * Reglas (02-DESIGN.md, seccion 3D):
  *  - three y R3F viven en Escena.tsx y anillo.ts, un chunk aparte que se pide
@@ -92,7 +94,6 @@ export function Trabajos() {
   const { carrusel, tipos } = trabajos;
 
   const seccionRef = useRef<HTMLElement>(null);
-  const pistaRef = useRef<HTMLDivElement>(null);
   const escenarioRef = useRef<HTMLDivElement>(null);
   const puenteRef = useRef<Puente>(crearPuente(N));
   const grillaBtns = useRef<(HTMLButtonElement | null)[]>([]);
@@ -113,8 +114,9 @@ export function Trabajos() {
   const [ficha, setFicha] = useState<{ indice: number; origen: Rect | null } | null>(null);
   const [cubre, setCubre] = useState(false);
 
-  // Progreso del tramo fijo: 0 cuando el escenario toca el techo, 1 cuando se va.
-  const { scrollYProgress } = useScroll({ target: pistaRef, offset: ["start start", "end end"] });
+  // Paso del escenario por la pantalla: 0 cuando asoma abajo, 1 cuando se va por
+  // arriba. Solo alimenta un giro leve; la pagina nunca queda fijada.
+  const { scrollYProgress } = useScroll({ target: escenarioRef, offset: ["start end", "end start"] });
 
   // Decide el modo y pide la escena recien cuando la seccion esta cerca.
   useEffect(() => {
@@ -153,14 +155,14 @@ export function Trabajos() {
     };
   }, []);
 
-  // El loop corre solo con la seccion en pantalla y la pestaña visible.
+  // El loop corre solo con el escenario en pantalla y la pestaña visible.
   useEffect(() => {
-    const pista = pistaRef.current;
-    if (!pista || modo !== "animado") return;
+    const escenario = escenarioRef.current;
+    if (!escenario || modo !== "animado") return;
     const io = new IntersectionObserver(([e]) => setEnPantalla(e.isIntersecting), {
       rootMargin: "80px 0px",
     });
-    io.observe(pista);
+    io.observe(escenario);
     const visibilidad = () => setPestanaVisible(!document.hidden);
     document.addEventListener("visibilitychange", visibilidad);
     return () => {
@@ -308,147 +310,162 @@ export function Trabajos() {
         <style>{CSS_SIN_JS}</style>
       </noscript>
 
-      <header className={`${contenedor} pb-10 pt-24 md:pb-14 md:pt-36`}>
-        <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
-          {trabajos.eyebrow}
-        </p>
-        <h2
-          id="trabajos-titulo"
-          className="max-w-[16ch] font-display text-[clamp(2.6rem,6.2vw,5.75rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
-        >
-          {trabajos.titulo}
-        </h2>
-        <p className="mt-6 max-w-[56ch] text-[17px] leading-relaxed text-[color:var(--text-dim)] md:mt-8 md:text-[19px]">
+      <header
+        className={`${contenedor} pt-16 md:pt-20 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-end lg:gap-16`}
+      >
+        <div>
+          <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
+            {trabajos.eyebrow}
+          </p>
+          <h2
+            id="trabajos-titulo"
+            className="max-w-[15ch] text-balance font-display text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-[color:var(--text)]"
+          >
+            {trabajos.titulo}
+          </h2>
+        </div>
+        <p className="mt-4 max-w-[46ch] text-[16px] leading-relaxed text-[color:var(--text-dim)] md:mt-6 md:text-[18px] lg:mt-0 lg:pb-2">
           {trabajos.intro}
         </p>
       </header>
 
-      <div ref={pistaRef} className="trabajos-pista relative h-[230svh] md:h-[280svh]">
-        {/* ── el escenario 3D, fijo mientras dura el tramo ── */}
+      <div className="trabajos-pista relative mt-4 md:mt-6">
+        {/* ── el escenario 3D: en el flujo normal, sin fijar la pagina ── */}
         <div
-          className="trabajos-3d sticky top-0 h-svh overflow-hidden"
+          className="trabajos-3d relative"
           role="region"
           aria-roledescription={carrusel.roledescription}
           aria-label={carrusel.region}
         >
-          {/* luz celeste difusa detras del anillo */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_46%_at_50%_56%,var(--accent-soft),transparent_72%)]"
-          />
-
-          <div
-            ref={escenarioRef}
-            className="absolute inset-0 cursor-grab touch-pan-y select-none active:cursor-grabbing"
-            onPointerDown={alBajar}
-            onPointerMove={alMover}
-            onPointerUp={alSoltar}
-            onPointerCancel={alSoltar}
-            onClickCapture={(e) => {
-              if (arrastre.current.suprimir) {
-                e.stopPropagation();
-                e.preventDefault();
-              }
-            }}
-          >
+          <div className="relative h-[clamp(300px,46svh,420px)] overflow-hidden md:h-[clamp(360px,50svh,580px)]">
+            {/* luz celeste difusa detras del anillo */}
             <div
               aria-hidden
-              className="absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]"
-              style={{ opacity: listo ? 1 : 0 }}
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_50%_at_50%_60%,var(--accent-soft),transparent_72%)]"
+            />
+
+            {/*
+              Arrastre horizontal: el anillo gira con inercia. touch-action pan-y
+              deja que el dedo siga bajando la pagina en vertical; solo el gesto
+              de costado llega como arrastre.
+            */}
+            <div
+              ref={escenarioRef}
+              className="absolute inset-0 cursor-grab touch-pan-y select-none active:cursor-grabbing"
+              onPointerDown={alBajar}
+              onPointerMove={alMover}
+              onPointerUp={alSoltar}
+              onPointerCancel={alSoltar}
+              onClickCapture={(e) => {
+                if (arrastre.current.suprimir) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+              }}
             >
-              {montarEscena ? (
-                <Escena
-                  puenteRef={puenteRef}
-                  progreso={scrollYProgress}
-                  activo={enPantalla && pestanaVisible && !cubre}
-                  movil={movil}
-                  texturas={TEXTURAS}
-                  destacados={DESTACADOS}
-                  onListo={() => setListo(true)}
-                />
-              ) : null}
+              <div
+                aria-hidden
+                className="absolute inset-0 transition-opacity duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] [mask-image:linear-gradient(to_bottom,black_78%,transparent)]"
+                style={{ opacity: listo ? 1 : 0 }}
+              >
+                {montarEscena ? (
+                  <Escena
+                    puenteRef={puenteRef}
+                    progreso={scrollYProgress}
+                    activo={enPantalla && pestanaVisible && !cubre}
+                    movil={movil}
+                    texturas={TEXTURAS}
+                    destacados={DESTACADOS}
+                    onListo={() => setListo(true)}
+                  />
+                ) : null}
+              </div>
+
+              {/* Botones reales, uno por tarjeta: la escena los ubica sobre cada plano */}
+              <ul className="absolute inset-0">
+                {ITEMS.map((t, i) => (
+                  <li key={t.slug}>
+                    <button
+                      ref={(el) => {
+                        puenteRef.current.botones[i] = el;
+                      }}
+                      type="button"
+                      aria-haspopup="dialog"
+                      onClick={() => abrir(i)}
+                      onPointerEnter={(e) => {
+                        if (e.pointerType !== "mouse" || arrastre.current.activo) return;
+                        puenteRef.current.hover = i;
+                        setHover(i);
+                      }}
+                      onPointerLeave={() => {
+                        if (puenteRef.current.hover !== i) return;
+                        puenteRef.current.hover = -1;
+                        setHover(-1);
+                      }}
+                      onFocus={(e) => {
+                        // con la ficha abierta o cerrandose, el foco que devuelve el dialogo no gira el anillo
+                        if (ocupado.current || !e.currentTarget.matches(":focus-visible")) return;
+                        const p = puenteRef.current;
+                        p.foco = i;
+                        p.irA = i;
+                        setFoco(i);
+                      }}
+                      onBlur={() => {
+                        if (puenteRef.current.foco !== i) return;
+                        puenteRef.current.foco = -1;
+                        setFoco(-1);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+                        e.preventDefault();
+                        const j = (i + (e.key === "ArrowRight" ? 1 : -1) + N) % N;
+                        puenteRef.current.botones[j]?.focus({ preventScroll: true });
+                      }}
+                      className="absolute left-0 top-0 h-px w-px origin-top-left cursor-pointer bg-transparent data-[atras=1]:pointer-events-none"
+                    >
+                      <span className="sr-only">
+                        {`${carrusel.abrir} ${t.marca}${t.subtitulo ? `, ${t.subtitulo}` : ""}. ${t.rubro}.`}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Botones reales, uno por tarjeta: la escena los ubica sobre cada plano */}
-            <ul className="absolute inset-0">
-              {ITEMS.map((t, i) => (
-                <li key={t.slug}>
-                  <button
-                    ref={(el) => {
-                      puenteRef.current.botones[i] = el;
-                    }}
-                    type="button"
-                    aria-haspopup="dialog"
-                    onClick={() => abrir(i)}
-                    onPointerEnter={(e) => {
-                      if (e.pointerType !== "mouse" || arrastre.current.activo) return;
-                      puenteRef.current.hover = i;
-                      setHover(i);
-                    }}
-                    onPointerLeave={() => {
-                      if (puenteRef.current.hover !== i) return;
-                      puenteRef.current.hover = -1;
-                      setHover(-1);
-                    }}
-                    onFocus={(e) => {
-                      // con la ficha abierta o cerrandose, el foco que devuelve el dialogo no gira el anillo
-                      if (ocupado.current || !e.currentTarget.matches(":focus-visible")) return;
-                      const p = puenteRef.current;
-                      p.foco = i;
-                      p.irA = i;
-                      setFoco(i);
-                    }}
-                    onBlur={() => {
-                      if (puenteRef.current.foco !== i) return;
-                      puenteRef.current.foco = -1;
-                      setFoco(-1);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-                      e.preventDefault();
-                      const j = (i + (e.key === "ArrowRight" ? 1 : -1) + N) % N;
-                      puenteRef.current.botones[j]?.focus({ preventScroll: true });
-                    }}
-                    className="absolute left-0 top-0 h-px w-px origin-top-left cursor-pointer bg-transparent data-[atras=1]:pointer-events-none"
-                  >
-                    <span className="sr-only">
-                      {`${carrusel.abrir} ${t.marca}${t.subtitulo ? `, ${t.subtitulo}` : ""}. ${t.rubro}.`}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <Escuadras className="m-3 md:m-5" />
+
+            {/* lectura de arriba: posicion en el anillo */}
+            <p
+              aria-hidden
+              className="pointer-events-none absolute left-6 top-5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)] md:left-12 md:top-7 lg:left-28"
+            >
+              <span className="text-[color:var(--text)]">
+                {pad(activa + 1)} / {pad(N)}
+              </span>
+              <span className="h-3 w-px bg-[color:var(--hairline)]" />
+              <span>{tipos[tActiva.tipo]}</span>
+            </p>
           </div>
 
-          <Escuadras className="m-4 md:m-6" />
-
-          {/* lectura de arriba: posicion en el anillo */}
-          <p
-            aria-hidden
-            className="pointer-events-none absolute left-6 top-6 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--text-faint)] md:left-12 md:top-10 lg:left-28"
-          >
-            <span className="text-[color:var(--text)]">
-              {pad(activa + 1)} / {pad(N)}
-            </span>
-            <span className="h-3 w-px bg-[color:var(--hairline)]" />
-            <span>{tipos[tActiva.tipo]}</span>
-          </p>
-
-          {/* abajo: marca y rubro de la activa, flechas y ayuda */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center bg-[linear-gradient(to_top,var(--bg)_35%,transparent)] px-6 pb-7 pt-16 md:pb-9">
-            <div className="flex w-full max-w-[44rem] items-center justify-between gap-4 lg:max-w-[60rem]">
-              <BotonGiro etiqueta={carrusel.anterior} onClick={() => girar(-1)}>
-                <ChevronLeft aria-hidden className="h-4 w-4" />
-              </BotonGiro>
-
-              <div aria-hidden key={tActiva.slug} className="trabajos-entra min-w-0 flex-1 text-center">
-                <p className="font-mono text-[10px] uppercase leading-snug tracking-[0.2em] text-[color:var(--accent)] md:text-[11px]">
+          {/*
+            abajo: marca y rubro de la activa, flechas y ayuda (fuera del lienzo:
+            nunca tapa el anillo). En el celular las flechas bajan a la fila de
+            la ayuda y la marca usa todo el ancho.
+          */}
+          <div className="relative flex justify-center px-4 pt-1 md:px-6">
+            <div className="grid w-full max-w-[44rem] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3 md:gap-y-4">
+              <div
+                aria-hidden
+                key={tActiva.slug}
+                className="trabajos-entra col-span-3 min-w-0 text-center md:col-span-1 md:col-start-2 md:row-start-1"
+              >
+                <p className="truncate font-mono text-[10px] uppercase leading-snug tracking-[0.2em] text-[color:var(--accent)] md:text-[11px]">
                   {tActiva.rubro}
                 </p>
-                <p className="mt-2 text-balance font-display text-[clamp(1.6rem,3.4vw,3rem)] font-semibold leading-[0.98] tracking-[-0.03em] text-[color:var(--text)]">
+                <p className="mt-1.5 truncate font-display text-[clamp(1.5rem,3vw,2.6rem)] font-semibold leading-[1.02] tracking-[-0.03em] text-[color:var(--text)]">
                   {tActiva.marca}
                 </p>
-                <p className="mt-2 text-balance text-[14px] leading-snug text-[color:var(--text-dim)] md:text-[15px]">
+                <p className="mt-1.5 truncate text-[14px] leading-snug text-[color:var(--text-dim)] md:text-[15px]">
                   {tActiva.destacado ? (
                     <>
                       <span className="text-[color:var(--accent)]">{tActiva.destacado.valor}</span>{" "}
@@ -460,19 +477,30 @@ export function Trabajos() {
                 </p>
               </div>
 
-              <BotonGiro etiqueta={carrusel.siguiente} onClick={() => girar(1)}>
+              <BotonGiro etiqueta={carrusel.anterior} onClick={() => girar(-1)} className="md:col-start-1 md:row-start-1">
+                <ChevronLeft aria-hidden className="h-4 w-4" />
+              </BotonGiro>
+              <p
+                aria-hidden
+                className="text-balance text-center font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[color:var(--text-faint)] md:col-span-3 md:row-start-2"
+              >
+                <span className="hidden md:inline">{carrusel.ayuda}</span>
+                {/* en el celular cada indicacion va en su linea, sin el punto medio colgando */}
+                {carrusel.ayudaMovil.split(" · ").map((parte) => (
+                  <span key={parte} className="block md:hidden">
+                    {parte}
+                  </span>
+                ))}
+              </p>
+              <BotonGiro etiqueta={carrusel.siguiente} onClick={() => girar(1)} className="md:col-start-3 md:row-start-1">
                 <ChevronRight aria-hidden className="h-4 w-4" />
               </BotonGiro>
             </div>
-            <p aria-hidden className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--text-faint)]">
-              <span className="hidden md:inline">{carrusel.ayuda}</span>
-              <span className="md:hidden">{carrusel.ayudaMovil}</span>
-            </p>
           </div>
         </div>
 
         {/* ── la grilla: reduced-motion, sin WebGL acelerado, ahorro de datos o sin JS ── */}
-        <div className={`trabajos-grilla hidden ${contenedor} pb-6`}>
+        <div className={`trabajos-grilla hidden ${contenedor} pb-6 pt-6`}>
           <ul className="grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {ITEMS.map((t, i) => (
               <li key={t.slug}>
@@ -522,8 +550,8 @@ export function Trabajos() {
         </div>
       </div>
 
-      <p className={`${contenedor} pb-24 pt-10 font-display text-[clamp(1.15rem,2.2vw,1.6rem)] font-medium leading-snug tracking-[-0.02em] text-[color:var(--text-dim)] md:pb-36`}>
-        {trabajos.pie}
+      <p className={`${contenedor} pb-20 pt-10 text-[15px] leading-relaxed text-[color:var(--text-dim)] md:pb-28 md:text-[16px]`}>
+        <span className="block max-w-[62ch]">{trabajos.pie}</span>
       </p>
 
       {ficha ? (
@@ -547,10 +575,12 @@ export function Trabajos() {
 function BotonGiro({
   etiqueta,
   onClick,
+  className = "",
   children,
 }: {
   etiqueta: string;
   onClick: () => void;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -560,7 +590,7 @@ function BotonGiro({
       title={etiqueta}
       onClick={onClick}
       onPointerDown={(e) => e.stopPropagation()}
-      className="pointer-events-auto flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center border border-[color:var(--hairline)] text-[color:var(--text)] transition-colors duration-300 hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)] active:translate-y-px"
+      className={`pointer-events-auto flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center border border-[color:var(--hairline-strong)] text-[color:var(--text)] transition-colors duration-300 hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-soft)] hover:text-[color:var(--accent)] active:translate-y-px ${className}`}
     >
       {children}
     </button>

@@ -5,6 +5,7 @@ import {
   VUELO,
   calcularEncuadre,
   indiceFrente,
+  normalizar,
   paso,
   radioAnillo,
   totalPara,
@@ -200,7 +201,7 @@ type Tarjeta = {
 export type EntradaCuadro = {
   t: number;
   dt: number;
-  /** progreso del tramo fijo (0..1) */
+  /** progreso del paso de la seccion por la pantalla (0..1; 0.5 con el escenario centrado) */
   scroll: number;
   puente: Puente;
   camara: THREE.Camera;
@@ -349,7 +350,7 @@ export function crearAnillo(n: number, opciones: { reflejo: boolean; destacados:
   let alto = 900;
   const objetivo = { pos: new THREE.Vector3(), quat: new THREE.Quaternion(), escala: 1 };
 
-  const giro = { ang: 0, vel: 0, auto: 0, scroll: NaN, arrastrando: false, frente: -1, t: 0 };
+  const giro = { ang: 0, vel: 0, auto: 0, scroll: NaN, arrastrando: false, frente: -1, t: 0, reposo: 0 };
   type Vuelo = { i: number; desde: number; hasta: number; t0: number; dur: number; v: number; fin: (() => void) | null };
   const vuelo: Vuelo = { i: -1, desde: 0, hasta: 0, t0: 0, dur: 1, v: 0, fin: null };
 
@@ -361,6 +362,14 @@ export function crearAnillo(n: number, opciones: { reflejo: boolean; destacados:
   const camPos = new THREE.Vector3();
   const orden: number[] = Array.from({ length: n }, (_, i) => i);
   const cosenos = new Float32Array(n);
+
+  /**
+   * Cuanto suma el scroll al giro. Es cero con el escenario centrado en la
+   * pantalla, asi el mejor caso queda de frente justo cuando se lo mira. En
+   * el celular no suma nada: ahi la tarjeta de frente ocupa casi todo el
+   * ancho y tiene que quedarse quieta mientras se lee.
+   */
+  const porScroll = (s: number) => (s - 0.5) * (enc.estrecho ? 0 : GIRO.scroll);
 
   function rectVuelo(): Rect {
     const w = enc.vuelo.ancho;
@@ -400,9 +409,9 @@ export function crearAnillo(n: number, opciones: { reflejo: boolean; destacados:
       vuelo.desde = 1;
       vuelo.hasta = 1;
       // la nueva queda de frente en el anillo, asi vuelve a su lugar de frente
-      const scroll = Number.isNaN(giro.scroll) ? 0 : giro.scroll;
-      const total = giro.ang - scroll * GIRO.scroll;
-      giro.ang = totalPara(i, total, n) + scroll * GIRO.scroll;
+      const scroll = Number.isNaN(giro.scroll) ? 0.5 : giro.scroll;
+      const total = giro.ang - porScroll(scroll);
+      giro.ang = totalPara(i, total, n) + porScroll(scroll);
       giro.vel = 0;
     },
     rectVuelo,
@@ -525,8 +534,8 @@ export function crearAnillo(n: number, opciones: { reflejo: boolean; destacados:
       giro.auto += ((libre ? 1 : 0) - giro.auto) * suave(dt * 1.2);
 
       if (puente.irA !== null && !arr.activo) {
-        const total = giro.ang - giro.scroll * GIRO.scroll;
-        const meta = totalPara(puente.irA, total, n) + giro.scroll * GIRO.scroll;
+        const total = giro.ang - porScroll(giro.scroll);
+        const meta = totalPara(puente.irA, total, n) + porScroll(giro.scroll);
         giro.ang += (meta - giro.ang) * suave(dt * 6);
         giro.vel = 0;
         if (Math.abs(meta - giro.ang) < 0.0015) {
@@ -536,10 +545,28 @@ export function crearAnillo(n: number, opciones: { reflejo: boolean; destacados:
       } else if (!arr.activo) {
         giro.ang += giro.vel * dt;
         giro.vel *= Math.exp(-GIRO.friccion * dt);
-        if (vuelo.i < 0) giro.ang -= GIRO.auto * giro.auto * dt;
+        if (vuelo.i < 0 && !enc.estrecho) {
+          // compu: el anillo entero gira solo, despacio
+          giro.ang -= GIRO.auto * giro.auto * dt;
+        } else if (vuelo.i < 0 && Math.abs(giro.vel) < 0.4) {
+          // celular: se asienta con una tarjeta de frente y avanza de a una
+          const tot = giro.ang - porScroll(giro.scroll);
+          const cerca = indiceFrente(tot, n);
+          if (Math.abs(normalizar(-cerca * a - tot)) > 0.002) {
+            puente.irA = cerca;
+            giro.vel = 0;
+          } else if (puente.hover < 0 && puente.foco < 0) {
+            giro.reposo += dt;
+            if (giro.reposo > GIRO.pausa) {
+              giro.reposo = 0;
+              puente.irA = (cerca + 1) % n;
+            }
+          }
+        }
       }
+      if (arr.activo || puente.irA !== null || puente.hover >= 0 || puente.foco >= 0 || vuelo.i >= 0) giro.reposo = 0;
 
-      const total = giro.ang - giro.scroll * GIRO.scroll;
+      const total = giro.ang - porScroll(giro.scroll);
       const frente = indiceFrente(total, n);
       if (frente !== giro.frente) {
         giro.frente = frente;

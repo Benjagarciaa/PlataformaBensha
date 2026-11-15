@@ -564,18 +564,25 @@ export const content = {
 // Media en public/trabajos/<slug>/:
 //   miniatura.webp  960x600, la tarjeta de la grilla y el arranque de la ficha
 //   textura.webp    512x320, la textura del plano 3D
-//   01.webp ...     galeria de la ficha (escritorio 1440 o celular 780 de ancho)
-//   video.mp4       video estrella sin audio, con su poster.webp
+//   01.webp ...     galeria de la ficha: compu 1440x900 (va en un marco de
+//                   navegador), celular 780x1688 (va en un marco de celular) o
+//                   lamina 1600x1000 ya compuesta (va sin marco)
+//   video.mp4       video estrella sin audio, 5 a 10 s (compu 16:10, de 1152 a
+//                   1280 de ancho, o celular 720x1558), con su poster.webp
 // Nada de esto se pide hasta que la seccion esta cerca de la pantalla, y la
 // galeria y el video solo cuando se abre la ficha.
 
 export type TipoTrabajo = "tienda" | "sistema";
+
+/** como se presenta cada medio en la ficha */
+export type MarcoMedio = "navegador" | "celular" | "lamina";
 
 export type ImagenTrabajo = {
   src: string;
   ancho: number;
   alto: number;
   alt: string;
+  marco: MarcoMedio;
 };
 
 export type VideoTrabajo = {
@@ -616,11 +623,12 @@ export type Trabajo = {
 
 const ruta = (slug: string, archivo: string) => `/trabajos/${slug}/${archivo}`;
 
-const escritorio = (slug: string, n: number, alt: string, alto = 900): ImagenTrabajo => ({
+const escritorio = (slug: string, n: number, alt: string): ImagenTrabajo => ({
   src: ruta(slug, `0${n}.webp`),
   ancho: 1440,
-  alto,
+  alto: 900,
   alt,
+  marco: "navegador",
 });
 
 const celular = (slug: string, n: number, alt: string): ImagenTrabajo => ({
@@ -628,6 +636,7 @@ const celular = (slug: string, n: number, alt: string): ImagenTrabajo => ({
   ancho: 780,
   alto: 1688,
   alt,
+  marco: "celular",
 });
 
 const lamina = (slug: string, n: number, alt: string): ImagenTrabajo => ({
@@ -635,13 +644,23 @@ const lamina = (slug: string, n: number, alt: string): ImagenTrabajo => ({
   ancho: 1600,
   alto: 1000,
   alt,
+  marco: "lamina",
+});
+
+/** lamina vertical: el celular ya viene dibujado en la imagen */
+const laminaVertical = (slug: string, n: number, alt: string): ImagenTrabajo => ({
+  src: ruta(slug, `0${n}.webp`),
+  ancho: 780,
+  alto: 1688,
+  alt,
+  marco: "lamina",
 });
 
 const video = (slug: string, descripcion: string, movil = false): VideoTrabajo => ({
   src: ruta(slug, "video.mp4"),
   poster: ruta(slug, "poster.webp"),
-  ancho: 720,
-  alto: movil ? 1558 : 450,
+  ancho: movil ? 720 : 1280,
+  alto: movil ? 1558 : 800,
   descripcion,
 });
 
@@ -680,7 +699,7 @@ const items: Trabajo[] = [
       lamina("tinte-pro", 2, "Selector de cinco tonos y combos de una a tres unidades"),
       lamina("tinte-pro", 3, "Color por unidad y oferta de lanzamiento en tres cuotas sin interés"),
       lamina("tinte-pro", 4, "Botón de compra, pago seguro y garantía de 30 días"),
-      celular("tinte-pro", 5, "La página completa en el celular"),
+      laminaVertical("tinte-pro", 5, "La página completa en el celular"),
     ]),
   },
   {
@@ -706,10 +725,10 @@ const items: Trabajo[] = [
     conQue: "Shopify con diseño y código a medida.",
     media: media("fdt", video("fdt", "El perchero de la portada: la prenda sale y se abre su ficha"), [
       escritorio("fdt", 1, "Ficha que se abre al tocar una prenda del perchero"),
-      escritorio("fdt", 2, "Vista 360° de la remera de compresión"),
+      escritorio("fdt", 2, "Vista 360° de la remera, con el detalle de las costuras"),
       escritorio("fdt", 3, "Selector Llevá 2 con color y talle por unidad"),
       celular("fdt", 4, "Portada en el celular"),
-      celular("fdt", 5, "Inicio del giro 360° en el celular"),
+      celular("fdt", 5, "Prenda del perchero abierta en el celular"),
     ]),
   },
   {
@@ -737,10 +756,10 @@ const items: Trabajo[] = [
     conQue: "Sistema propio hecho a medida, con base de datos y fotos en la nube.",
     media: media(
       "descartables-catalogo",
-      video("descartables-catalogo", "Búsqueda con sugerencias, ficha del producto y botón de WhatsApp", true),
+      video("descartables-catalogo", "Búsqueda con un error de tipeo: sugerencias con fotos, la ficha y el botón de WhatsApp"),
       [
-        escritorio("descartables-catalogo", 1, "Buscador con sugerencias y fotos mientras se escribe"),
-        escritorio("descartables-catalogo", 2, "Ficha de producto con galería y ficha técnica"),
+        escritorio("descartables-catalogo", 1, "Categoría con subcategorías, filtros y orden"),
+        escritorio("descartables-catalogo", 2, "Categorías con la cantidad de productos de cada una"),
         escritorio("descartables-catalogo", 3, "Accesos por rubro en la portada"),
         celular("descartables-catalogo", 4, "Portada en el celular"),
         celular("descartables-catalogo", 5, "Ficha en el celular con el botón de WhatsApp"),
@@ -769,7 +788,7 @@ const items: Trabajo[] = [
     ],
     conQue: "Shopify con diseño y código a medida, con animaciones que siguen el scroll.",
     media: media("solvex", video("solvex", "Antes y después: la línea se arrastra de un lado al otro"), [
-      escritorio("solvex", 1, "Antes y después con la línea que se mueve", 851),
+      escritorio("solvex", 1, "Página del almohadón con la línea celeste y la compra a la vista"),
       escritorio("solvex", 2, "Carrito lateral con la crema de regalo"),
       escritorio("solvex", 3, "Portada de la tienda"),
       celular("solvex", 4, "Página del almohadón en el celular"),
@@ -806,9 +825,9 @@ const items: Trabajo[] = [
       [
         escritorio("salguero-admin", 1, "Evento con sus cobros, margen y cotización"),
         escritorio("salguero-admin", 2, "Precios con costo total y aviso de margen"),
-        escritorio("salguero-admin", 3, "Modo privacidad con los montos ocultos"),
+        escritorio("salguero-admin", 3, "Calendario con los eventos del mes"),
         celular("salguero-admin", 4, "Ganancia del mes y monotributo en el celular"),
-        celular("salguero-admin", 5, "Detalle de un evento en el celular"),
+        celular("salguero-admin", 5, "Gastos del mes por categoría, en el celular"),
       ]
     ),
   },
@@ -836,7 +855,7 @@ const items: Trabajo[] = [
     media: media("azter", video("azter", "Recorrido editorial por la página de la gorra Atenas"), [
       escritorio("azter", 1, "Página de la gorra Atenas"),
       escritorio("azter", 2, "Las cuatro piezas de la colección"),
-      escritorio("azter", 3, "Página de la remera Star"),
+      escritorio("azter", 3, "La gorra Atenas con los jerseys de la colección"),
       celular("azter", 4, "Portada en el celular"),
       celular("azter", 5, "Gorra Atenas en el celular"),
     ]),
@@ -865,8 +884,7 @@ const items: Trabajo[] = [
     media: media("capileka", null, [
       lamina("capileka", 1, "La página en un celular junto a la ilustración y las pestañas"),
       lamina("capileka", 2, "Ilustración del cuero cabelludo por dentro con los puntos donde actúa"),
-      lamina("capileka", 3, "Pestañas para recorrer cada punto"),
-      celular("capileka", 4, "El bloque completo en el celular"),
+      laminaVertical("capileka", 3, "El bloque completo en el celular"),
     ]),
   },
   {
@@ -894,7 +912,7 @@ const items: Trabajo[] = [
     conQue: "Sistema propio hecho a medida, en el mismo proyecto que el catálogo.",
     media: media(
       "descartables-panel",
-      video("descartables-panel", "Carga de un producto desde el celular, con categoría, ficha y fotos", true),
+      video("descartables-panel", "Carga de un producto desde el celular: nombre, categoría y fotos", true),
       [
         escritorio("descartables-panel", 1, "Inicio del panel con conteos y pendientes"),
         escritorio("descartables-panel", 2, "Categorías en árbol con sus acciones"),
@@ -927,8 +945,8 @@ const items: Trabajo[] = [
     conQue: "Shopify con diseño a medida y animaciones en código.",
     media: media("bustani", video("bustani", "Portada animada con el almohadón y los regalos"), [
       escritorio("bustani", 1, "Página del almohadón"),
-      escritorio("bustani", 2, "Encuesta tipo quiz"),
-      escritorio("bustani", 3, "Catálogo de la tienda"),
+      escritorio("bustani", 2, "Catálogo de la tienda"),
+      escritorio("bustani", 3, "Todo lo que llega en el pedido, con los regalos"),
       celular("bustani", 4, "Portada en el celular"),
       celular("bustani", 5, "Encuesta en el celular"),
     ]),
@@ -955,8 +973,8 @@ const items: Trabajo[] = [
     conQue: "Shopify con diseño a medida y animaciones que siguen el scroll.",
     media: media("lava-plus", video("lava-plus", "Frotás la remera y la mancha desaparece"), [
       escritorio("lava-plus", 1, "Página del producto"),
-      escritorio("lava-plus", 2, "Antes y después de la mancha", 695),
-      escritorio("lava-plus", 3, "Los tres usos del producto", 832),
+      escritorio("lava-plus", 2, "Escena fija donde la mancha pierde mientras bajás"),
+      escritorio("lava-plus", 3, "Cinco ingredientes, un solo pote"),
       celular("lava-plus", 4, "Portada en el celular"),
       celular("lava-plus", 5, "Remera limpia después de frotar, en el celular"),
     ]),
@@ -984,7 +1002,7 @@ const items: Trabajo[] = [
     ],
     conQue: "Sitio propio hecho a medida, con la animación dibujada cuadro por cuadro.",
     media: media("salguero-landing", video("salguero-landing", "La caja de catering se abre con el scroll"), [
-      escritorio("salguero-landing", 1, "Primer pantallazo con la caja cerrada"),
+      escritorio("salguero-landing", 1, "Galería con las mesas y los productos"),
       escritorio("salguero-landing", 2, "Banda para empresas"),
       escritorio("salguero-landing", 3, "Cotizador que arma el pedido"),
       celular("salguero-landing", 4, "La caja abriéndose en el celular"),
@@ -1012,8 +1030,8 @@ const items: Trabajo[] = [
     ],
     conQue: "Shopify con diseño a medida.",
     media: media("chau-pelo", video("chau-pelo", "Frotás la foto y se van los pelos"), [
-      escritorio("chau-pelo", 1, "Página del producto"),
-      escritorio("chau-pelo", 2, "Juego de frotar la foto, ya sin pelos"),
+      escritorio("chau-pelo", 1, "Página del producto con los packs"),
+      escritorio("chau-pelo", 2, "Hecho para casas con mucho pelo"),
       escritorio("chau-pelo", 3, "Packs de uno, dos y tres potes"),
       celular("chau-pelo", 4, "Portada en el celular"),
       celular("chau-pelo", 5, "Página del producto en el celular"),
@@ -1041,8 +1059,8 @@ const items: Trabajo[] = [
     conQue: "Shopify con diseño a medida.",
     media: media("baron-mens", video("baron-mens", "Ilustración del folículo y diagnóstico de la barba por fases"), [
       escritorio("baron-mens", 1, "Página de las vitaminas"),
-      escritorio("baron-mens", 2, "Diagnóstico de la barba por fases", 886),
-      escritorio("baron-mens", 3, "Tratamientos de uno, dos y tres meses", 829),
+      escritorio("baron-mens", 2, "Diagnóstico de la barba por fases"),
+      escritorio("baron-mens", 3, "Tratamientos de uno, dos y tres meses"),
       celular("baron-mens", 4, "Portada en el celular"),
       celular("baron-mens", 5, "Página de las vitaminas en el celular"),
     ]),
@@ -1070,7 +1088,7 @@ const items: Trabajo[] = [
     media: media("fosters", video("fosters", "Un día con el short de lino, de la mañana a la noche"), [
       escritorio("fosters", 1, "Página del short de lino"),
       escritorio("fosters", 2, "Formulario de pedido que termina en WhatsApp"),
-      escritorio("fosters", 3, "Escena de un día con el short", 899),
+      escritorio("fosters", 3, "Por qué Fosters: envío, pago por QR y pedidos por WhatsApp"),
       celular("fosters", 4, "Portada en el celular"),
       celular("fosters", 5, "Cuatro colores, cuatro planes, en el celular"),
     ]),
@@ -1098,8 +1116,8 @@ const items: Trabajo[] = [
     conQue: "Shopify con diseño y código a medida.",
     media: media("atlas", video("atlas", "Selector «¿Qué entrenás hoy?» que cambia entre straps y muñequeras"), [
       escritorio("atlas", 1, "Página de los straps"),
-      escritorio("atlas", 2, "Página de las muñequeras"),
-      escritorio("atlas", 3, "Combos con descuento al llevar más", 828),
+      escritorio("atlas", 2, "Envíos, cambios y pagos a la vista"),
+      escritorio("atlas", 3, "Combos con descuento al llevar más"),
       celular("atlas", 4, "Portada en el celular"),
       celular("atlas", 5, "Página de los straps en el celular"),
     ]),
@@ -1110,13 +1128,13 @@ export const trabajos = {
   eyebrow: "TRABAJOS REALES",
   titulo: "Abrilos y mirá cómo funcionan.",
   intro:
-    "Tiendas que venden y sistemas para manejarlas. Cada uno es un trabajo real, con el nombre de su marca: tocá uno y mirá cómo funciona por dentro.",
+    "Tiendas que venden y sistemas para manejarlas, cada uno con el nombre de su marca. Tocá uno y mirá cómo funciona por dentro.",
   pie: "Acá muestro quince. Detrás hay más de doscientas páginas, pero la mayoría quedan bajo acuerdo con cada cliente.",
 
   carrusel: {
     region: "Carrusel de trabajos",
     roledescription: "carrusel",
-    ayuda: "Arrastrá o bajá para girar · Tocá una para abrirla",
+    ayuda: "Arrastrá para girar · Tocá una para abrirla",
     ayudaMovil: "Deslizá para girar · Tocá para abrir",
     anterior: "Girar al trabajo anterior",
     siguiente: "Girar al trabajo siguiente",
