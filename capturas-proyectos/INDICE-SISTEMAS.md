@@ -241,6 +241,7 @@ Videos (`videos/`):
 | --- | --- | --- |
 | `hero-caja-que-se-abre-desktop.mp4` | 18 s | La caja que se abre (scrub de ida y vuelta) en desktop. |
 | `hero-caja-que-se-abre-mobile.mp4` | 16,5 s | Lo mismo en el celular. |
+| `scroll-completo-desktop.mp4` | 30 s | Recorrido de toda la página en desktop: la caja, servicios, empresas, galería, Flor, reseñas, proceso, preguntas, cotizador y pie. |
 
 ---
 
