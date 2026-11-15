@@ -144,7 +144,7 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 - `azter/desktop/home-bloque-01-azter.webp` (1440x790, 41 KB): Home: bloque 1 «AZTER» (desktop 1440x900)
 - `azter/desktop/home-bloque-02-cuatro-piezas.webp` (1440x976, 70 KB): Home: bloque 2 «CUATRO PIEZAS» (desktop 1440x900)
 - `azter/desktop/home-bloque-03-una-historia-que-se-escribe.webp` (1440x1177, 62 KB): Home: bloque 3 «Una historia que se escribe por capítulos.» (desktop 1440x900)
-- `azter/desktop/home-bloque-04-section-template-27226706739309-cust.webp` (1440x493, 14 KB): Home: bloque 4 «.section-template--27226706739309__custom_liquid_RTHmYm-padding {…» (desktop 1440x900)
+- `azter/desktop/home-bloque-04-beneficios-volver-a-chapter.webp` (1440x493, 14 KB): Home: bloque 4, beneficios (cuotas, envío, pago seguro, edición por capítulo) y «Volver a Chapter I»
 - `azter/desktop/home-fold.webp` (1440x900, 48 KB): Home: primer pantallazo (desktop 1440x900)
 - `azter/desktop/home-full.webp` (1440x4069, 211 KB): Home: página completa (desktop 1440x900)
 - `azter/desktop/remera-grecia-bloque-01-grecia.webp` (1440x1121, 53 KB): Landing jersey Grecia: bloque 1 «GRECIA» (desktop 1440x900)
@@ -173,7 +173,7 @@ Marca de streetwear blanco y negro con estética editorial y scroll cinemático.
 - `azter/mobile/home-bloque-01-azter.webp` (780x1800, 54 KB): Home: bloque 1 «AZTER» (mobile 390x844 @2x)
 - `azter/mobile/home-bloque-02-star.webp` (724x4050, 129 KB): Home: bloque 2 «STAR» (mobile 390x844 @2x)
 - `azter/mobile/home-bloque-03-una-historia-que-se-escribe.webp` (780x3088, 102 KB): Home: bloque 3 «Una historia que se escribe por capítulos.» (mobile 390x844 @2x)
-- `azter/mobile/home-bloque-04-section-template-27226706739309-cust.webp` (780x1216, 25 KB): Home: bloque 4 «.section-template--27226706739309__custom_liquid_RTHmYm-padding {…» (mobile 390x844 @2x)
+- `azter/mobile/home-bloque-04-beneficios-volver-a-chapter.webp` (780x1216, 25 KB): Home: bloque 4, beneficios (cuotas, envío, pago seguro, edición por capítulo) y «Volver a Chapter I»
 - `azter/mobile/home-fold.webp` (780x1688, 52 KB): Home: primer pantallazo (mobile 390x844 @2x)
 - `azter/mobile/home-full.webp` (780x13570, 393 KB): Home: página completa (mobile 390x844 @2x)
 - `azter/mobile/remera-grecia-bloque-01-grecia.webp` (780x3640, 104 KB): Landing jersey Grecia: bloque 1 «GRECIA» (mobile 390x844 @2x)
@@ -261,7 +261,9 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 **URLs capturadas**
 
 - `almohadon`: https://www.bustani.store/products/almohada-ergonomica-para-parejas-1vpjh
+- `attract`: https://www.bustani.store/products/bustani-attract
 - `catalogo`: https://www.bustani.store/collections/all
+- `ebook`: https://www.bustani.store/products/ebook-reinicia-tu-intimidad-en-21-dias-18tos
 - `encuesta-almohadon`: https://www.bustani.store/pages/encuesta-almohadon
 - `encuesta-bustani-men`: https://www.bustani.store/pages/encuesta-bustani-men
 - `home`: https://www.bustani.store/
@@ -289,6 +291,7 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 - `bustani/videos/almohadon-scroll-mobile.mp4` (390x844, 18.0 s, 788 KB): Landing almohadón ergonómico para parejas: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `bustani/videos/attract-scroll-desktop.mp4` (1280x800, 11.4 s, 1.1 MB): Landing Bustani Attract: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `bustani/videos/catalogo-scroll-desktop.mp4` (1280x800, 8.5 s, 467 KB): Catálogo: scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `bustani/videos/ebook-scroll-desktop.mp4` (1280x800, 14.7 s, 1.6 MB): Landing ebook: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `bustani/videos/encuesta-almohadon-quiz-desktop.mp4` (1280x800, 11.0 s, 203 KB): Encuesta del almohadón: pantalla inicial, Empezar y el quiz avanzando 3 preguntas (desktop). No se completó ni se envió
 - `bustani/videos/encuesta-almohadon-quiz-mobile.mp4` (390x844, 9.1 s, 188 KB): Encuesta del almohadón: el quiz avanzando en mobile. No se completó ni se envió
 - `bustani/videos/encuesta-almohadon-scroll-desktop.mp4` (1280x800, 4.2 s, 114 KB): Encuesta quiz del almohadón: scroll completo de arriba a abajo con pausas en los bloques (desktop)
@@ -312,17 +315,25 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 - `bustani/desktop/almohadon-bloque-06-lo-que-dicen-los-que.webp` (1440x1384, 70 KB): Landing almohadón ergonómico para parejas: bloque 6 «Lo que dicen los que ya lo usaronReseñas reales de compradores…» (desktop 1440x900)
 - `bustani/desktop/almohadon-fold.webp` (1440x900, 89 KB): Landing almohadón ergonómico para parejas: primer pantallazo (desktop 1440x900)
 - `bustani/desktop/almohadon-full.webp` (1440x10932, 542 KB): Landing almohadón ergonómico para parejas: página completa (desktop 1440x900)
-- `bustani/desktop/attract-bloque-01-el-aroma-que-amplificatu-presencia.webp` (1220x1308, 80 KB): Landing Bustani Attract: bloque 1 (desktop 1440x900)
-- `bustani/desktop/attract-bloque-02-unas-gotas-antesde-tu-proximo.webp` (1440x738, 50 KB): Landing Bustani Attract: bloque 2 (desktop 1440x900)
-- `bustani/desktop/attract-bloque-03-tu-fragancia-en-los-detalles.webp` (1440x609, 22 KB): Landing Bustani Attract: bloque 3 (desktop 1440x900)
-- `bustani/desktop/attract-bloque-04-fresco-al-principio-inolvidablemente.webp` (1440x706, 27 KB): Landing Bustani Attract: bloque 4 (desktop 1440x900)
-- `bustani/desktop/attract-bloque-05-todo-lo-que-hace-a.webp` (1440x726, 18 KB): Landing Bustani Attract: bloque 5 (desktop 1440x900)
-- `bustani/desktop/attract-bloque-06-tenes-preguntas-te-acompanamos.webp` (1440x964, 22 KB): Landing Bustani Attract: bloque 6 (desktop 1440x900)
+- `bustani/desktop/attract-bloque-01-el-aroma-que-amplificatu-presencia.webp` (1220x1308, 80 KB): Landing Bustani Attract: bloque 1 «El aroma que amplificatu presencia.» (desktop 1440x900)
+- `bustani/desktop/attract-bloque-02-unas-gotas-antesde-tu-proximo.webp` (1440x738, 50 KB): Landing Bustani Attract: bloque 2 «Unas gotas antesde tu próximo encuentro.» (desktop 1440x900)
+- `bustani/desktop/attract-bloque-03-tu-fragancia-en-los-detalles.webp` (1440x609, 22 KB): Landing Bustani Attract: bloque 3 «Tu fragancia, en los detalles.» (desktop 1440x900)
+- `bustani/desktop/attract-bloque-04-fresco-al-principio-inolvidablemente.webp` (1440x706, 27 KB): Landing Bustani Attract: bloque 4 «Fresco al principio.Inolvidablemente tuyo.» (desktop 1440x900)
+- `bustani/desktop/attract-bloque-05-todo-lo-que-hace-a.webp` (1440x726, 18 KB): Landing Bustani Attract: bloque 5 «Todo lo que hace a Attract.» (desktop 1440x900)
+- `bustani/desktop/attract-bloque-06-tenes-preguntas-te-acompanamos.webp` (1440x964, 22 KB): Landing Bustani Attract: bloque 6 «¿Tenés preguntas?Te acompañamos.» (desktop 1440x900)
 - `bustani/desktop/attract-fold.webp` (1440x900, 78 KB): Landing Bustani Attract: primer pantallazo (desktop 1440x900)
 - `bustani/desktop/attract-full.webp` (1440x7010, 289 KB): Landing Bustani Attract: página completa (desktop 1440x900)
 - `bustani/desktop/catalogo-bloque-01-todo-bustani.webp` (1440x1568, 129 KB): Catálogo: bloque 1 «Todo Bustani» (desktop 1440x900)
 - `bustani/desktop/catalogo-fold.webp` (1440x900, 78 KB): Catálogo: primer pantallazo (desktop 1440x900)
 - `bustani/desktop/catalogo-full.webp` (1440x2548, 169 KB): Catálogo: página completa (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-01-reinicia-tu-intimidad-en-21.webp` (1440x2097, 110 KB): Landing ebook: bloque 1 «Reinicia tu intimidad en 21 días» (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-02-mas-conexion-mas-placer-cero.webp` (1440x669, 33 KB): Landing ebook: bloque 2 «Más conexión, más placer, cero incomodidad» (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-03-reinicia-tu-intimidad-en-21.webp` (1440x596, 31 KB): Landing ebook: bloque 3 «Reinicia tu intimidad en 21 días» (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-04-el-programa-se-basa-en.webp` (1440x614, 24 KB): Landing ebook: bloque 4 «El programa se basa en 3 principios» (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-05-empeza-tu-transformacion.webp` (1440x1213, 51 KB): Landing ebook: bloque 5 «Empezá tu transformación» (desktop 1440x900)
+- `bustani/desktop/ebook-bloque-06-proba-sin-ningun-riesgo.webp` (1440x618, 29 KB): Landing ebook: bloque 6 «Probá sin ningún riesgo» (desktop 1440x900)
+- `bustani/desktop/ebook-fold.webp` (1440x900, 72 KB): Landing ebook: primer pantallazo (desktop 1440x900)
+- `bustani/desktop/ebook-full.webp` (1440x10187, 489 KB): Landing ebook: página completa (desktop 1440x900)
 - `bustani/desktop/encuesta-almohadon-bloque-01-el-almohadon-bustani-es-para.webp` (1440x900, 35 KB): Encuesta quiz del almohadón: bloque 1 «¿El Almohadón Bustani es para ustedes?» (desktop 1440x900)
 - `bustani/desktop/encuesta-almohadon-fold.webp` (1440x900, 36 KB): Encuesta quiz del almohadón: primer pantallazo (desktop 1440x900)
 - `bustani/desktop/encuesta-almohadon-full.webp` (1440x900, 35 KB): Encuesta quiz del almohadón: página completa (desktop 1440x900)
@@ -373,9 +384,25 @@ Tienda de bienestar en pareja: almohadón ergonómico, manta, suplementos, ebook
 - `bustani/mobile/almohadon-bloque-06-lo-que-dicen-los-que.webp` (780x2862, 115 KB): Landing almohadón ergonómico para parejas: bloque 6 «Lo que dicen los que ya lo usaronReseñas reales de compradores…» (mobile 390x844 @2x)
 - `bustani/mobile/almohadon-fold.webp` (780x1688, 94 KB): Landing almohadón ergonómico para parejas: primer pantallazo (mobile 390x844 @2x)
 - `bustani/mobile/almohadon-full.webp` (464x16000, 553 KB): Landing almohadón ergonómico para parejas: página completa (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-01-el-aroma-que-amplificatu-presencia.webp` (780x3500, 147 KB): Landing Bustani Attract: bloque 1 «El aroma que amplificatu presencia.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-02-unas-gotas-antesde-tu-proximo.webp` (780x2156, 92 KB): Landing Bustani Attract: bloque 2 «Unas gotas antesde tu próximo encuentro.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-03-fresco-al-principio-inolvidablemente.webp` (780x1888, 52 KB): Landing Bustani Attract: bloque 3 «Fresco al principio.Inolvidablemente tuyo.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-04-tres-pasos-para-hacerlo-tuyo.webp` (780x1698, 48 KB): Landing Bustani Attract: bloque 4 «Tres pasos para hacerlo tuyo.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-05-todo-lo-que-hace-a.webp` (780x1404, 33 KB): Landing Bustani Attract: bloque 5 «Todo lo que hace a Attract.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-bloque-06-tenes-preguntas-te-acompanamos.webp` (780x1732, 38 KB): Landing Bustani Attract: bloque 6 «¿Tenés preguntas?Te acompañamos.» (mobile 390x844 @2x)
+- `bustani/mobile/attract-fold.webp` (780x1688, 86 KB): Landing Bustani Attract: primer pantallazo (mobile 390x844 @2x)
+- `bustani/mobile/attract-full.webp` (760x16000, 515 KB): Landing Bustani Attract: página completa (mobile 390x844 @2x)
 - `bustani/mobile/catalogo-bloque-01-todo-bustani.webp` (780x2944, 154 KB): Catálogo: bloque 1 «Todo Bustani» (mobile 390x844 @2x)
 - `bustani/mobile/catalogo-fold.webp` (780x1688, 82 KB): Catálogo: primer pantallazo (mobile 390x844 @2x)
 - `bustani/mobile/catalogo-full.webp` (780x5108, 222 KB): Catálogo: página completa (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-01-1-6.webp` (780x868, 38 KB): Landing ebook: bloque 1 «1 / 6» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-02-reinicia-tu-intimidad-en-21.webp` (780x4050, 187 KB): Landing ebook: bloque 2 «Reinicia tu intimidad en 21 días» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-03-reinicia-tu-intimidad-en-21.webp` (780x1480, 53 KB): Landing ebook: bloque 3 «Reinicia tu intimidad en 21 días» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-04-el-programa-se-basa-en.webp` (780x1582, 47 KB): Landing ebook: bloque 4 «El programa se basa en 3 principios» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-05-empeza-tu-transformacion.webp` (780x2782, 95 KB): Landing ebook: bloque 5 «Empezá tu transformación» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-bloque-06-proba-sin-ningun-riesgo.webp` (780x1660, 61 KB): Landing ebook: bloque 6 «Probá sin ningún riesgo» (mobile 390x844 @2x)
+- `bustani/mobile/ebook-fold.webp` (780x1688, 79 KB): Landing ebook: primer pantallazo (mobile 390x844 @2x)
+- `bustani/mobile/ebook-full.webp` (506x15998, 555 KB): Landing ebook: página completa (mobile 390x844 @2x)
 - `bustani/mobile/encuesta-almohadon-bloque-01-el-almohadon-bustani-es-para.webp` (780x1688, 55 KB): Encuesta quiz del almohadón: bloque 1 «¿El Almohadón Bustani es para ustedes?» (mobile 390x844 @2x)
 - `bustani/mobile/encuesta-almohadon-fold.webp` (780x1688, 57 KB): Encuesta quiz del almohadón: primer pantallazo (mobile 390x844 @2x)
 - `bustani/mobile/encuesta-almohadon-full.webp` (780x1688, 57 KB): Encuesta quiz del almohadón: página completa (mobile 390x844 @2x)
@@ -433,7 +460,7 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 
 **Interacciones grabadas y notas**
 
-- Grabado: juego «Frotá la foto» (desktop y mobile) y antes y después con línea arrastrable (desktop).
+- Grabado: juego «Frotá la foto» (desktop y mobile, con cambio de mascota a Perros al final) y antes y después con línea arrastrable (desktop).
 
 **Archivos**
 
@@ -442,8 +469,8 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 - `chau-pelo/videos/home-scroll-desktop.mp4` (1280x800, 13.2 s, 899 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `chau-pelo/videos/home-scroll-mobile.mp4` (390x844, 14.0 s, 461 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `chau-pelo/videos/producto-antes-despues-desktop.mp4` (1280x800, 8.2 s, 293 KB): Landing: antes y después de un solo lavado, scroll que corre la línea y arrastre manual de la línea (desktop)
-- `chau-pelo/videos/producto-frota-la-foto-desktop.mp4` (1280x800, 8.0 s, 146 KB): Landing: bloque «Frotá la foto y sacale los pelos», el mouse frota la foto (canvas) y el contador de pelo afuera sube (desktop)
-- `chau-pelo/videos/producto-frota-la-foto-mobile.mp4` (390x844, 8.0 s, 104 KB): Landing: bloque «Frotá la foto» frotado con el dedo en mobile
+- `chau-pelo/videos/producto-frota-la-foto-desktop.mp4` (1280x800, 18.0 s, 569 KB): Landing: bloque «Frotá la foto y sacale los pelos», el mouse frota la foto (canvas) y el contador de pelo afuera sube (desktop)
+- `chau-pelo/videos/producto-frota-la-foto-mobile.mp4` (390x844, 15.1 s, 289 KB): Landing: bloque «Frotá la foto» frotado con el dedo en mobile
 - `chau-pelo/videos/producto-scroll-desktop.mp4` (1280x800, 18.6 s, 1.8 MB): Landing aditivo antipelusa: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `chau-pelo/videos/producto-scroll-mobile.mp4` (390x844, 18.8 s, 914 KB): Landing aditivo antipelusa: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 
@@ -484,18 +511,20 @@ Landing de aditivo para lavado que elimina pelos y olores, verde y amarillo, con
 - `chau-pelo/mobile/producto-bloque-05-lo-que-tu-detergente-no.webp` (780x2032, 75 KB): Landing aditivo antipelusa: bloque 5 «Lo que tu detergente no puede hacer.» (mobile 390x844 @2x)
 - `chau-pelo/mobile/producto-bloque-06-frota-la-foto-y-sacale.webp` (780x2352, 108 KB): Landing aditivo antipelusa: bloque 6 «Frotá la foto y sacale los pelos.» (mobile 390x844 @2x)
 - `chau-pelo/mobile/producto-fold.webp` (780x1688, 118 KB): Landing aditivo antipelusa: primer pantallazo (mobile 390x844 @2x)
-- `chau-pelo/mobile/producto-frota-la-foto-resultado.webp` (780x1688, 83 KB): Landing: bloque «Frotá la foto» después de frotar, con el porcentaje de pelo afuera
+- `chau-pelo/mobile/producto-frota-la-foto-resultado.webp` (780x1688, 88 KB): Landing: bloque «Frotá la foto» después de frotar, con el porcentaje de pelo afuera
 - `chau-pelo/mobile/producto-full.webp` (366x16000, 629 KB): Landing aditivo antipelusa: página completa (mobile 390x844 @2x)
 
 ## FDT (ropa de gym de compresión)
 
-Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12+ prendas colgadas) y landing de RISE con giro 360 por scroll.
+Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (las prendas colgadas salen del perchero al tocarlas) y landing de RISE con giro 360 por scroll.
 
 **URLs capturadas**
 
 - `home`: https://fdt.com.ar/
+- `morley-tank`: https://fdt.com.ar/products/fdt-morley-tank
 - `rise`: https://fdt.com.ar/products/rise-compression-tee
 - `rise-360`: https://fdt.com.ar/products/rise-compression-tee?vista=360
+- `rise-tank`: https://fdt.com.ar/products/rise-compression-tank-negra
 
 **Los mejores para el carrusel**
 
@@ -507,7 +536,7 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 
 - Grabado: perchero del hero (desktop con hover y click, mobile con swipe y tap), giro 360 de la RISE (desktop y mobile), selector de bundle Llevá 1 / Llevá 2 (desktop).
 - La vista 360 está en `/products/rise-compression-tee?vista=360` (la URL sin parámetro muestra la ficha normal, también capturada como `rise`).
-- El 360 es una secuencia de imágenes en canvas 2D: se ve bien en headless sin WebGL.
+- El giro 360 se dibuja en un canvas y se renderizó bien en Chrome headless sin flags extra de WebGL.
 
 **Archivos**
 
@@ -517,13 +546,15 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 - `fdt/videos/home-perchero-mobile.mp4` (390x844, 14.7 s, 297 KB): Home: perchero en mobile como carrusel con swipe, tap que abre la ficha (bottom sheet) y filtro Musculosas
 - `fdt/videos/home-scroll-desktop.mp4` (1280x800, 12.2 s, 1.6 MB): Home: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fdt/videos/home-scroll-mobile.mp4` (390x844, 12.4 s, 699 KB): Home: scroll completo de arriba a abajo con pausas en los bloques (mobile)
+- `fdt/videos/morley-tank-scroll-desktop.mp4` (1280x800, 8.4 s, 1.0 MB): FDT Morley Tank: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fdt/videos/rise-360-giro-desktop.mp4` (1280x800, 11.7 s, 546 KB): RISE vista 360: scroll ida y vuelta que gira la remera 360 con los callouts de detalles (desktop)
 - `fdt/videos/rise-360-giro-mobile.mp4` (390x844, 11.6 s, 292 KB): RISE vista 360: giro de la remera por scroll, ida y vuelta (mobile)
 - `fdt/videos/rise-360-scroll-desktop.mp4` (1280x800, 12.5 s, 1.9 MB): RISE Compression Tee con vista 360: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fdt/videos/rise-360-scroll-mobile.mp4` (390x844, 11.8 s, 932 KB): RISE Compression Tee con vista 360: scroll completo de arriba a abajo con pausas en los bloques (mobile)
 - `fdt/videos/rise-bundle-desktop.mp4` (1280x800, 5.8 s, 140 KB): RISE: selector de bundle Llevá 1 / Llevá 2 (48% off en la segunda) con color y talle por unidad (desktop)
-- `fdt/videos/rise-scroll-desktop.mp4` (1280x800, 9.0 s, 1.7 MB): RISE Compression Tee (vista normal): scroll completo de arriba a abajo con pausas en los bloques (desktop)
+- `fdt/videos/rise-scroll-desktop.mp4` (1280x800, 8.6 s, 1.6 MB): RISE Compression Tee (vista normal): scroll completo de arriba a abajo con pausas en los bloques (desktop)
 - `fdt/videos/rise-scroll-mobile.mp4` (390x844, 9.4 s, 800 KB): RISE Compression Tee (vista normal): scroll completo de arriba a abajo con pausas en los bloques (mobile)
+- `fdt/videos/rise-tank-scroll-desktop.mp4` (1280x800, 8.4 s, 1.1 MB): RISE Compression Tank: scroll completo de arriba a abajo con pausas en los bloques (desktop)
 
 `desktop/`
 
@@ -536,6 +567,9 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 - `fdt/desktop/home-fold.webp` (1440x900, 41 KB): Home: primer pantallazo (desktop 1440x900)
 - `fdt/desktop/home-full.webp` (1440x5250, 348 KB): Home: página completa (desktop 1440x900)
 - `fdt/desktop/home-perchero-ficha-abierta.webp` (1440x900, 34 KB): Home: prenda sacada del perchero con la ficha rápida abierta
+- `fdt/desktop/morley-tank-bloque-01-fdt-morley-tank.webp` (1240x2160, 129 KB): FDT Morley Tank: bloque 1 «FDT MORLEY TANK» (desktop 1440x900)
+- `fdt/desktop/morley-tank-fold.webp` (1440x900, 67 KB): FDT Morley Tank: primer pantallazo (desktop 1440x900)
+- `fdt/desktop/morley-tank-full.webp` (1440x5999, 319 KB): FDT Morley Tank: página completa (desktop 1440x900)
 - `fdt/desktop/rise-360-bloque-01-rise-rec-000-rise-compression.webp` (1440x900, 35 KB): RISE Compression Tee con vista 360: bloque 1 «RISE Rec · 000°RISE Compression Tee 01 · FrenteLogo FDTEstampa de…» (desktop 1440x900)
 - `fdt/desktop/rise-360-bloque-02-rise-compression-tee.webp` (1240x2160, 169 KB): RISE Compression Tee con vista 360: bloque 2 «RISE COMPRESSION TEE» (desktop 1440x900)
 - `fdt/desktop/rise-360-fold.webp` (1440x900, 42 KB): RISE Compression Tee con vista 360: primer pantallazo (desktop 1440x900)
@@ -543,7 +577,10 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 - `fdt/desktop/rise-bloque-01-rise-compression-tee.webp` (1240x2160, 169 KB): RISE Compression Tee (vista normal): bloque 1 «RISE COMPRESSION TEE» (desktop 1440x900)
 - `fdt/desktop/rise-bundle-lleva-2.webp` (1440x900, 89 KB): RISE: bundle Llevá 2 seleccionado, con el armado por unidad
 - `fdt/desktop/rise-fold.webp` (1440x900, 92 KB): RISE Compression Tee (vista normal): primer pantallazo (desktop 1440x900)
-- `fdt/desktop/rise-full.webp` (1440x8248, 505 KB): RISE Compression Tee (vista normal): página completa (desktop 1440x900)
+- `fdt/desktop/rise-full.webp` (1440x8248, 515 KB): RISE Compression Tee (vista normal): página completa (desktop 1440x900)
+- `fdt/desktop/rise-tank-bloque-01-rise-compression-tank.webp` (1240x2160, 165 KB): RISE Compression Tank: bloque 1 «RISE COMPRESSION TANK» (desktop 1440x900)
+- `fdt/desktop/rise-tank-fold.webp` (1440x900, 98 KB): RISE Compression Tank: primer pantallazo (desktop 1440x900)
+- `fdt/desktop/rise-tank-full.webp` (1440x6315, 368 KB): RISE Compression Tank: página completa (desktop 1440x900)
 
 `mobile/`
 
@@ -556,7 +593,12 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 - `fdt/mobile/home-fold.webp` (780x1688, 44 KB): Home: primer pantallazo (mobile 390x844 @2x)
 - `fdt/mobile/home-full.webp` (780x11604, 552 KB): Home: página completa (mobile 390x844 @2x)
 - `fdt/mobile/home-perchero-ficha-abierta.webp` (780x1688, 41 KB): Home: prenda sacada del perchero con la ficha rápida abierta
-- `fdt/mobile/rise-360-bloque-01-section-template-28052427276381-cust.webp` (780x4050, 65 KB): RISE Compression Tee con vista 360: bloque 1 «.section-template--28052427276381__custom_liquid_pid9xL-padding {…» (mobile 390x844 @2x)
+- `fdt/mobile/morley-tank-bloque-01-negrobeige-1-7.webp` (780x780, 4 KB): FDT Morley Tank: bloque 1 «NegroBeige 1 / 7» (mobile 390x844 @2x)
+- `fdt/mobile/morley-tank-bloque-02-fdt-morley-tank.webp` (780x2402, 100 KB): FDT Morley Tank: bloque 2 «FDT MORLEY TANK» (mobile 390x844 @2x)
+- `fdt/mobile/morley-tank-bloque-03-como-en-la-old-school.webp` (780x4050, 186 KB): FDT Morley Tank: bloque 3 «Como en la old school, sin lo old.» (mobile 390x844 @2x)
+- `fdt/mobile/morley-tank-fold.webp` (780x1688, 49 KB): FDT Morley Tank: primer pantallazo (mobile 390x844 @2x)
+- `fdt/mobile/morley-tank-full.webp` (780x12250, 493 KB): FDT Morley Tank: página completa (mobile 390x844 @2x)
+- `fdt/mobile/rise-360-bloque-01-giro-360-inicio.webp` (780x1800, 62 KB): RISE vista 360: escena fijada del giro al inicio, «Scrolleá para girarla» (mobile)
 - `fdt/mobile/rise-360-bloque-02-negrogrisazul-1-9.webp` (780x780, 6 KB): RISE Compression Tee con vista 360: bloque 2 «NegroGrisAzul 1 / 9» (mobile 390x844 @2x)
 - `fdt/mobile/rise-360-bloque-03-rise-compression-tee.webp` (780x2514, 114 KB): RISE Compression Tee con vista 360: bloque 3 «RISE COMPRESSION TEE» (mobile 390x844 @2x)
 - `fdt/mobile/rise-360-bloque-04-no-es-la-tela-es.webp` (780x4050, 209 KB): RISE Compression Tee con vista 360: bloque 4 «No es la tela. Es el molde.» (mobile 390x844 @2x)
@@ -564,9 +606,14 @@ Tienda de ropa de compresión para gimnasio con hero de perchero interactivo (12
 - `fdt/mobile/rise-360-full.webp` (672x16000, 581 KB): RISE Compression Tee con vista 360: página completa (mobile 390x844 @2x)
 - `fdt/mobile/rise-bloque-01-negrogrisazul-1-9.webp` (780x780, 6 KB): RISE Compression Tee (vista normal): bloque 1 «NegroGrisAzul 1 / 9» (mobile 390x844 @2x)
 - `fdt/mobile/rise-bloque-02-rise-compression-tee.webp` (780x2514, 113 KB): RISE Compression Tee (vista normal): bloque 2 «RISE COMPRESSION TEE» (mobile 390x844 @2x)
-- `fdt/mobile/rise-bloque-03-no-es-la-tela-es.webp` (780x4050, 210 KB): RISE Compression Tee (vista normal): bloque 3 «No es la tela. Es el molde.» (mobile 390x844 @2x)
+- `fdt/mobile/rise-bloque-03-no-es-la-tela-es.webp` (780x4050, 205 KB): RISE Compression Tee (vista normal): bloque 3 «No es la tela. Es el molde.» (mobile 390x844 @2x)
 - `fdt/mobile/rise-fold.webp` (780x1688, 55 KB): RISE Compression Tee (vista normal): primer pantallazo (mobile 390x844 @2x)
-- `fdt/mobile/rise-full.webp` (780x14374, 637 KB): RISE Compression Tee (vista normal): página completa (mobile 390x844 @2x)
+- `fdt/mobile/rise-full.webp` (780x14374, 635 KB): RISE Compression Tee (vista normal): página completa (mobile 390x844 @2x)
+- `fdt/mobile/rise-tank-bloque-01-negra-1-5.webp` (780x780, 5 KB): RISE Compression Tank: bloque 1 «Negra 1 / 5» (mobile 390x844 @2x)
+- `fdt/mobile/rise-tank-bloque-02-rise-compression-tank.webp` (780x2432, 104 KB): RISE Compression Tank: bloque 2 «RISE COMPRESSION TANK» (mobile 390x844 @2x)
+- `fdt/mobile/rise-tank-bloque-03-libertad-total-en-los-hombros.webp` (780x4050, 218 KB): RISE Compression Tank: bloque 3 «Libertad total en los hombros.» (mobile 390x844 @2x)
+- `fdt/mobile/rise-tank-fold.webp` (780x1688, 49 KB): RISE Compression Tank: primer pantallazo (mobile 390x844 @2x)
+- `fdt/mobile/rise-tank-full.webp` (780x13140, 546 KB): RISE Compression Tank: página completa (mobile 390x844 @2x)
 
 ## FOSTERS (short de lino, Bolivia)
 
@@ -633,6 +680,12 @@ Marca boliviana de shorts de lino con hero camaleón editorial (el fondo cambia 
 - `fosters/mobile/home-bloque-06-comprar-es-asi-de-simple.webp` (780x1644, 56 KB): Home: bloque 6 «Comprar es así de simple.» (mobile 390x844 @2x)
 - `fosters/mobile/home-fold.webp` (780x1688, 66 KB): Home: primer pantallazo (mobile 390x844 @2x)
 - `fosters/mobile/home-full.webp` (638x16000, 388 KB): Home: página completa (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-01-short-de-lino.webp` (780x2628, 81 KB): Landing short de lino: bloque 1 «Short de Lino» (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-02-por-que-este-short.webp` (780x1198, 59 KB): Landing short de lino: bloque 2 «Por qué este short.» (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-03-cuatro-colores-cuatro-planes.webp` (780x1832, 100 KB): Landing short de lino: bloque 3 «Cuatro colores, cuatro planes.» (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-04-facil-de-cuidar.webp` (780x1946, 55 KB): Landing short de lino: bloque 4 «Fácil de cuidar.» (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-05-te-quedo-alguna-duda.webp` (780x2760, 92 KB): Landing short de lino: bloque 5 «¿Te quedó alguna duda?» (mobile 390x844 @2x)
+- `fosters/mobile/short-bloque-06-elegi-el-tuyo.webp` (780x1842, 76 KB): Landing short de lino: bloque 6 «Elegí el tuyo.» (mobile 390x844 @2x)
 - `fosters/mobile/short-fold.webp` (780x1688, 54 KB): Landing short de lino: primer pantallazo (mobile 390x844 @2x)
 - `fosters/mobile/short-formulario-whatsapp-abierto.webp` (780x1688, 60 KB): Landing short: formulario de pedido a WhatsApp abierto (sin enviar)
 - `fosters/mobile/short-full.webp` (580x16000, 563 KB): Landing short de lino: página completa (mobile 390x844 @2x)
@@ -706,7 +759,7 @@ Landing de almohadón ortopédico con galería fija estilo Apple y línea celest
 
 `mobile/`
 
-- `solvex/mobile/almohadon-bloque-01-bloque.webp` (780x780, 80 KB): Landing almohadón ortopédico: bloque 1 (mobile 390x844 @2x)
+- `solvex/mobile/almohadon-bloque-01-galeria.webp` (780x780, 80 KB): Landing almohadón: galería con la línea celeste en los recortes (mobile)
 - `solvex/mobile/almohadon-bloque-02-almohadon-ortopedico-solvex-libera-t.webp` (780x4050, 197 KB): Landing almohadón ortopédico: bloque 2 «Almohadón Ortopédico Solvex Liberá tu espalda» (mobile 390x844 @2x)
 - `solvex/mobile/almohadon-bloque-03-move-la-linea-y-mira.webp` (780x1840, 91 KB): Landing almohadón ortopédico: bloque 3 «Mové la línea y mirá la diferencia» (mobile 390x844 @2x)
 - `solvex/mobile/almohadon-bloque-04-el-cuerpo-manda-senales-el.webp` (780x2128, 80 KB): Landing almohadón ortopédico: bloque 4 «El cuerpo manda señales. El dolor de espalda al sentarte no es normal…» (mobile 390x844 @2x)
@@ -716,7 +769,7 @@ Landing de almohadón ortopédico con galería fija estilo Apple y línea celest
 - `solvex/mobile/almohadon-full.webp` (468x16000, 563 KB): Landing almohadón ortopédico: página completa (mobile 390x844 @2x)
 - `solvex/mobile/carrito-lateral-abierto-abajo.webp` (780x1688, 55 KB): Carrito lateral abierto, parte de abajo con total y botones de pago
 - `solvex/mobile/carrito-lateral-abierto.webp` (780x1688, 55 KB): Carrito lateral abierto: almohadón y crema de alivio lumbar de regalo
-- `solvex/mobile/crema-bloque-01-bloque.webp` (780x780, 29 KB): Landing crema de alivio lumbar: bloque 1 (mobile 390x844 @2x)
+- `solvex/mobile/crema-bloque-01-galeria.webp` (780x780, 29 KB): Landing crema: galería del producto (mobile)
 - `solvex/mobile/crema-bloque-02-crema-de-alivio-lumbar-solvex.webp` (780x3732, 165 KB): Landing crema de alivio lumbar: bloque 2 «Crema de Alivio Lumbar Solvex Alivio que se siente en minutos» (mobile 390x844 @2x)
 - `solvex/mobile/crema-bloque-03-tu-zona-lumbar-vive-contracturada.webp` (780x2068, 72 KB): Landing crema de alivio lumbar: bloque 3 «Tu zona lumbar vive contracturada — y vos ya te acostumbraste» (mobile 390x844 @2x)
 - `solvex/mobile/crema-bloque-04-lumbares-que-volvieron-a-la.webp` (780x1434, 45 KB): Landing crema de alivio lumbar: bloque 4 «Lumbares que volvieron a la vida» (mobile 390x844 @2x)
@@ -807,4 +860,4 @@ Landing muy interactiva y dopamínica de detergente en polvo 3 en 1, azul eléct
 - `lava-plus/mobile/producto-frota-la-mancha-resultado.webp` (780x1688, 73 KB): Landing: «Frotá la mancha» después de frotar, remera limpia
 - `lava-plus/mobile/producto-full.webp` (414x16000, 602 KB): Landing LAVA+ 3 en 1: página completa (mobile 390x844 @2x)
 
-Tamaño total de capturas: 130 MB.
+Tamaño total de capturas: 140 MB.
