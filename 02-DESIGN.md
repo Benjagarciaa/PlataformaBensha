@@ -203,7 +203,7 @@ Una familia de layout por sección, cero repetición.
 
 | # | Sección | id | Archivo | Layout | Motion |
 |---|---|---|---|---|---|
-| 1 | Hero | `inicio` | `Hero.tsx` + `PlanoCanvas.tsx` | Editorial monumental asimétrico: nombre gigante abajo a la izquierda, wireframe de una landing dibujándose a la derecha (SVG/canvas), tira de anotación mono arriba a la derecha (hora de Córdoba, uptime de sesión, disponibilidad) | Boot: el wireframe se dibuja bloque por bloque con `stroke-dashoffset` (hero, precio, prueba social, FAQ, CTA), y cuando termina, el nombre entra letra por letra con rise + blur |
+| 1 | Hero | `inicio` | `Hero.tsx` + `components/hero3d/` | Hero fijo (sticky) durante un recorrido de 2.5 pantallas (2.2 en mobile). Texto HTML real a la izquierda (arriba en mobile), escena WebGL a pantalla completa detrás: "del caos al sistema". Escuadras en las esquinas del cuadro y cajetín mono abajo a la derecha con la lectura del ensamblaje | Scroll: unos 180 fragmentos del caos de un negocio chico (chats, celdas de planilla, post-its, tickets, relojes, carritos) vuelan con desfase a sus casilleros y arman una notebook y un celular con su UI. El titular pasa del dolor ("Tu negocio hoy") a la solución ("Con un sistema"). Al final, órbita leve, el sistema se enciende y un pulso celeste lo recorre cada 5.2 s. Ver sección 14 |
 | 2 | Sobre mí | `sobre-mi` | `About.tsx` | Split asimétrico 7/5. Texto dominante a la izquierda; a la derecha tu foto en duotono celeste dentro de un marco con marcas de esquina y una cota que mide el marco, anclada al riel con un conector de 1px | Párrafos revelados línea por línea con máscara; una única pasada de escaneo celeste sobre la foto, una sola vez |
 | 3 | **Anatomía de una landing** | `anatomia` | `Anatomia.tsx` | **La sección firma.** Wireframe grande de una landing (izquierda, sticky) con sus bloques apilados. A la derecha, las anotaciones: al llegar a cada bloque se enciende su cota y aparece la nota de conversión ("bloque 04 · prueba social · va acá porque la objeción de confianza aparece justo después del precio") | Scrub con GSAP ScrollTrigger: el bloque activo se ilumina en `--accent`, los demás bajan a 25%. La anotación entra con blur + 12px |
 | 4 | Proyectos | `proyectos` | `Proyectos.tsx` | Paneles caso apilados con pin GSAP, uno por marca. Cada panel: mockup de celular con captura real de la landing a la izquierda, datos a la derecha, y un anillo de specs mono alrededor del mockup (BUNDLES · STICKY BAR · UGC · FAQ · CHECKOUT DIRECTO) | Pin + los callouts se encienden en secuencia según el progreso del scroll |
@@ -257,7 +257,8 @@ se muestran el mail y el WhatsApp directos, por si prefieren escribir sin llenar
 
 ## 13. Performance y accesibilidad (innegociable)
 
-- Un solo `requestAnimationFrame` global (el de `TrazoProvider`). Canvas acotados.
+- Un solo `requestAnimationFrame` global (el de `TrazoProvider`). Canvas acotados. Única excepción
+  documentada: el loop de la escena 3D del hero (sección 14).
 - `next/font/local` para Clash y Switzer, `next/font/google` para JetBrains Mono.
 - Las capturas de las landings van optimizadas con `next/image`, con `sizes` correcto.
   Ninguna imagen de más de 400kb.
@@ -270,3 +271,72 @@ se muestran el mail y el WhatsApp directos, por si prefieren escribir sin llenar
   anotación debajo de cada uno; paneles pin → apilados normales; constelación → lista
   agrupada; wireframe del hero → versión simplificada, sin seguimiento del cursor.
 - Objetivo: LCP menor a 2s en 4G, sin layout shift.
+
+---
+
+## 14. 3D (WebGL)
+
+El hero tiene la única escena 3D del sitio. Estas reglas aplican a esa escena y a cualquier
+otra que se sume.
+
+**Aislamiento.** three y React Three Fiber viven solo en componentes hoja de
+`components/hero3d/`: `Escena3D.tsx` (el `<Canvas>`, único archivo que importa R3F) y
+`geometrias.ts` (geometrías, shaders y estado mutable). `plano.ts` es geometría pura sin three
+(casilleros del sistema y tramos del scroll) y lo comparten la escena, el texto HTML y el SVG
+del fallback. Ningún otro archivo importa three.
+
+**Su loop, la excepción al rAF único.** R3F corre su propio `requestAnimationFrame`. Es la
+única excepción a la sección 4 y tiene límites:
+- `frameloop="always"` solo mientras el hero está en pantalla (IntersectionObserver sobre la
+  sección) y la pestaña está visible (`visibilitychange`). Fuera de eso, `"never"`.
+- Todo el movimiento de los fragmentos se calcula en el vertex shader. Por frame la CPU solo
+  escribe un puñado de uniforms: progreso, tiempo, mouse, pulso.
+- El progreso sale de `useScroll` de motion sobre la sección y se lee con `MotionValue.get()`
+  dentro de `useFrame`. Sin GSAP en este componente, sin listeners de scroll.
+- Las transformaciones del texto ligadas al scroll usan `useTransform` en forma de función:
+  la forma de rangos se acelera con ViewTimeline nativo y con el sticky mide otro rango.
+
+**Carga diferida.** El texto del hero es HTML renderizado en el servidor y es el LCP: no
+depende del JS de la escena. El canvas se importa con `next/dynamic` y `ssr: false`, y se pide
+recién cuando terminó la Intro (`lib/intro.ts`) y el navegador está ocioso
+(`requestIdleCallback`). El chunk de three nunca entra en el JS inicial. El canvas aparece con
+un fade de opacidad cuando ya pintó su primer frame.
+
+**Fallbacks.** No se monta el canvas, se muestra el sistema armado en SVG estático
+(`IlustracionSistema.tsx`, sale de los mismos casilleros) y el texto queda en su estado final
+cuando:
+- `prefers-reduced-motion: reduce` (resuelto por CSS antes de hidratar, sin salto),
+- `navigator.connection.saveData`,
+- no hay WebGL o solo hay WebGL por software (SwiftShader, llvmpipe: PCs sin GPU y servidores
+  de medición). `?webgl=forzar` en la URL saltea ese chequeo, solo para QA con navegadores
+  headless,
+- no hay JS (`<noscript>`).
+Las reglas de ese modo viven en `components/hero3d/estatico.ts`, una sola fuente para los tres
+casos. El titular del caos queda oculto a la vista pero accesible para lectores de pantalla.
+
+**Presupuesto por dispositivo.**
+
+| | Desktop | Mobile (pointer coarse o ancho < 768) |
+|---|---|---|
+| Fragmentos | 178 | 91 |
+| Draw calls | 16 (líneas y relleno por tipo, aparatos, pantallas, halo) | igual |
+| dpr máximo | 1.75 | 1.5 |
+| Antialias | sí | no |
+| Mouse | parallax de cámara y repulsión del caos (solo pointer fine) | sin mouse |
+| Aparatos | con espesor (frente, dorso y aristas) | solo frente |
+| Postprocesado | ninguno: el glow es un sprite radial y un gradiente CSS | ninguno |
+
+**Paleta y estilo de líneas.** Todo es un plano técnico: líneas `gl.LINES` de 1px en
+`--accent`, superficies apenas rellenas (alfa 0.05), blending aditivo, y el blanco papel
+`--text` solo en la punta del plotter y en el pulso. Los colores se leen de las variables CSS
+al montar: ningún color escrito en el código de la escena. Sin sombras, sin texturas, sin
+colores fuera de la paleta. Detrás del texto el caos baja la voz (se atenúa en el shader) y una
+viñeta del color de fondo protege la lectura.
+
+**Ojo con el costo de estilo y con el LCP.** `--trazo` cambia en `:root` en cada frame y eso
+recalcula el estilo de todos los nodos de la página. Por eso el SVG del fallback no se dibuja
+rect por rect (serían unos 120 nodos): cada grupo es un solo `<path>` con muchos subtrazos y el
+dibujo entero son unos 15 nodos. No va como imagen ni como máscara CSS: eso cuenta como
+candidato a LCP y, como aparece cuando se decide el modo estático, se vuelve el LCP de la
+página. Y nada de `<radialGradient>` con `var()` en un SVG inline: se invalida en cada
+recálculo y obliga a repintar el dibujo entero en cada frame. Los halos van con gradiente CSS.

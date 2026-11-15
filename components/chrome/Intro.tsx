@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { content } from "@/content/data";
+import { marcarIntroFin } from "@/lib/intro";
 
 /**
  * Intro. La cortina que "traza el plano" al entrar y se abre revelando el sitio.
@@ -14,6 +15,8 @@ import { content } from "@/content/data";
  *  - Salteable: cualquier click, scroll, tecla o toque la cierra al instante.
  *  - Con reduced-motion no aparece.
  *  - Bloquea el scroll mientras dura y lo suelta al terminar.
+ *  - Al terminar avisa (lib/intro.ts): el hero 3D espera eso para cargar
+ *    WebGL, asi la escena no se arma debajo de la cortina.
  */
 
 const DURACION = 1500;
@@ -48,6 +51,7 @@ export function Intro() {
     const slow = !!conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType ?? ""));
     if (reduce || slow) {
       setVisible(false);
+      marcarIntroFin();
       return;
     }
 
@@ -81,7 +85,7 @@ export function Intro() {
   if (!mounted) return null;
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={marcarIntroFin}>
       {visible ? (
         <motion.div
           key="intro"

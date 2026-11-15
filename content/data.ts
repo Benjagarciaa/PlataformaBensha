@@ -25,6 +25,31 @@ export const content = {
 
   // ── HERO ──────────────────────────────────────────────────────────────
   hero: {
+    // Hero 3D "del caos al sistema". El texto cambia con el scroll: primero el
+    // dolor (caos), despues la solucion (sistema armado).
+    caos: {
+      kicker: "Tu negocio hoy",
+      titular: "Pedidos por WhatsApp, precios en una planilla, todo en tu cabeza.",
+      bajada: "Así no se escala.",
+    },
+    sistema: {
+      kicker: "Con un sistema",
+      titular: {
+        before: "Una web",
+        accent: "que vende",
+        after: "y un panel que manejás vos.",
+      },
+      bajada:
+        "Diseño, programo y te dejo todo funcionando. Sin plantillas y sin depender de nadie.",
+      ctaPrimary: "Quiero el mío",
+      ctaSecondary: "Ver proyectos",
+    },
+    indicador: "Bajá y mirá cómo se ordena",
+    cajetin: {
+      titulo: "DEL CAOS AL SISTEMA",
+      ensamble: "ENSAMBLE",
+    },
+
     title: {
       before: "Más de 200 páginas de producto,",
       accent: "programadas",
